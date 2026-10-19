@@ -41,6 +41,11 @@ export const MINI_CODE_HISTORY_PATH = path.join(MINI_CODE_DIR, 'history.jsonl')
 export const MINI_CODE_PERMISSIONS_PATH = path.join(MINI_CODE_DIR, 'permissions.json')
 export const MINI_CODE_MCP_PATH = path.join(MINI_CODE_DIR, 'mcp.json')
 export const MINI_CODE_MCP_TOKENS_PATH = path.join(MINI_CODE_DIR, 'mcp-tokens.json')
+export const MINI_CODE_MEMORY_PATH = path.join(MINI_CODE_DIR, 'memory')
+export const MINI_CODE_MEMORY_ENABLED = process.env.MINI_CODE_MEMORY !== '0'
+export const MINI_CODE_MEMORY_DISTILL_ENABLED = process.env.MINI_CODE_MEMORY_DISTILL !== '0'
+export const MINI_CODE_MEMORY_CONTROLLER_ENABLED = process.env.MINI_CODE_MEMORY_CONTROLLER !== '0'
+export const MINI_CODE_DEBUG_MEMORY = process.env.MINI_CODE_DEBUG_MEMORY === '1'
 export const MINI_CODE_PROJECTS_DIR = path.join(MINI_CODE_DIR, 'projects')
 export const CLAUDE_SETTINGS_PATH = path.join(os.homedir(), '.claude', 'settings.json')
 export const PROJECT_MCP_PATH = path.join(process.cwd(), '.mcp.json')

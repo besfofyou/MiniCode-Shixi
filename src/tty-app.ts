@@ -19,6 +19,7 @@ import {
   PermissionRequest,
 } from './permissions.js'
 import { buildSystemPrompt } from './prompt.js'
+import type { MemoryRuntime } from './memory/runtime.js'
 import type { PlanManager } from './plan/manager.js'
 import { formatPlan } from './plan/context.js'
 import { discoverInstructionFiles } from './memory.js'
@@ -98,6 +99,8 @@ type TtyAppArgs = {
   alreadySavedCount: number
   resumeTarget?: string | 'picker'
   execution?: SessionRuntime
+  memoryRuntime?: MemoryRuntime
+  distillSession?: (messages: ChatMessage[], sessionId: string) => Promise<void>
 }
 
 type PendingApproval = {
@@ -884,13 +887,14 @@ function createRenderScheduler(renderNow: () => void): () => void {
   }
 }
 
-async function refreshSystemPrompt(args: TtyAppArgs): Promise<void> {
+async function refreshSystemPrompt(args: TtyAppArgs, userQuery?: string): Promise<void> {
   args.messages[0] = {
     role: 'system',
     content: await buildSystemPrompt(args.cwd, args.permissions.getSummary(), {
       skills: args.tools.getSkills(),
       mcpServers: args.tools.getMcpServers(),
       subAgents: { maxConcurrent: args.subAgents.maxConcurrent },
+      memory: args.memoryRuntime?.promptExtras(userQuery),
     }),
   }
 }
@@ -1053,6 +1057,7 @@ async function handleInput(
     return false
   }
   if (/^\/(new|resume|fork)(?:\s|$)/.test(input)) {
+    await args.distillSession?.(args.messages, args.sessionId)
     await args.execution!.reset()
     // Retry saving before switching sessions; a failure leaves the current session intact.
     await saveSession(args.cwd, args.sessionId, args.messages, args.alreadySavedCount)
@@ -1373,6 +1378,7 @@ async function handleInput(
     tools: args.tools,
     plan: args.plan,
     permissionSummary: args.permissions.getSummary(),
+    memoryStore: args.memoryRuntime?.store,
   })
   if (localCommandResult !== null) {
     pushTranscriptEntry(state, {
@@ -1417,10 +1423,11 @@ async function executeTtyTurn(
   request: TurnRequest,
 ): Promise<AgentTurnResult> {
   let result: AgentTurnResult = { messages: args.messages, outcome: 'failed', toolCalls: 0 }
+  const recentToolCount = state.recentTools.length
   state.isBusy = true
   args.permissions.beginTurn(request.signal)
   try {
-    await refreshSystemPrompt(args)
+    await refreshSystemPrompt(args, request.input.content)
     throwIfAborted(request.signal)
     args.messages.push(request.input)
     pushTranscriptEntry(state, {
@@ -1582,6 +1589,7 @@ async function executeTtyTurn(
         rerender()
       },
       onToolResult(toolName, output, isError) {
+        args.memoryRuntime?.recordTurnTool(toolName, isError)
         const pending = pendingToolEntries.get(toolName) ?? []
         const entryId = pending.shift()
         pendingToolEntries.set(toolName, pending)
@@ -1676,6 +1684,8 @@ async function executeTtyTurn(
     state.isBusy = false
   }
 
+  const toolNames = state.recentTools.slice(recentToolCount).map(tool => tool.name)
+  await args.memoryRuntime?.completeTurn({ outcome: result.outcome, messages: args.messages, toolNames })
   finalizeDanglingRunningTools(state)
   if (getRunningToolEntries(state).length === 0) {
     setStatus(state, null)
@@ -1884,7 +1894,9 @@ export async function runTtyApp(args: TtyAppArgs): Promise<void> {
     const finish = () => {
       if (finished) return
       finished = true
-      void permissionArgs.execution!.stop().finally(() => {
+      void permissionArgs.execution!.stop().then(async () => {
+        await permissionArgs.distillSession?.(permissionArgs.messages, permissionArgs.sessionId)
+      }).finally(() => {
         permissionArgs.execution!.goal.manager.dispose()
         cleanup()
         resolve()

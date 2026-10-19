@@ -7,7 +7,7 @@ import {
   findMatchingSlashCommands,
   tryHandleLocalCommand,
 } from './cli-commands.js'
-import { loadRuntimeConfig } from './config.js'
+import { loadRuntimeConfig, MINI_CODE_MEMORY_ENABLED } from './config.js'
 import { forkSession } from './session.js'
 import { maybeHandleManagementCommand } from './manage-cli.js'
 import { summarizeMcpServers } from './mcp-status.js'
@@ -32,6 +32,7 @@ import {
   createContextCollapseState,
 } from './compact/context-collapse.js'
 import { createContentReplacementState } from './utils/tool-result-storage.js'
+import { MemoryRuntime } from './memory/runtime.js'
 
 async function main(): Promise<void> {
   const cwd = process.cwd()
@@ -75,10 +76,18 @@ async function main(): Promise<void> {
 
   let sessionId = crypto.randomUUID().slice(0, 8)
   const plan = new PlanManager(sessionId)
+  const memoryRuntime = MINI_CODE_MEMORY_ENABLED
+    ? await MemoryRuntime.create(cwd)
+    : undefined
   const tools = await createDefaultToolRegistry({
     cwd,
     runtime,
     plan,
+    memoryStore: memoryRuntime?.store,
+    memoryRetriever: memoryRuntime?.retriever,
+    onMemoryOutcome: (action, success) => {
+      void memoryRuntime?.recordToolOutcome(action, success)
+    },
   })
   const mcpHydration = hydrateMcpTools({
     cwd,
@@ -106,19 +115,21 @@ async function main(): Promise<void> {
         skills: tools.getSkills(),
         mcpServers: tools.getMcpServers(),
         subAgents: { maxConcurrent: subAgents.maxConcurrent },
+        memory: memoryRuntime?.promptExtras(),
       }),
     },
   ]
   const contentReplacementState = createContentReplacementState()
   const contextCollapseState = createContextCollapseState()
 
-  async function refreshSystemPrompt(): Promise<void> {
+  async function refreshSystemPrompt(userQuery?: string): Promise<void> {
     messages[0] = {
       role: 'system',
       content: await buildSystemPrompt(cwd, permissions.getSummary(), {
         skills: tools.getSkills(),
         mcpServers: tools.getMcpServers(),
         subAgents: { maxConcurrent: subAgents.maxConcurrent },
+        memory: memoryRuntime?.promptExtras(userQuery),
       }),
     }
   }
@@ -152,6 +163,10 @@ async function main(): Promise<void> {
         sessionId,
         alreadySavedCount: 0,
         resumeTarget: resolvedResumeTarget,
+        memoryRuntime,
+        distillSession: async (sessionMessages, endedSessionId) => {
+          if (memoryRuntime) await memoryRuntime.distill(sessionMessages, model, endedSessionId)
+        },
       })
       return
     }
@@ -174,7 +189,7 @@ async function main(): Promise<void> {
     const execution = new SessionRuntime({
       plan, tools, isBusy: () => localBusy,
       async execute(request) {
-        await refreshSystemPrompt()
+        await refreshSystemPrompt(request.input.content)
         messages = [...messages, request.input]
         permissions.beginTurn(request.signal)
         try {
@@ -184,9 +199,18 @@ async function main(): Promise<void> {
             signal: request.signal, maxSteps: request.mode ? 50 : undefined,
             stopOnFatalToolError: !!request.mode,
             modelName: runtime?.model ?? '', contentReplacementState, contextCollapseState,
+            onToolStart: toolName => memoryRuntime?.recordTurnTool(toolName),
+            onToolResult: (toolName, _output, isError) => memoryRuntime?.recordTurnTool(toolName, isError),
             onAssistantMessage: content => console.log(`\n${content}\n`),
           })
           messages = result.messages
+          await memoryRuntime?.completeTurn({
+            outcome: result.outcome,
+            messages: result.messages,
+            toolNames: result.messages
+              .filter(message => message.role === 'assistant_tool_call')
+              .map(message => message.toolName),
+          })
           if (result.error) console.log(`\n${result.error}\n`)
           return result
         } finally {
@@ -280,6 +304,7 @@ async function main(): Promise<void> {
             tools,
             plan,
             permissionSummary: permissions.getSummary(),
+            memoryStore: memoryRuntime?.store,
           })
           if (localCommandResult !== null) {
             console.log(`\n${localCommandResult}\n`)
@@ -314,6 +339,7 @@ async function main(): Promise<void> {
     }
 
     await execution.stop()
+    await memoryRuntime?.distill(messages, model, sessionId)
     execution.goal.manager.dispose()
     process.off('SIGINT', stopOnInterrupt)
 
@@ -325,6 +351,7 @@ async function main(): Promise<void> {
   } finally {
     await subAgents.closeAll()
     await mcpHydration
+    await memoryRuntime?.controller.saveToDisk().catch(() => {})
     await tools.dispose()
   }
 }

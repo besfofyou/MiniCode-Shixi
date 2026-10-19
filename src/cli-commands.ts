@@ -11,6 +11,8 @@ import { discoverInstructionFiles, renderMemoryReport } from './memory.js'
 import type { ToolRegistry } from './tool.js'
 import type { PlanManager } from './plan/manager.js'
 import { formatPlan } from './plan/context.js'
+import type { MemoryFilesystem } from './memory/filesystem.js'
+import { generateHealthReport, formatHealthReport } from './memory/health.js'
 
 export type SlashCommand = {
   name: string
@@ -166,7 +168,7 @@ export const SLASH_COMMANDS: SlashCommand[] = [
   {
     name: '/memory',
     usage: '/memory',
-    description: 'Show instruction files loaded into the system prompt.',
+    description: 'Show instruction files and persistent memory health.',
   },
 ]
 
@@ -201,6 +203,7 @@ export async function tryHandleLocalCommand(
     tools?: ToolRegistry
     permissionSummary?: string[]
     plan?: PlanManager
+    memoryStore?: MemoryFilesystem
   },
 ): Promise<string | null> {
   const cwd = context?.cwd ?? process.cwd()
@@ -289,7 +292,11 @@ export async function tryHandleLocalCommand(
 
   if (input === '/memory') {
     const files = await discoverInstructionFiles(cwd)
-    return renderMemoryReport(files, cwd)
+    let output = renderMemoryReport(files, cwd)
+    if (context?.memoryStore) {
+      output += `\n\n${formatHealthReport(await generateHealthReport(context.memoryStore))}`
+    }
+    return output
   }
 
   if (input === '/model') {

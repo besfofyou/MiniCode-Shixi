@@ -17,6 +17,10 @@ import { webSearchTool } from './web-search.js'
 import { writeFileTool } from './write-file.js'
 import type { PlanManager } from '../plan/manager.js'
 import { createUpdatePlanTool } from './plan.js'
+import type { MemoryFilesystem } from '../memory/filesystem.js'
+import type { MemoryRetriever } from '../memory/retrieval.js'
+import type { ActionType } from '../memory/controller.js'
+import { createMemoryTools } from './memory-tools.js'
 
 export const SUB_AGENT_TOOL_NAMES = [
   'list_files',
@@ -25,6 +29,7 @@ export const SUB_AGENT_TOOL_NAMES = [
   'load_skill',
   'web_fetch',
   'web_search',
+  'memory_read',
 ] as const
 
 function summarizeServerEndpoint(config: McpServerConfig): string {
@@ -54,6 +59,9 @@ export async function createDefaultToolRegistry(args: {
   cwd: string
   runtime: RuntimeConfig | null
   plan?: PlanManager
+  memoryStore?: MemoryFilesystem
+  memoryRetriever?: MemoryRetriever
+  onMemoryOutcome?: (action: ActionType, success: boolean) => void
 }): Promise<ToolRegistry> {
   const skills = await discoverSkills(args.cwd)
   const mcpServers = args.runtime?.mcpServers ?? {}
@@ -72,6 +80,9 @@ export async function createDefaultToolRegistry(args: {
     createLoadSkillTool(args.cwd),
     webFetchTool,
     webSearchTool,
+    ...(args.memoryStore && args.memoryRetriever
+      ? createMemoryTools(args.memoryStore, args.memoryRetriever, args.onMemoryOutcome)
+      : []),
   ], {
     skills,
     mcpServers: buildConnectingMcpSummaries(mcpServers),
