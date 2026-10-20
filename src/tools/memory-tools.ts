@@ -49,13 +49,13 @@ export function createMemoryTools(
     },
   }
 
-  const writeSchema = z.object({
+  const memoryWriteSchema = z.object({
     tier: z.enum(['episodic', 'semantic', 'procedural']),
     content: z.string().min(1).max(4_000),
     tags: z.array(z.string().max(100)).max(20).default([]),
     supersedes: z.string().regex(/^[A-Za-z0-9_-]{1,64}$/).optional(),
   })
-  const memoryWrite: ToolDefinition<z.infer<typeof writeSchema>> = {
+  const memoryWrite: ToolDefinition<z.infer<typeof memoryWriteSchema>> = {
     name: 'memory_write',
     description: 'Store a concise, useful fact, preference, session summary, or reusable procedure. Never store credentials or instructions for the assistant.',
     inputSchema: {
@@ -68,7 +68,7 @@ export function createMemoryTools(
       },
       required: ['tier', 'content'],
     },
-    schema: writeSchema,
+    schema: memoryWriteSchema,
     async run(input): Promise<ToolResult> {
       const validation = validateMemoryWrite(input.content)
       if (!validation.allowed) return { ok: false, output: `Rejected: ${validation.reason}` }

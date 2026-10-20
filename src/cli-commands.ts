@@ -12,7 +12,6 @@ import type { ToolRegistry } from './tool.js'
 import type { PlanManager } from './plan/manager.js'
 import { formatPlan } from './plan/context.js'
 import type { MemoryFilesystem } from './memory/filesystem.js'
-import { generateHealthReport, formatHealthReport } from './memory/health.js'
 
 export type SlashCommand = {
   name: string
@@ -294,7 +293,13 @@ export async function tryHandleLocalCommand(
     const files = await discoverInstructionFiles(cwd)
     let output = renderMemoryReport(files, cwd)
     if (context?.memoryStore) {
-      output += `\n\n${formatHealthReport(await generateHealthReport(context.memoryStore))}`
+      try {
+        const { generateHealthReport, formatHealthReport } = await import('./memory/health.js')
+        const report = await generateHealthReport(context.memoryStore)
+        output += `\n\n${formatHealthReport(report)}`
+      } catch {
+        // Memory health is optional and must not hide the instruction-file report.
+      }
     }
     return output
   }

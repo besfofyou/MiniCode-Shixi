@@ -64,6 +64,16 @@ export class MemoryFilesystem {
     }
   }
 
+  private async appendIndex(entry: MemoryEntry): Promise<void> {
+    await appendFile(path.join(this.root, '_index.jsonl'), `${JSON.stringify({
+      id: entry.id,
+      tier: entry.tier,
+      tags: entry.tags,
+      tokens: tokenize(entry.content),
+      updatedAt: entry.updatedAt,
+    })}\n`, 'utf8')
+  }
+
   async ensureStructure(): Promise<void> {
     await Promise.all(TIERS.map(tier => mkdir(path.join(this.root, tier), { recursive: true })))
     const schemaPath = path.join(this.root, '_schema.json')
@@ -115,13 +125,7 @@ export class MemoryFilesystem {
 
       const filePath = this.entryPath(tier, entry.id)
       await this.atomicWrite(filePath, `${JSON.stringify(entry, null, 2)}\n`)
-      await appendFile(path.join(this.root, '_index.jsonl'), `${JSON.stringify({
-        id: entry.id,
-        tier: entry.tier,
-        tags: entry.tags,
-        tokens: tokenize(entry.content),
-        updatedAt: entry.updatedAt,
-      })}\n`, 'utf8')
+      await this.appendIndex(entry)
       return entry
     })
   }

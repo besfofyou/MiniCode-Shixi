@@ -34,32 +34,6 @@ function extractText(message: ChatMessage): string | null {
   return null
 }
 
-function safeTags(value: unknown): string[] {
-  if (!Array.isArray(value)) return []
-  return value.filter((tag): tag is string => typeof tag === 'string')
-    .map(tag => tag.trim().slice(0, 100)).filter(Boolean).slice(0, 10)
-}
-
-async function writeValidated(
-  store: MemoryFilesystem,
-  tier: 'semantic' | 'procedural' | 'episodic',
-  content: unknown,
-  tags: unknown,
-  sessionId: string,
-  trigger: 'auto_distill' | 'session_end',
-): Promise<boolean> {
-  if (typeof content !== 'string' || content.trim().length < 10) return false
-  const normalized = content.trim().slice(0, 500)
-  if (!validateMemoryWrite(normalized).allowed) return false
-  await store.write(tier, normalized, {
-    tags: safeTags(tags),
-    source: { sessionId, trigger },
-    confidence: tier === 'episodic' ? 0.8 : 0.6,
-    origin: 'agent',
-  })
-  return true
-}
-
 export async function distillSessionEnd(
   messages: ChatMessage[],
   model: ModelAdapter,
@@ -85,12 +59,33 @@ export async function distillSessionEnd(
     let factsCount = 0
     let skillsCount = 0
     for (const fact of extracted.facts.slice(0, 5)) {
-      if (await writeValidated(store, 'semantic', fact.content, fact.tags, sessionId, 'auto_distill')) factsCount++
+      if (typeof fact.content !== 'string' || !fact.content || fact.content.length < 10 || !validateMemoryWrite(fact.content).allowed) continue
+      await store.write('semantic', fact.content, {
+        tags: Array.isArray(fact.tags) ? fact.tags.filter((tag): tag is string => typeof tag === 'string') : [],
+        source: { sessionId, trigger: 'auto_distill' },
+        confidence: 0.6,
+        origin: 'agent',
+      })
+      factsCount++
     }
     for (const skill of extracted.skills.slice(0, 3)) {
-      if (await writeValidated(store, 'procedural', skill.content, skill.tags, sessionId, 'auto_distill')) skillsCount++
+      if (typeof skill.content !== 'string' || !skill.content || skill.content.length < 20 || !validateMemoryWrite(skill.content).allowed) continue
+      await store.write('procedural', skill.content, {
+        tags: Array.isArray(skill.tags) ? skill.tags.filter((tag): tag is string => typeof tag === 'string') : [],
+        source: { sessionId, trigger: 'auto_distill' },
+        confidence: 0.6,
+        origin: 'agent',
+      })
+      skillsCount++
     }
-    await writeValidated(store, 'episodic', extracted.summary, ['session-summary'], sessionId, 'session_end')
+    if (extracted.summary.length > 10 && validateMemoryWrite(extracted.summary).allowed) {
+      await store.write('episodic', extracted.summary, {
+        tags: ['session-summary'],
+        source: { sessionId, trigger: 'session_end' },
+        confidence: 0.8,
+        origin: 'agent',
+      })
+    }
     return { factsCount, skillsCount }
   } catch {
     return { factsCount: 0, skillsCount: 0 }

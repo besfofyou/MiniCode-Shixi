@@ -33,33 +33,25 @@ export class AdaptiveMemoryController {
   }
 
   private warmStartPriors(): void {
-    const phases: Phase[] = ['early', 'late']
-    const storeStates: StoreState[] = ['empty', 'sparse', 'moderate', 'rich']
-    const agentStates: AgentState[] = ['normal', 'stuck', 'repeating']
-    for (const phase of phases) {
-      for (const storeState of storeStates) {
-        for (const agentState of agentStates) {
-          const key = `${phase}:${storeState}:${agentState}`
-          const priors = new Map<ActionType, ActionStats>()
-          if (storeState === 'empty') {
-            priors.set('noop', { value: phase === 'early' ? 0.8 : 0.6, count: 1 })
-          } else if (agentState === 'repeating' && (storeState === 'moderate' || storeState === 'rich')) {
-            priors.set('inject_procedural', { value: phase === 'late' ? 0.85 : 0.8, count: 1 })
-            priors.set('retrieve', { value: 0.45, count: 1 })
-            priors.set('noop', { value: 0.05, count: 1 })
-          } else {
-            const retrieveValue = agentState === 'stuck' ? 0.9
-              : storeState === 'rich' ? 0.6
-                : storeState === 'moderate' ? 0.5 : 0.45
-            priors.set('retrieve', { value: retrieveValue, count: 1 })
-            priors.set('noop', { value: 0.05, count: 1 })
-            if (storeState === 'moderate' || storeState === 'rich') {
-              priors.set('inject_procedural', { value: 0.15, count: 1 })
-            }
-          }
-          this.qTable.set(key, priors)
-        }
-      }
+    const priors: Array<[string, ActionType, number]> = [
+      ['early:empty:normal', 'noop', 0.8],
+      ['early:empty:stuck', 'noop', 0.7],
+      ['early:sparse:normal', 'retrieve', 0.4],
+      ['early:moderate:normal', 'retrieve', 0.5],
+      ['early:rich:normal', 'retrieve', 0.6],
+      ['late:sparse:stuck', 'retrieve', 0.85],
+      ['late:moderate:stuck', 'retrieve', 0.9],
+      ['late:rich:stuck', 'retrieve', 0.9],
+      ['early:rich:repeating', 'inject_procedural', 0.8],
+      ['late:rich:repeating', 'inject_procedural', 0.85],
+      ['late:moderate:repeating', 'inject_procedural', 0.7],
+      ['late:empty:normal', 'noop', 0.6],
+      ['late:sparse:normal', 'retrieve', 0.5],
+    ]
+
+    for (const [stateKey, action, value] of priors) {
+      if (!this.qTable.has(stateKey)) this.qTable.set(stateKey, new Map())
+      this.qTable.get(stateKey)!.set(action, { value, count: 1 })
     }
   }
 

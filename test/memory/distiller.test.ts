@@ -45,4 +45,40 @@ describe('distillSessionEnd', () => {
       await rm(root, { recursive: true, force: true })
     }
   })
+
+  it('applies the documented minimum lengths for facts, skills, and summaries', async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), 'minicode-distiller-boundaries-'))
+    try {
+      const store = new MemoryFilesystem(root)
+      await store.ensureStructure()
+      const model = new FixedModel({
+        type: 'assistant',
+        content: JSON.stringify({
+          facts: [
+            { content: '123456789' },
+            { content: '1234567890' },
+          ],
+          skills: [
+            { content: 'x'.repeat(19) },
+            { content: 'x'.repeat(20) },
+          ],
+          summary: '1234567890',
+        }),
+      })
+      const messages: ChatMessage[] = [
+        { role: 'user', content: 'First user turn.' },
+        { role: 'assistant', content: 'Assistant response.' },
+        { role: 'user', content: 'Second user turn.' },
+      ]
+      assert.deepEqual(await distillSessionEnd(messages, model, store, 'boundary'), {
+        factsCount: 1,
+        skillsCount: 1,
+      })
+      assert.equal((await store.listTier('semantic')).length, 1)
+      assert.equal((await store.listTier('procedural')).length, 1)
+      assert.equal((await store.listTier('episodic')).length, 0)
+    } finally {
+      await rm(root, { recursive: true, force: true })
+    }
+  })
 })

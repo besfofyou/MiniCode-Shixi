@@ -12,7 +12,11 @@ describe('MemoryFilesystem', () => {
     try {
       const store = new MemoryFilesystem(root)
       await store.ensureStructure()
+      const schema = JSON.parse(await readFile(path.join(root, '_schema.json'), 'utf8')) as { version: number }
+      assert.equal(schema.version, 1)
       const first = await store.write('semantic', 'Project uses TypeScript strict mode.')
+      const index = (await readFile(path.join(root, '_index.jsonl'), 'utf8')).trim().split('\n')
+      assert.equal(JSON.parse(index[0]!).id, first.id)
       const second = await store.write('semantic', 'Project uses TypeScript 5 strict mode.', { supersedes: first.id })
       assert.ok((await store.read('semantic', first.id))?.supersededAt)
       const results = new MemoryRetriever().search('TypeScript strict', await store.listTier('semantic'), { limit: 5 })

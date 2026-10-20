@@ -1,13 +1,12 @@
 import { readFile, readdir } from 'node:fs/promises'
 import path from 'node:path'
 import type { MemoryFilesystem } from './filesystem.js'
-import { validateMemoryWrite } from './safety.js'
 
 export async function bootstrapFromExisting(
   store: MemoryFilesystem,
   cwd: string,
 ): Promise<{ imported: number }> {
-  const existingEntries = await store.listTierAll('semantic')
+  const existingEntries = await store.listTier('semantic')
   if (existingEntries.some(entry => entry.tags.includes('_bootstrap'))) return { imported: 0 }
 
   let imported = 0
@@ -17,9 +16,9 @@ export async function bootstrapFromExisting(
     for (const directory of directories) {
       if (!directory.isDirectory()) continue
       try {
-        const content = (await readFile(path.join(skillsDir, directory.name, 'SKILL.md'), 'utf8')).trim().slice(0, 4_000)
-        if (!validateMemoryWrite(content).allowed) continue
-        await store.write('procedural', content, {
+        const content = await readFile(path.join(skillsDir, directory.name, 'SKILL.md'), 'utf8')
+        if (!content.trim()) continue
+        await store.write('procedural', content.slice(0, 3_000), {
           tags: ['_bootstrap', `skill:${directory.name}`],
           source: { sessionId: 'bootstrap', trigger: 'migration' },
           confidence: 0.9,
@@ -35,7 +34,7 @@ export async function bootstrapFromExisting(
   }
 
   if (imported > 0) {
-    await store.write('semantic', `Memory bootstrap completed (${imported} skills imported).`, {
+    await store.write('semantic', `Bootstrapped ${imported} skills from .mini-code/skills/`, {
       tags: ['_bootstrap'],
       source: { sessionId: 'bootstrap', trigger: 'migration' },
       confidence: 1,

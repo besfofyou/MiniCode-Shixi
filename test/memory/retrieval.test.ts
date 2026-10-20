@@ -33,7 +33,7 @@ describe('MemoryRetriever', () => {
       entry({ id: 'user', content: 'TypeScript setup uses strict mode.', origin: 'user' }),
       entry({ id: 'other', content: 'Database runs on PostgreSQL.' }),
     ], { limit: 5 })
-    assert.deepEqual(results.map(result => result.entry.id), ['user', 'agent'])
+    assert.deepEqual(results.map(result => result.entry.id), ['user', 'agent', 'other'])
   })
 
   it('filters obsolete and superseded entries unless explicitly requested', () => {
@@ -46,10 +46,23 @@ describe('MemoryRetriever', () => {
     assert.equal(retriever.search('React application', entries, { limit: 5, includeSuperseded: true }).length, 2)
   })
 
-  it('handles empty, unmatched, and CJK queries', () => {
+  it('scores unmatched candidates and handles empty and CJK queries', () => {
     const entries = [entry({ id: '1', content: '项目使用 TypeScript 严格模式' })]
     assert.equal(retriever.search('', entries, { limit: 5 }).length, 0)
-    assert.equal(retriever.search('unrelated', entries, { limit: 5 }).length, 0)
+    assert.equal(retriever.search('unrelated', entries, { limit: 5 }).length, 1)
     assert.equal(retriever.search('严格模式', entries, { limit: 5 }).length, 1)
+  })
+
+  it('applies exponential recency decay independently of memory tier', () => {
+    const recent = entry({ id: 'recent', content: 'same matching memory', tier: 'semantic' })
+    const old = entry({
+      id: 'old',
+      content: 'same matching memory',
+      tier: 'semantic',
+      lastAccessedAt: new Date(Date.now() - 60 * 86_400_000).toISOString(),
+    })
+    const results = retriever.search('matching memory', [old, recent], { limit: 2 })
+    assert.equal(results[0]?.entry.id, 'recent')
+    assert.ok(results[0]!.score > results[1]!.score)
   })
 })

@@ -1,4 +1,3 @@
-import { TIER_POLICIES } from './constants.js'
 import { tokenize } from './filesystem.js'
 import type { MemoryEntry, ScoredEntry } from './types.js'
 
@@ -15,8 +14,8 @@ export class MemoryRetriever {
   search(query: string, entries: MemoryEntry[], options: SearchOptions): ScoredEntry[] {
     const candidates = entries.filter(entry =>
       !entry.obsolete && (options.includeSuperseded || entry.supersededAt === null))
-    const queryTokens = [...new Set(tokenize(query))]
-    if (candidates.length === 0 || queryTokens.length === 0 || options.limit <= 0) return []
+    const queryTokens = tokenize(query)
+    if (candidates.length === 0 || queryTokens.length === 0) return []
 
     const tokenized = candidates.map(entry => tokenize(entry.content))
     const lengths = tokenized.map(tokens => tokens.length)
@@ -28,7 +27,7 @@ export class MemoryRetriever {
       }
     }
 
-    const recencyWeight = Math.max(0, Math.min(1, options.recencyWeight ?? 0.25))
+    const recencyWeight = options.recencyWeight ?? 0.25
     const now = Date.now()
     const scored: ScoredEntry[] = []
     candidates.forEach((entry, index) => {
@@ -44,11 +43,8 @@ export class MemoryRetriever {
         bm25 += idf * (frequency * (this.k1 + 1)) /
           (frequency + this.k1 * (1 - this.b + this.b * tokens.length / avgDocLen))
       }
-      if (bm25 === 0) return
-
-      const days = Math.max(0, (now - Date.parse(entry.lastAccessedAt)) / 86_400_000)
-      const decayDays = TIER_POLICIES[entry.tier].decayDays
-      const recency = decayDays ? Math.exp(-Math.LN2 * days / decayDays) : 1
+      const days = (now - Date.parse(entry.lastAccessedAt)) / 86_400_000
+      const recency = Math.exp(-0.03 * days)
       const access = Math.log1p(Math.max(0, entry.accessCount)) / 10
       const originBonus = entry.origin === 'user' ? 0.15 : 0
       const score = (1 - recencyWeight) * sigmoid(bm25) + recencyWeight * recency +

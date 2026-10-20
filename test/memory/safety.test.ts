@@ -5,6 +5,7 @@ import { looksLikeCredential, validateMemoryWrite } from '../../src/memory/safet
 describe('memory write safety', () => {
   it('accepts concise normal content and rejects empty or excessive content', () => {
     assert.equal(validateMemoryWrite('User prefers strict TypeScript.').allowed, true)
+    assert.equal(validateMemoryWrite('x'.repeat(4_000)).allowed, true)
     assert.equal(validateMemoryWrite('   ').allowed, false)
     assert.match(validateMemoryWrite('x'.repeat(4_001)).reason ?? '', /4000/)
   })

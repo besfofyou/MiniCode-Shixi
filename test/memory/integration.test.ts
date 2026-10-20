@@ -32,13 +32,28 @@ describe('ASFM integration', () => {
     }
   })
 
-  it('keeps unrelated content out of prompt and respects memory disable flag', async () => {
+  it('keeps the instruction report available when dynamic memory health fails', async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), 'minicode-asfm-health-error-'))
+    try {
+      const expected = await tryHandleLocalCommand('/memory', { cwd: root })
+      const failingStore = {
+        listTierAll: async () => { throw new Error('simulated memory read failure') },
+      } as unknown as import('../../src/memory/filesystem.js').MemoryFilesystem
+      const actual = await tryHandleLocalCommand('/memory', { cwd: root, memoryStore: failingStore })
+      assert.equal(actual, expected)
+    } finally {
+      await rm(root, { recursive: true, force: true })
+    }
+  })
+
+  it('uses the recency score for unmatched candidates and respects memory disable flag', async () => {
     const root = await mkdtemp(path.join(os.tmpdir(), 'minicode-asfm-'))
     try {
       const runtime = await MemoryRuntime.create(root, path.join(root, 'memory'))
       await runtime.store.write('semantic', 'Project uses PostgreSQL for the database.')
       const prompt = await buildSystemPrompt(root, [], { memory: runtime.promptExtras('How are files named?') })
-      assert.doesNotMatch(prompt, /Recalled Memories/)
+      assert.match(prompt, /Recalled Memories/)
+      assert.match(prompt, /PostgreSQL/)
     } finally {
       await rm(root, { recursive: true, force: true })
     }
