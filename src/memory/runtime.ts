@@ -85,9 +85,26 @@ export class MemoryRuntime {
     this.lastToolNames = [...this.lastToolNames, ...this.turnToolNames, ...(args.toolNames ?? [])].slice(-8)
     this.turnToolNames = []
     this.turnHadToolError = false
-    if (this.pendingDecision && this.pendingDecision.action !== 'noop' && process.env.MINI_CODE_MEMORY_CONTROLLER !== '0') {
-      this.controller.update(this.pendingDecision.stateKey, this.pendingDecision.action,
-        args.outcome === 'final' && this.pendingFound)
+    if (process.env.MINI_CODE_MEMORY_CONTROLLER !== '0') {
+      if (this.pendingDecision) {
+        const success = this.pendingDecision.action === 'noop'
+          ? (args.outcome === 'final')
+          : (args.outcome === 'final' && this.pendingFound)
+        this.controller.update(
+          this.pendingDecision.stateKey,
+          this.pendingDecision.action,
+          success,
+        )
+      } else {
+        const implicitState = inferControllerState({
+          turnIndex: this.turnIndex,
+          totalEntries: await this.countEntries(),
+          consecutiveErrors: this.consecutiveErrors,
+          lastToolNames: this.lastToolNames,
+        })
+        const stateKey = `${implicitState.phase}:${implicitState.storeState}:${implicitState.agentState}`
+        this.controller.update(stateKey, 'noop', args.outcome === 'final')
+      }
     }
     this.pendingDecision = null
     this.pendingFound = false

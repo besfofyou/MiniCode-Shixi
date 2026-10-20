@@ -51,7 +51,7 @@ export class AdaptiveMemoryController {
 
     for (const [stateKey, action, value] of priors) {
       if (!this.qTable.has(stateKey)) this.qTable.set(stateKey, new Map())
-      this.qTable.get(stateKey)!.set(action, { value, count: 1 })
+      this.qTable.get(stateKey)!.set(action, { value, count: 0 })
     }
   }
 
@@ -63,7 +63,17 @@ export class AdaptiveMemoryController {
     let bestAction = available[0]!
     let bestUcb = -Infinity
     for (const action of available) {
-      const stats = actionMap.get(action) ?? { value: 0.05, count: 1 }
+      const stats = actionMap.get(action) ?? { value: 0.05, count: 0 }
+
+      if (stats.count === 0) {
+        const ucb = stats.value + this.explorationParam * 2
+        if (ucb > bestUcb) {
+          bestUcb = ucb
+          bestAction = action
+        }
+        continue
+      }
+
       const exploration = this.explorationParam * Math.sqrt(Math.log(totalCount + 1) / stats.count)
       const ucb = stats.value + exploration
       if (ucb > bestUcb) {

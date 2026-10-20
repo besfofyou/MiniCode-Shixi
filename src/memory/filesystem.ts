@@ -28,6 +28,7 @@ function isMemoryEntry(value: unknown): value is MemoryEntry {
     entry.confidence! >= 0 && entry.confidence! <= 1 && Array.isArray(entry.tags) &&
     entry.tags.every(tag => typeof tag === 'string') && typeof entry.obsolete === 'boolean' &&
     typeof entry.contentHash === 'string' && (entry.origin === 'agent' || entry.origin === 'user') &&
+    (entry.durability === 'durable' || entry.durability === 'session' || entry.durability === 'volatile') &&
     typeof entry.source === 'object' && entry.source !== null &&
     typeof entry.source.sessionId === 'string'
 }
@@ -91,7 +92,7 @@ export class MemoryFilesystem {
   async write(
     tier: MemoryTier,
     content: string,
-    metadata: Partial<Pick<MemoryEntry, 'tags' | 'supersedes' | 'source' | 'confidence' | 'origin'>> = {},
+    metadata: Partial<Pick<MemoryEntry, 'tags' | 'supersedes' | 'source' | 'confidence' | 'origin' | 'durability'>> = {},
   ): Promise<MemoryEntry> {
     const validation = validateMemoryWrite(content)
     if (!validation.allowed) throw new Error(validation.reason)
@@ -99,6 +100,34 @@ export class MemoryFilesystem {
 
     return this.enqueueWrite(async () => {
       const normalizedContent = content.trim()
+      const hash = createHash('sha256').update(normalizedContent).digest('hex')
+
+      const existing = await this.listTier(tier)
+
+      const exactDup = existing.find(e => e.contentHash === hash)
+      if (exactDup) {
+        exactDup.lastAccessedAt = new Date().toISOString()
+        exactDup.accessCount += 1
+        await this.atomicWrite(
+          this.entryPath(tier, exactDup.id),
+          `${JSON.stringify(exactDup, null, 2)}\n`,
+        )
+        return exactDup
+      }
+
+      const newTokens = new Set(tokenize(normalizedContent))
+      for (const old of existing) {
+        const oldTokens = new Set(tokenize(old.content))
+        if (oldTokens.size === 0 || newTokens.size === 0) continue
+        let intersection = 0
+        for (const t of newTokens) { if (oldTokens.has(t)) intersection++ }
+        const overlap = intersection / Math.min(newTokens.size, oldTokens.size)
+        if (overlap > 0.7) {
+          metadata.supersedes = old.id
+          break
+        }
+      }
+
       const now = new Date().toISOString()
       const entry: MemoryEntry = {
         id: randomUUID().slice(0, 12),
@@ -116,8 +145,9 @@ export class MemoryFilesystem {
         tags: [...new Set((metadata.tags ?? []).filter(tag => typeof tag === 'string').map(tag => tag.slice(0, 100)))],
         obsolete: false,
         obsoleteReason: null,
-        contentHash: createHash('sha256').update(normalizedContent).digest('hex'),
+        contentHash: hash,
         origin: metadata.origin ?? 'agent',
+        durability: metadata.durability ?? 'durable',
       }
 
       if (entry.supersedes) await this.markSupersededInternal(entry.supersedes, now)

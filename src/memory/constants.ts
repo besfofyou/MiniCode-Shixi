@@ -8,13 +8,13 @@ export const TIER_POLICIES = {
   semantic: {
     maxEntries: 100,
     maxTotalChars: 50_000,
-    decayDays: null,
+    decayDays: 365,
     hardDeleteDays: null,
   },
   procedural: {
     maxEntries: 30,
     maxTotalChars: 60_000,
-    decayDays: null,
+    decayDays: 180,
     hardDeleteDays: null,
   },
 } as const

@@ -12,8 +12,7 @@ export class MemoryRetriever {
   private readonly b = 0.75
 
   search(query: string, entries: MemoryEntry[], options: SearchOptions): ScoredEntry[] {
-    const candidates = entries.filter(entry =>
-      !entry.obsolete && (options.includeSuperseded || entry.supersededAt === null))
+    const candidates = entries.filter(entry => !entry.obsolete)
     const queryTokens = tokenize(query)
     if (candidates.length === 0 || queryTokens.length === 0) return []
 
@@ -47,8 +46,20 @@ export class MemoryRetriever {
       const recency = Math.exp(-0.03 * days)
       const access = Math.log1p(Math.max(0, entry.accessCount)) / 10
       const originBonus = entry.origin === 'user' ? 0.15 : 0
-      const score = (1 - recencyWeight) * sigmoid(bm25) + recencyWeight * recency +
-        0.05 * access + 0.1 * entry.confidence + originBonus
+
+      const supersededPenalty = entry.supersededAt ? 0.3 : 1.0
+
+      const durabilityWeight = entry.durability === 'volatile' ? 0.5
+        : entry.durability === 'session' ? 0.7
+          : 1.0
+
+      const score = (
+        (1 - recencyWeight) * sigmoid(bm25)
+        + recencyWeight * recency
+        + 0.05 * access
+        + 0.1 * entry.confidence
+        + originBonus
+      ) * supersededPenalty * durabilityWeight
       scored.push({ entry, score })
     })
     return scored.sort((a, b) => b.score - a.score).slice(0, Math.floor(options.limit))

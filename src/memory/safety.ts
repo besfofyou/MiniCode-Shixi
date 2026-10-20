@@ -13,6 +13,16 @@ const CREDENTIAL_PATTERNS = [
   /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/,
 ]
 
+const VOLATILE_STATE_PATTERNS = [
+  /\b(?:currently|当前|目前|现在)\s+(?:为空|is empty|未初始化|not initialized|on branch)\b/i,
+  /\b(?:暂时|临时|temporarily)\b/i,
+]
+
+const ABSOLUTE_PATH_PATTERNS = [
+  /[A-Z]:\\[\\/]/,
+  /\/(?:home|Users|root|tmp|var)\/\S+/,
+]
+
 export type ValidationResult = {
   allowed: boolean
   reason?: string
@@ -39,4 +49,20 @@ export function validateMemoryWrite(content: string): ValidationResult {
 
 export function looksLikeCredential(content: string): boolean {
   return CREDENTIAL_PATTERNS.some(pattern => pattern.test(content))
+}
+
+export function looksLikeVolatileState(content: string): boolean {
+  return VOLATILE_STATE_PATTERNS.some(pattern => pattern.test(content))
+}
+
+/**
+ * 写入前对内容做清洗，移除绝对路径但不阻止写入。
+ * 在 writeValidated 中调用。
+ */
+export function sanitizeMemoryContent(content: string): string {
+  let sanitized = content
+  for (const pattern of ABSOLUTE_PATH_PATTERNS) {
+    sanitized = sanitized.replace(new RegExp(pattern.source, 'g'), '<local-path>')
+  }
+  return sanitized
 }

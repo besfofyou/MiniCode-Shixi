@@ -23,6 +23,9 @@ export type MemoryEntry = {
   obsoleteReason: string | null
   contentHash: string
   origin: 'agent' | 'user'
+
+  /** 预期持久性：durable=长期有效, session=仅本次会话上下文, volatile=很快过时 */
+  durability: 'durable' | 'session' | 'volatile'
 }
 
 export type ScoredEntry = {
