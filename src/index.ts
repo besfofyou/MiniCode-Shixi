@@ -115,7 +115,7 @@ async function main(): Promise<void> {
         skills: tools.getSkills(),
         mcpServers: tools.getMcpServers(),
         subAgents: { maxConcurrent: subAgents.maxConcurrent },
-        memory: memoryRuntime?.promptExtras(),
+        memory: await memoryRuntime?.promptExtras(),
       }),
     },
   ]
@@ -129,7 +129,7 @@ async function main(): Promise<void> {
         skills: tools.getSkills(),
         mcpServers: tools.getMcpServers(),
         subAgents: { maxConcurrent: subAgents.maxConcurrent },
-        memory: memoryRuntime?.promptExtras(userQuery),
+        memory: await memoryRuntime?.promptExtras(userQuery),
       }),
     }
   }
@@ -204,12 +204,16 @@ async function main(): Promise<void> {
             onAssistantMessage: content => console.log(`\n${content}\n`),
           })
           messages = result.messages
+          const lastAssistantMsg = result.messages
+            .filter((m): m is Extract<ChatMessage, { role: 'assistant' }> => m.role === 'assistant')
+            .at(-1)
           await memoryRuntime?.completeTurn({
             outcome: result.outcome,
             messages: result.messages,
             toolNames: result.messages
               .filter(message => message.role === 'assistant_tool_call')
               .map(message => message.toolName),
+            assistantReply: lastAssistantMsg?.content,
           })
           if (result.error) console.log(`\n${result.error}\n`)
           return result

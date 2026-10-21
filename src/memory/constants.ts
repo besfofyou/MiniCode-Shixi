@@ -20,6 +20,7 @@ export const TIER_POLICIES = {
 } as const
 
 export const MEMORY_CONTEXT_BUDGET = {
+  /** 默认最大注入字符数（当 controller 无明确 budget 时的 fallback） */
   maxInjectionChars: 4_000,
   reservedUtilization: 0.05,
 } as const

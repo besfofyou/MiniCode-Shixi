@@ -17,7 +17,7 @@ describe('ASFM integration', () => {
       const tools = createMemoryTools(runtime.store, runtime.retriever, (action, success) => { void runtime.recordToolOutcome(action, success) })
       assert.deepEqual(tools.map(tool => tool.name), ['memory_read', 'memory_write', 'memory_forget'])
       for (let turn = 0; turn < 4; turn++) await runtime.completeTurn({ outcome: 'final', messages: [] })
-      const prompt = await buildSystemPrompt(root, [], { memory: runtime.promptExtras('What TypeScript build settings does this project use?') })
+      const prompt = await buildSystemPrompt(root, [], { memory: await runtime.promptExtras('What TypeScript build settings does this project use?') })
       assert.match(prompt, /Recalled Memories/)
       assert.match(prompt, /NodeNext/)
       await runtime.completeTurn({ outcome: 'final', messages: [], toolNames: ['read_file'] })
@@ -51,7 +51,7 @@ describe('ASFM integration', () => {
     try {
       const runtime = await MemoryRuntime.create(root, path.join(root, 'memory'))
       await runtime.store.write('semantic', 'Project uses PostgreSQL for the database.')
-      const prompt = await buildSystemPrompt(root, [], { memory: runtime.promptExtras('How are files named?') })
+      const prompt = await buildSystemPrompt(root, [], { memory: await runtime.promptExtras('How are files named?') })
       assert.match(prompt, /Recalled Memories/)
       assert.match(prompt, /PostgreSQL/)
     } finally {
