@@ -4,8 +4,8 @@ import { loadMemory } from './memory.js'
 import type { MemoryFilesystem } from './memory/filesystem.js'
 import type { MemoryRetriever } from './memory/retrieval.js'
 import { MEMORY_CONTEXT_BUDGET } from './memory/constants.js'
-import type { AdaptiveMemoryController, MemoryDecision, StoreQuality } from './memory/controller.js'
-import { classifyQueryIntent, inferControllerState } from './memory/controller.js'
+import type { AdaptiveMemoryController, MemoryDecision } from './memory/controller.js'
+import { inferControllerState } from './memory/controller.js'
 import type { MemoryEntry } from './memory/types.js'
 
 export type MemoryExtras = {
@@ -17,13 +17,6 @@ export type MemoryExtras = {
   lastToolNames: string[]
   userQuery?: string
   onDecision?: (decision: MemoryDecision, found: boolean) => void
-  /** 新增：注入记忆后回调注入的 entry IDs */
-  onInjectedIds?: (ids: string[]) => void
-  /** 新增：当前 context 利用率，由 tty-app 或 index 传入 */
-  contextUtilization?: number
-  /** 新增：最近几轮检索过的 entry IDs */
-  recentRetrievalIds?: string[]
-  storeQuality?: StoreQuality
 }
 
 export async function buildSystemPrompt(
@@ -136,41 +129,29 @@ export async function buildSystemPrompt(
     const tiers = ['episodic', 'semantic', 'procedural'] as const
     const tierEntries: MemoryEntry[][] = await Promise.all(tiers.map(tier => memory.store.listTier(tier)))
     const allEntries = tierEntries.flat()
-    const queryIntent = memory.userQuery
-      ? classifyQueryIntent(memory.userQuery)
-      : 'unknown'
     const state = inferControllerState({
       turnIndex: memory.turnIndex,
       totalEntries: allEntries.length,
       consecutiveErrors: memory.consecutiveErrors,
       lastToolNames: memory.lastToolNames,
-      contextUtilization: memory.contextUtilization,
-      queryIntent,
-      storeQuality: memory.storeQuality,
     })
     const forced = process.env.MINI_CODE_MEMORY_CONTROLLER === '0'
     const decision = forced
-      ? { action: 'retrieve' as const, stateKey: `${state.phase}:${state.storeState}:${state.agentState}`, params: { topK: 3, tier: 'all' as const, budgetChars: MEMORY_CONTEXT_BUDGET.maxInjectionChars } }
+      ? { action: 'retrieve' as const, stateKey: `${state.phase}:${state.storeState}:${state.agentState}`, params: { topK: 3, tier: 'all' as const } }
       : memory.controller.selectAction(state)
     if (decision.action !== 'noop' && memory.userQuery) {
       const candidates = decision.params.tier === 'all'
         ? allEntries
         : allEntries.filter(entry => entry.tier === decision.params.tier)
       const results = memory.retriever.search(memory.userQuery, candidates, { limit: decision.params.topK })
-      const recentIds = new Set(memory.recentRetrievalIds ?? [])
-      const filteredResults = results.filter(({ entry }) => !recentIds.has(entry.id))
-      // 如果全被过滤了，放宽限制——至少保留 top 1
-      const finalResults = filteredResults.length > 0
-        ? filteredResults
-        : results.slice(0, 1)
-      await Promise.all(finalResults.map(({ entry }) => memory.store.read(entry.tier, entry.id)))
-      memory.onDecision?.(decision, finalResults.length > 0)
+      await Promise.all(results.map(({ entry }) => memory.store.read(entry.tier, entry.id)))
+      memory.onDecision?.(decision, results.length > 0)
       if (process.env.MINI_CODE_DEBUG_MEMORY === '1') {
-        process.stderr.write(`[memory] ${decision.action} ${finalResults.length ? `${finalResults.length} result(s)` : 'no results'}\n`)
+        process.stderr.write(`[memory] ${decision.action} ${results.length ? `${results.length} result(s)` : 'no results'}\n`)
       }
-      let budget = decision.params.budgetChars ?? MEMORY_CONTEXT_BUDGET.maxInjectionChars
+      let budget = MEMORY_CONTEXT_BUDGET.maxInjectionChars
       const sections: string[] = []
-      for (const { entry } of finalResults) {
+      for (const { entry } of results) {
         const ageDays = Math.round((Date.now() - Date.parse(entry.createdAt)) / 86_400_000)
         const ageLabel = ageDays === 0 ? 'today'
           : ageDays === 1 ? '1 day ago'
@@ -192,13 +173,6 @@ export async function buildSystemPrompt(
       }
       if (sections.length > 0) {
         parts.push(`# Recalled Memories\n\n${sections.join('\n\n---\n\n')}`)
-      }
-      if (sections.length > 0 && memory.store) {
-        // 通知 runtime 本轮注入了哪些 entry
-        const injectedIds = finalResults.map(({ entry }) => entry.id)
-        // 通过闭包或 onDecision 之外的回调传递
-        // 我们扩展 MemoryExtras 来传递
-        memory.onInjectedIds?.(injectedIds)
       }
     } else if (memory.userQuery) {
       memory.onDecision?.(decision, false)

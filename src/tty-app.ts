@@ -894,7 +894,7 @@ async function refreshSystemPrompt(args: TtyAppArgs, userQuery?: string): Promis
       skills: args.tools.getSkills(),
       mcpServers: args.tools.getMcpServers(),
       subAgents: { maxConcurrent: args.subAgents.maxConcurrent },
-      memory: await args.memoryRuntime?.promptExtras(userQuery),
+      memory: args.memoryRuntime?.promptExtras(userQuery),
     }),
   }
 }
@@ -1461,8 +1461,6 @@ async function executeTtyTurn(
       contextCollapseState: args.contextCollapseState,
       onContextStats(stats) {
         state.contextStats = stats
-        // 新增：同步 utilization 到 memory runtime
-        args.memoryRuntime?.setContextUtilization(stats.utilization)
         rerender()
       },
       async onAutoCompact(result) {
@@ -1489,7 +1487,6 @@ async function executeTtyTurn(
           state.compressionStatus = null
           rerender()
         }, 5000)
-        args.memoryRuntime?.recordCompactTriggered()
       },
       async onContextCollapse(result) {
         if (result.collapsed) {
@@ -1517,7 +1514,6 @@ async function executeTtyTurn(
           state.compressionStatus = null
           rerender()
         }, 5000)
-        args.memoryRuntime?.recordCompactTriggered()
       },
       onAssistantMessage(content, metadata) {
         const workedForSeconds = metadata?.final
@@ -1689,14 +1685,7 @@ async function executeTtyTurn(
   }
 
   const toolNames = state.recentTools.slice(recentToolCount).map(tool => tool.name)
-  const lastAssistant = [...args.messages].reverse().find(m => m.role === 'assistant')
-  const assistantReply = lastAssistant?.role === 'assistant' ? lastAssistant.content : undefined
-  await args.memoryRuntime?.completeTurn({
-    outcome: result.outcome,
-    messages: args.messages,
-    toolNames,
-    assistantReply,
-  })
+  await args.memoryRuntime?.completeTurn({ outcome: result.outcome, messages: args.messages, toolNames })
   finalizeDanglingRunningTools(state)
   if (getRunningToolEntries(state).length === 0) {
     setStatus(state, null)
