@@ -1,7 +1,9 @@
+import { randomUUID } from 'node:crypto'
 import type { ModelAdapter, ChatMessage } from '../types.js'
 import type { MemoryFilesystem } from './filesystem.js'
 import { tokenize } from './filesystem.js'
 import { validateMemoryWrite, sanitizeMemoryContent, looksLikeVolatileState } from './safety.js'
+import type { SkillBank } from './skill-bank.js'
 
 const DISTILL_PROMPT = `Extract concise, durable information useful in a future coding session from the conversation.
 Return only JSON with this shape:
@@ -144,6 +146,7 @@ export async function distillSessionEnd(
   model: ModelAdapter,
   store: MemoryFilesystem,
   sessionId: string,
+  options?: { skillBank?: SkillBank },
 ): Promise<DistillResult> {
   const relevant = messages.filter(message => extractText(message) !== null).slice(-30)
   const userTurnCount = relevant.filter(message => message.role === 'user').length
@@ -198,6 +201,31 @@ export async function distillSessionEnd(
       if (await writeIfNotRedundant('procedural', skill.content, skill.tags, skill.durability)) skillsCount++
     }
     await writeIfNotRedundant('episodic', extracted.summary, ['session-summary'])
+
+    // 将蒸馏出的 skills 同步写入 SkillBank（如果提供了引用）
+    if (extracted.skills.length > 0 && options?.skillBank) {
+      const now = new Date().toISOString()
+      for (const skill of extracted.skills.slice(0, maxSkills)) {
+        if (typeof skill.content !== 'string' || skill.content.trim().length < 10) continue
+        options.skillBank.add({
+          skill_id: `distill_${randomUUID().slice(0, 8)}`,
+          title: skill.content.split(/[。.!？\n]/)[0]?.slice(0, 80) ?? 'Untitled',
+          principle: skill.content,
+          when_to_apply: '',
+          tags: safeTags(skill.tags),
+          usage_count: 0,
+          success_count: 0,
+          lifecycle: 'trial',
+          parent_id: null,
+          generation: 0,
+          children: [],
+          recent_failures: [],
+          createdAt: now,
+          updatedAt: now,
+        }, 'general')
+      }
+    }
+
     return { factsCount, skillsCount }
   } catch {
     return { factsCount: 0, skillsCount: 0 }

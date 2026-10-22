@@ -3,6 +3,7 @@ import type { SkillSummary } from './skills.js'
 import { loadMemory } from './memory.js'
 import type { MemoryFilesystem } from './memory/filesystem.js'
 import type { MemoryRetriever } from './memory/retrieval.js'
+import type { SkillBank } from './memory/skill-bank.js'
 import { MEMORY_CONTEXT_BUDGET } from './memory/constants.js'
 import type { AdaptiveMemoryController, MemoryDecision } from './memory/controller.js'
 import { inferControllerState } from './memory/controller.js'
@@ -12,6 +13,7 @@ export type MemoryExtras = {
   store: MemoryFilesystem
   retriever: MemoryRetriever
   controller: AdaptiveMemoryController
+  skillBank?: SkillBank
   turnIndex: number
   consecutiveErrors: number
   lastToolNames: string[]
@@ -176,6 +178,19 @@ export async function buildSystemPrompt(
       }
     } else if (memory.userQuery) {
       memory.onDecision?.(decision, false)
+    }
+  }
+
+  // ====== 新增：SkillBank 技能注入 ======
+  if (memory?.store) {
+    // 获取 MemoryRuntime 的 skillBank（通过 extras 传入）
+    const skillBankExtras = memory.skillBank
+    if (skillBankExtras && memory.userQuery) {
+      const retrieved = skillBankExtras.retrieve(memory.userQuery)
+      const skillPrompt = skillBankExtras.formatPrompt(retrieved)
+      if (skillPrompt && skillPrompt !== 'No relevant skills found.') {
+        parts.push(`# Learned Skills (dynamic)\n\n${skillPrompt}`)
+      }
     }
   }
 

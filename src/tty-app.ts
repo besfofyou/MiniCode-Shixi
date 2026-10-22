@@ -1373,6 +1373,34 @@ async function handleInput(
     return false
   }
 
+  if (input === '/skillbank') {
+    const bank = args.memoryRuntime?.skillBank
+    if (!bank) {
+      pushTranscriptEntry(state, {
+        kind: 'assistant',
+        body: 'SkillBank not initialized.',
+      })
+      return false
+    }
+    const counts = bank.counts()
+    const skills = bank.allSkills()
+    const lines = [
+      `SkillBank: ${counts.total} skills (${counts.general} general, ${counts.taskSpecific} task-specific)`,
+      '',
+      ...skills.map(s => {
+        const fitness = s.usage_count >= 5
+          ? (s.success_count / Math.max(s.usage_count, 1)).toFixed(2)
+          : 'warmup'
+        return `  [${s.lifecycle}] ${s.title} (fitness: ${fitness}, used: ${s.usage_count})`
+      })
+    ]
+    pushTranscriptEntry(state, {
+      kind: 'assistant',
+      body: lines.join('\n'),
+    })
+    return false
+  }
+
   const localCommandResult = await tryHandleLocalCommand(input, {
     cwd: args.cwd,
     tools: args.tools,

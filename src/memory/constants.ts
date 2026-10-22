@@ -23,3 +23,11 @@ export const MEMORY_CONTEXT_BUDGET = {
   maxInjectionChars: 4_000,
   reservedUtilization: 0.05,
 } as const
+
+export const SKILL_BANK_CONFIG = {
+  defaultBankFileName: 'skill-bank.json',
+  maxGeneralSkills: 30,
+  maxTaskSpecificPerGroup: 20,
+  maxCommonMistakes: 10,
+  retrieveTopK: 6,
+} as const
