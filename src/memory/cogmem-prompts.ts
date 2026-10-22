@@ -1,21 +1,16 @@
 /** 结构化信息抽取 prompt（对应 CogMem ATOMIC_EXTRACTION） */
-export const EXTRACTION_SYSTEM_PROMPT = `You are an expert information extractor for a coding assistant's memory system.
-Extract structured information from the conversation between a user and a coding assistant.
-
-Extract the following:
-1. **Events**: Specific occurrences — what the user requested, what the assistant did.
-   Format: {"type":"event","title":"...","participants":[...],"time":"...","concepts":[...]}
-2. **Facts**: Objective, durable project details, user preferences, tech stack info.
-   Format: {"type":"fact","subject":"...","predicate":"...","object":"..."}
-3. **Claims**: Subjective statements, opinions, preferences expressed by the user.
-   Format: {"type":"claim","source":"...","target":"...","content":"..."}
-
-Guidelines:
-- Extract only what is explicitly stated.
-- Use exact names and terms from the conversation.
-- Do NOT extract transient runtime state (current branch, empty dirs, etc.).
-- Do NOT include credentials, secrets, or absolute machine paths.
-- Output valid JSON only with "events", "facts", "claims", and "persons" arrays.`
+export const EXTRACTION_SYSTEM_PROMPT = `You extract long-term memory for a coding assistant.
+1. events — things that happened in this session (requests, decisions, fixes, failures):
+   {"title":"User asked to migrate tests to Vitest","description":"...","participants":["User","Assistant"],"time":"yesterday","concepts":["vitest","testing"],"evidence":"<verbatim quote ≤200 chars>"}
+   - participants: "User" for the human, "Assistant" for the agent; first item = primary actor.
+   - time: keep the original relative expression if one is mentioned; otherwise omit.
+   - concepts: REQUIRED, 1-4 short noun phrases (library, module, file area, practice).
+2. facts — durable project knowledge or user preferences:
+   {"subject":"project","predicate":"uses_test_framework","object":"vitest","evidence":"..."}
+3. claims — subjective opinions/judgments:
+   {"source":"User","target":"jest","content":"is too slow for this repo","evidence":"..."}
+Rules: explicit info only; no transient runtime state; no secrets, tokens or absolute paths; "evidence" must be copied verbatim.
+Return ONE JSON object: {"persons":[{"name":"..."}],"concepts":[{"name":"...","description":"..."}],"events":[],"facts":[],"claims":[]}`
 
 export const EXTRACTION_USER_PROMPT = `Extract structured information from the following coding session:
 
@@ -56,24 +51,16 @@ Progress so far:
 
 Decide the next step. What information do we still need?`
 
-/** 记忆巩固 prompt（对应 CogMem MEMORY_CONSOLIDATION） */
-export const CONSOLIDATION_SYSTEM = `You are a memory consolidation expert.
-Analyze extracted events and claims, and synthesize them into high-level, durable Facts.
+/** 记忆巩固 prompt（对应 CogMem MEMORY_CONSOLIDATION） — 按聚类合成 */
+export const CONSOLIDATION_CLUSTER_SYSTEM = `You consolidate episodic memories of a coding assistant into ONE durable semantic fact.
+The events below share the same actor and concept. Write a generalization that will still hold in future sessions
+(a habit, preference, convention, recurring problem, or project property). Do not restate a single event.
+If no durable generalization is supported, return {"skip": true}.
+Return JSON only: {"content":"<one sentence>","predicate":"<snake_case>","confidence":0.0-1.0,"valid_from":"YYYY-MM-DD or null"}`
 
-Rules:
-1. Merge related events sharing the same concept/participants into a single Fact.
-2. Assign confidence 0.0–1.0 based on evidence strength.
-3. Preserve source event IDs for traceability.
-4. Mark temporal info when available.
+export const CONSOLIDATION_USER_TEMPLATE_NOTE = '' // 旧模板可删除
 
-Output JSON: {"facts":[{"subject":"...","predicate":"...","object":"...","confidence":0.0,"sources":["event_id_1"],"temporal_info":"..."}]}`
-
-export const CONSOLIDATION_USER = `Consolidate these events into durable facts:
-
-Events:
-{events}
-
-Existing Facts (avoid duplicates):
-{existing_facts}
-
-Provide consolidated facts as JSON array.`
+export const CONSOLIDATION_CLUSTER_USER = `Actor: {person_name}
+Concept: {concept_name}
+Events (newest first):
+{events_json}`

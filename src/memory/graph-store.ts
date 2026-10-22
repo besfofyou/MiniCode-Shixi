@@ -1,7 +1,7 @@
-import { readFile, writeFile, mkdir } from 'node:fs/promises'
-import path from 'node:path'
+import { readFile, rename } from 'node:fs/promises'
+import { writeJsonAtomic } from './fs-util.js'
 import type {
-  AnyGraphNode, GraphEdge, CogMemNodeType,
+  AnyGraphNode, GraphEdge, CogMemNodeType, EdgeType,
 } from './types.js'
 
 /**
@@ -14,6 +14,9 @@ export class GraphStore {
   private nodes = new Map<string, AnyGraphNode>()
   private edges: GraphEdge[] = []
   private adjacency = new Map<string, Set<string>>()  // node_id → neighbor ids
+  private edgeKeys = new Set<string>()
+
+  private static key(e: GraphEdge) { return `${e.source_id}|${e.target_id}|${e.edge_type}` }
 
   // ---- 节点操作 ----
 
@@ -46,11 +49,15 @@ export class GraphStore {
     for (const neighbors of this.adjacency.values()) {
       neighbors.delete(id)
     }
+    this.edgeKeys = new Set(this.edges.map(GraphStore.key))
   }
 
   // ---- 边操作 ----
 
   addEdge(edge: GraphEdge): void {
+    const k = GraphStore.key(edge)
+    if (this.edgeKeys.has(k)) return
+    this.edgeKeys.add(k)
     this.edges.push(edge)
     if (!this.adjacency.has(edge.source_id)) {
       this.adjacency.set(edge.source_id, new Set())
@@ -60,6 +67,14 @@ export class GraphStore {
     }
     this.adjacency.get(edge.source_id)!.add(edge.target_id)
     this.adjacency.get(edge.target_id)!.add(edge.source_id)
+  }
+
+  getOutEdges(id: string, type?: EdgeType): GraphEdge[] {
+    return this.edges.filter(e => e.source_id === id && (!type || e.edge_type === type))
+  }
+
+  getInEdges(id: string, type?: EdgeType): GraphEdge[] {
+    return this.edges.filter(e => e.target_id === id && (!type || e.edge_type === type))
   }
 
   getNeighbors(nodeId: string, maxDepth = 1, maxResults = 10): AnyGraphNode[] {
@@ -127,29 +142,30 @@ export class GraphStore {
   // ---- 持久化 ----
 
   async save(filePath: string): Promise<void> {
-    await mkdir(path.dirname(filePath), { recursive: true })
-    const data = {
+    await writeJsonAtomic(filePath, {
       schema_version: 2,
       nodes: [...this.nodes.values()],
       edges: this.edges,
-    }
-    await writeFile(filePath, JSON.stringify(data, null, 2), 'utf8')
+    })
   }
 
   async load(filePath: string): Promise<void> {
+    let raw: unknown
     try {
-      const raw = JSON.parse(await readFile(filePath, 'utf8'))
-      this.nodes.clear()
-      this.edges = []
-      this.adjacency.clear()
-      for (const node of (raw.nodes ?? [])) {
-        this.nodes.set(node.node_id, node)
-      }
-      for (const edge of (raw.edges ?? [])) {
-        this.addEdge(edge)
-      }
-    } catch {
-      // 文件不存在或损坏时保持空图
+      raw = JSON.parse(await readFile(filePath, 'utf8'))
+    } catch (e: any) {
+      if (e?.code !== 'ENOENT') await rename(filePath, `${filePath}.corrupt-${Date.now()}`).catch(() => {})
+      return
+    }
+    this.nodes.clear()
+    this.edges = []
+    this.adjacency.clear()
+    this.edgeKeys.clear()
+    for (const node of ((raw as { nodes?: AnyGraphNode[] }).nodes ?? [])) {
+      this.nodes.set(node.node_id, node)
+    }
+    for (const edge of ((raw as { edges?: GraphEdge[] }).edges ?? [])) {
+      this.addEdge(edge)
     }
   }
 }

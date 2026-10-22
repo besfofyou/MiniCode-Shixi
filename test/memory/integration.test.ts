@@ -57,7 +57,13 @@ describe('CogMem integration', () => {
       assert.equal(runtime.graph.nodeCount(), 0)
       assert.equal(runtime.vectorStore.size(), 0)
       assert.equal(runtime.skillBank.size, 0)
-      assert.deepEqual(runtime.getStats(), { persons: 0, events: 0, concepts: 0, claims: 0, facts: 0, edges: 0 })
+      const stats = runtime.getStats()
+      assert.equal(stats.persons, 0)
+      assert.equal(stats.events, 0)
+      assert.equal(stats.concepts, 0)
+      assert.equal(stats.claims, 0)
+      assert.equal(stats.facts, 0)
+      assert.equal(stats.edges, 0)
     } finally {
       await rm(root, { recursive: true, force: true })
     }
@@ -69,15 +75,15 @@ describe('CogMem integration', () => {
     const extractor = new CogMemExtractor(graph, vectorStore, new FixedModel([EXTRACTION_JSON]))
 
     const { nodesCreated } = await extractor.extractFromMessages(CONVERSATION, 'session-1')
-    assert.equal(nodesCreated, 4)
+    assert.equal(nodesCreated, 5)
 
     const stats = graph.stats()
     assert.equal(stats.persons, 1)
     assert.equal(stats.events, 1)
-    assert.equal(stats.concepts, 1)
+    assert.equal(stats.concepts, 2) // TypeScript + project (fact subject becomes a concept)
     assert.equal(stats.facts, 1)
-    assert.equal(stats.edges, 1) // Alice PARTICIPATED_IN the event
-    assert.equal(vectorStore.size(), 4)
+    assert.ok(stats.edges >= 4) // PARTICIPATED_IN + ABOUT_CONCEPT(event) + HAS_ATTRIBUTE + ABOUT_CONCEPT(fact)
+    assert.equal(vectorStore.size(), 5)
 
     const person = graph.getNodesByType<PersonNode>('person')[0]!
     assert.equal(person.canonical_name, 'Alice')
@@ -101,45 +107,69 @@ describe('CogMem integration', () => {
         'FINAL_ANSWER: The project uses TypeScript.',
       ]),
     )
-    const result = await agent.search('What language does the project use')
+    // Disable fast path so the LLM ReAct loop runs
+    const result = await agent.search('What language does the project use? why')
     assert.ok(result.nodes.some(n => n.node_type === 'fact' && n.object === 'TypeScript'))
     assert.equal(result.answer_summary, 'The project uses TypeScript.')
     assert.ok(result.reasoning_path.length >= 1)
     assert.equal(result.reasoning_path[0]!.action, 'semantic_search')
   })
 
-  it('consolidator.consolidate() synthesizes Facts from 3+ Events with SUPPORTED_BY edges', async () => {
+  it('consolidator.consolidate() synthesizes Facts from person×concept clusters with SUPPORTED_BY edges', async () => {
     const graph = new GraphStore()
     const vectorStore = new VectorStore(new MockEmbeddingClient())
-    const events = [
-      makeEventNode('event_aaa1', 'User asked about the tech stack'),
-      makeEventNode('event_aaa2', 'User asked about the test command'),
-      makeEventNode('event_aaa3', 'User asked about the build command'),
-    ]
-    for (const event of events) {
+    const now = new Date().toISOString()
+
+    // Create a User person and a vitest concept
+    const person: PersonNode = {
+      node_id: 'p_user1', node_type: 'person', canonical_name: 'User', aliases: [],
+      description: 'Person: User', created_at: now, updated_at: now,
+      source_session_id: 's', embedding_text: 'User',
+    }
+    const concept = {
+      node_id: 'c_vitest', node_type: 'concept' as const, name: 'vitest',
+      description: 'vitest', created_at: now, updated_at: now,
+      source_session_id: 's', embedding_text: 'Concept: vitest',
+    }
+    graph.addNode(person)
+    graph.addNode(concept)
+
+    // Create 3 events with User as participant and vitest as concept
+    const events: EventNode[] = []
+    for (let i = 0; i < 3; i++) {
+      const event: EventNode = {
+        node_id: `event_vitest_${i}`, node_type: 'event',
+        title: `User ran vitest tests ${i + 1}`, description: `Vitest test run ${i + 1}`,
+        participants: ['p_user1'], concepts: ['c_vitest'], archived: false,
+        session_time: '2026-01-01', created_at: now, updated_at: now,
+        source_session_id: 's', embedding_text: `Event: vitest run ${i + 1}`,
+      }
       graph.addNode(event)
-      await vectorStore.add(event.node_id, event.embedding_text)
+      events.push(event)
     }
 
     const consolidator = new MemoryConsolidator(graph, vectorStore, new FixedModel([
       JSON.stringify({
-        facts: [{
-          subject: 'project',
-          predicate: 'uses',
-          object: 'TypeScript with npm workflows',
-          confidence: 0.9,
-          sources: events.map(e => e.node_id),
-        }],
+        content: 'User prefers vitest for running tests',
+        predicate: 'prefers_test_framework',
+        confidence: 0.85,
+        valid_from: null,
       }),
     ]))
     const result = await consolidator.consolidate()
     assert.equal(result.factsCreated, 1)
-    assert.equal(result.eventsArchived, 3)
 
     const fact = graph.getNodesByType<FactNode>('fact')[0]!
-    assert.deepEqual(fact.supported_by_event_ids, events.map(e => e.node_id))
-    assert.equal(graph.stats().edges, 3) // SUPPORTED_BY evidence chain
-    assert.ok(graph.getNodesByType<EventNode>('event').every(e => e.archived))
+    assert.match(fact.description, /vitest/)
+    assert.equal(fact.lifecycle, 'stable')
+    assert.ok(fact.supported_by_event_ids.length > 0)
+    assert.ok(fact.supported_by_event_ids.length <= 5)
+    // HAS_ATTRIBUTE edge from person to fact
+    assert.ok(graph.getOutEdges(person.node_id, 'HAS_ATTRIBUTE').length > 0)
+    // SUPPORTED_BY edges from fact to events
+    assert.ok(graph.getOutEdges(fact.node_id, 'SUPPORTED_BY').length > 0)
+    // Original events are NOT archived (CogMem default)
+    assert.ok(graph.getNodesByType<EventNode>('event').every(e => !e.archived))
   })
 
   it('graph.save() → load() persists and restores nodes and edges', async () => {

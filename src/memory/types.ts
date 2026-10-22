@@ -85,6 +85,9 @@ export type ScoredEntry = {
 /** CogMem 节点类型枚举 */
 export type CogMemNodeType = 'person' | 'event' | 'concept' | 'claim' | 'fact'
 
+/** Fact/Claim 生命周期（对应 CogMem 的 candidate / stable / archived） */
+export type MemoryLifecycle = 'candidate' | 'stable' | 'archived'
+
 /** 基础图谱节点 */
 export interface GraphNode {
   node_id: string
@@ -94,6 +97,8 @@ export interface GraphNode {
   source_session_id: string
   source_doc_id?: string
   embedding_text: string  // 用于生成 embedding 的文本
+  evidence?: string[]          // 原文片段，最多 3 条（对应 CogMem 的 EvidenceStore）
+  source_sessions?: string[]   // 出现过的会话
 }
 
 /** Person 节点 */
@@ -114,6 +119,7 @@ export interface EventNode extends GraphNode {
   resolved_time?: string   // 解析后的绝对时间
   concepts: string[]       // concept node_id 列表
   archived: boolean
+  session_time?: string        // 会话日期 YYYY-MM-DD
 }
 
 /** Concept 节点 */
@@ -131,6 +137,8 @@ export interface ClaimNode extends GraphNode {
   target?: string           // 关于什么/谁
   content: string
   confidence: number
+  target_id?: string
+  lifecycle?: MemoryLifecycle
 }
 
 /** Fact 节点（语义记忆核心） */
@@ -143,6 +151,15 @@ export interface FactNode extends GraphNode {
   confidence: number
   temporal_info?: string
   supported_by_event_ids: string[]  // 原始证据链
+  subject_id?: string
+  object_id?: string
+  lifecycle?: MemoryLifecycle            // 缺省按 'stable' 处理（兼容旧数据）
+  is_latest?: boolean
+  valid_from?: string
+  valid_to?: string
+  importance?: number
+  mention_count?: number
+  derived_from_event_ids?: string[]      // 参与合成的全部事件（SUPPORTED_BY 只保留 5 条）
 }
 
 /** 所有节点联合类型 */
@@ -151,13 +168,18 @@ export type AnyGraphNode = PersonNode | EventNode | ConceptNode | ClaimNode | Fa
 /** 图谱边类型 */
 export type EdgeType =
   | 'PARTICIPATED_IN'     // Person → Event
+  | 'MENTIONED_IN'        // Person → Event（次要参与者）
   | 'RELATED_TO'          // Concept ↔ Concept
   | 'ABOUT_CONCEPT'       // Event/Claim/Fact → Concept
   | 'CLAIMED_BY'          // Claim → Person
+  | 'CLAIMS'              // Person → Claim
+  | 'ABOUT'               // Claim → Concept/Person
+  | 'HAS_ATTRIBUTE'       // Person → Fact
   | 'SUPPORTED_BY'        // Fact → Event（证据链）
   | 'HAPPENED_BEFORE'     // Event → Event（时间边）
   | 'HAPPENED_DURING'     // Event → Event
   | 'SUPERSEDED_BY'       // Fact → Fact（知识更新）
+  | 'SUPERSEDES'          // Fact → Fact（新事实取代旧事实）
 
 export interface GraphEdge {
   source_id: string
@@ -168,11 +190,16 @@ export interface GraphEdge {
   metadata?: Record<string, unknown>
 }
 
+// LLM 原始输出与图节点分开定义，避免再出现字段名对不上
+export interface RawEvent { title?: string; description?: string; participants?: string[]; time?: string; concepts?: string[]; evidence?: string }
+export interface RawFact  { subject?: string; predicate?: string; object?: string; evidence?: string }
+export interface RawClaim { source?: string; target?: string; content?: string; evidence?: string }
+
 /** 结构化抽取结果 */
 export interface ExtractionResult {
-  events: Omit<EventNode, 'node_id' | 'created_at' | 'updated_at' | 'embedding_text'>[]
-  facts: Omit<FactNode, 'node_id' | 'created_at' | 'updated_at' | 'embedding_text'>[]
-  claims: (Omit<ClaimNode, 'node_id' | 'created_at' | 'updated_at' | 'embedding_text'> & { source?: string })[]
+  events: RawEvent[]
+  facts: RawFact[]
+  claims: RawClaim[]
   persons: { name: string; aliases?: string[] }[]
   concepts: { name: string; description?: string }[]
 }

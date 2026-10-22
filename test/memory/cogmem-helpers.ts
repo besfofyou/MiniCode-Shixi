@@ -10,6 +10,10 @@ export class MockEmbeddingClient implements EmbeddingClient {
   dimension(): number {
     return 32
   }
+
+  modelId(): string {
+    return 'mock'
+  }
 }
 
 function vectorFor(text: string): number[] {
