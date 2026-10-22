@@ -1,16 +1,6 @@
+// ---- 保留原有 ----
 export const TIER_POLICIES = {
-  episodic: {
-    maxEntries: 50,
-    maxTotalChars: 100_000,
-    decayDays: 90,
-    hardDeleteDays: 180,
-  },
-  semantic: {
-    maxEntries: 100,
-    maxTotalChars: 50_000,
-    decayDays: 365,
-    hardDeleteDays: null,
-  },
+  // episodic 和 semantic 的策略现在由 GraphStore 管理
   procedural: {
     maxEntries: 30,
     maxTotalChars: 60_000,
@@ -30,4 +20,22 @@ export const SKILL_BANK_CONFIG = {
   maxTaskSpecificPerGroup: 20,
   maxCommonMistakes: 10,
   retrieveTopK: 6,
+} as const
+
+// ---- 新增 ----
+export const COGMEM_CONFIG = {
+  /** SearchAgent 最大迭代次数 */
+  searchMaxIterations: 4,
+  /** 向量检索默认 topK */
+  semanticSearchTopK: 10,
+  /** 锚点检索默认 topK */
+  findAnchorsTopK: 5,
+  /** 图遍历默认深度 */
+  traverseMaxDepth: 1,
+  /** 图遍历默认最大结果数 */
+  traverseMaxResults: 10,
+  /** 记忆巩固最小 Event 数阈值 */
+  consolidationMinEvents: 3,
+  /** 注入 prompt 的最大节点数 */
+  maxInjectedNodes: 8,
 } as const

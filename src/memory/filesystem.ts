@@ -1,3 +1,5 @@
+// 保留 procedural 层功能，删除 episodic/semantic 层
+// episodic 和 semantic 现在由 GraphStore + VectorStore 管理
 import {
   appendFile,
   mkdir,
@@ -12,16 +14,16 @@ import path from 'node:path'
 import { MINI_CODE_DIR } from '../config.js'
 import { TIER_POLICIES } from './constants.js'
 import { validateMemoryWrite } from './safety.js'
-import { MEMORY_SCHEMA_VERSION, type MemoryEntry, type MemoryTier } from './types.js'
+import { MEMORY_SCHEMA_VERSION, type MemoryEntry } from './types.js'
 
 const DEFAULT_MEMORY_ROOT = path.join(MINI_CODE_DIR, 'memory')
-const TIERS: readonly MemoryTier[] = ['episodic', 'semantic', 'procedural']
+const PROCEDURAL_TIER = 'procedural' as const
 
 function isMemoryEntry(value: unknown): value is MemoryEntry {
   if (typeof value !== 'object' || value === null) return false
   const entry = value as Partial<MemoryEntry>
   return typeof entry.id === 'string' && /^[A-Za-z0-9_-]{1,64}$/.test(entry.id) &&
-    typeof entry.schemaVersion === 'number' && TIERS.includes(entry.tier as MemoryTier) &&
+    typeof entry.schemaVersion === 'number' && entry.tier === PROCEDURAL_TIER &&
     typeof entry.content === 'string' && typeof entry.createdAt === 'string' &&
     typeof entry.updatedAt === 'string' && typeof entry.lastAccessedAt === 'string' &&
     Number.isInteger(entry.accessCount) && Number.isFinite(entry.confidence) &&
@@ -47,8 +49,8 @@ export class MemoryFilesystem {
     return result
   }
 
-  private entryPath(tier: MemoryTier, id: string): string {
-    if (!TIERS.includes(tier) || !/^[A-Za-z0-9_-]{1,64}$/.test(id)) {
+  private entryPath(tier: typeof PROCEDURAL_TIER, id: string): string {
+    if (tier !== PROCEDURAL_TIER || !/^[A-Za-z0-9_-]{1,64}$/.test(id)) {
       throw new Error('Invalid memory tier or entry ID.')
     }
     return path.join(this.root, tier, `${id}.json`)
@@ -76,27 +78,18 @@ export class MemoryFilesystem {
   }
 
   async ensureStructure(): Promise<void> {
-    await Promise.all(TIERS.map(tier => mkdir(path.join(this.root, tier), { recursive: true })))
-    const schemaPath = path.join(this.root, '_schema.json')
-    try {
-      await readFile(schemaPath, 'utf8')
-    } catch {
-      await this.atomicWrite(schemaPath, `${JSON.stringify({
-        version: MEMORY_SCHEMA_VERSION,
-        createdAt: new Date().toISOString(),
-      }, null, 2)}\n`)
-    }
-    await this.pruneExpiredEpisodic()
+    // 只创建 procedural 目录
+    await mkdir(path.join(this.root, PROCEDURAL_TIER), { recursive: true })
   }
 
   async write(
-    tier: MemoryTier,
+    tier: typeof PROCEDURAL_TIER,
     content: string,
     metadata: Partial<Pick<MemoryEntry, 'tags' | 'supersedes' | 'source' | 'confidence' | 'origin' | 'durability'>> = {},
   ): Promise<MemoryEntry> {
     const validation = validateMemoryWrite(content)
     if (!validation.allowed) throw new Error(validation.reason)
-    if (!TIERS.includes(tier)) throw new Error('Invalid memory tier.')
+    if (tier !== PROCEDURAL_TIER) throw new Error('Invalid memory tier.')
 
     return this.enqueueWrite(async () => {
       const normalizedContent = content.trim()
@@ -160,7 +153,7 @@ export class MemoryFilesystem {
     })
   }
 
-  async read(tier: MemoryTier, id: string): Promise<MemoryEntry | null> {
+  async read(tier: typeof PROCEDURAL_TIER, id: string): Promise<MemoryEntry | null> {
     let filePath: string
     try {
       filePath = this.entryPath(tier, id)
@@ -189,12 +182,12 @@ export class MemoryFilesystem {
     })
   }
 
-  async listTier(tier: MemoryTier): Promise<MemoryEntry[]> {
+  async listTier(tier: typeof PROCEDURAL_TIER): Promise<MemoryEntry[]> {
     return (await this.listTierAll(tier)).filter(entry => !entry.obsolete)
   }
 
-  async listTierAll(tier: MemoryTier): Promise<MemoryEntry[]> {
-    if (!TIERS.includes(tier)) return []
+  async listTierAll(tier: typeof PROCEDURAL_TIER): Promise<MemoryEntry[]> {
+    if (tier !== PROCEDURAL_TIER) return []
     let files: string[]
     try {
       files = (await readdir(path.join(this.root, tier))).filter(file => /^[A-Za-z0-9_-]{1,64}\.json$/.test(file))
@@ -216,40 +209,34 @@ export class MemoryFilesystem {
   async markObsolete(id: string, reason: string): Promise<boolean> {
     if (!/^[A-Za-z0-9_-]{1,64}$/.test(id)) return false
     return this.enqueueWrite(async () => {
-      for (const tier of TIERS) {
-        const filePath = this.entryPath(tier, id)
-        try {
-          const entry = JSON.parse(await readFile(filePath, 'utf8')) as MemoryEntry
-          entry.obsolete = true
-          entry.obsoleteReason = reason.slice(0, 500)
-          entry.updatedAt = new Date().toISOString()
-          await this.atomicWrite(filePath, `${JSON.stringify(entry, null, 2)}\n`)
-          return true
-        } catch {
-          // Continue searching the other tiers.
-        }
+      const filePath = this.entryPath(PROCEDURAL_TIER, id)
+      try {
+        const entry = JSON.parse(await readFile(filePath, 'utf8')) as MemoryEntry
+        entry.obsolete = true
+        entry.obsoleteReason = reason.slice(0, 500)
+        entry.updatedAt = new Date().toISOString()
+        await this.atomicWrite(filePath, `${JSON.stringify(entry, null, 2)}\n`)
+        return true
+      } catch {
+        return false
       }
-      return false
     })
   }
 
   private async markSupersededInternal(id: string, at: string): Promise<void> {
     if (!/^[A-Za-z0-9_-]{1,64}$/.test(id)) return
-    for (const tier of TIERS) {
-      const filePath = this.entryPath(tier, id)
-      try {
-        const entry = JSON.parse(await readFile(filePath, 'utf8')) as MemoryEntry
-        entry.supersededAt = at
-        entry.updatedAt = at
-        await this.atomicWrite(filePath, `${JSON.stringify(entry, null, 2)}\n`)
-        return
-      } catch {
-        // Continue searching the other tiers.
-      }
+    const filePath = this.entryPath(PROCEDURAL_TIER, id)
+    try {
+      const entry = JSON.parse(await readFile(filePath, 'utf8')) as MemoryEntry
+      entry.supersededAt = at
+      entry.updatedAt = at
+      await this.atomicWrite(filePath, `${JSON.stringify(entry, null, 2)}\n`)
+    } catch {
+      // Superseded entry may no longer exist.
     }
   }
 
-  private async enforceCapacity(tier: MemoryTier, incomingChars: number): Promise<void> {
+  private async enforceCapacity(tier: typeof PROCEDURAL_TIER, incomingChars: number): Promise<void> {
     const policy = TIER_POLICIES[tier]
     if (incomingChars > policy.maxTotalChars) throw new Error(`Memory exceeds ${tier} tier capacity.`)
     for (const entry of await this.listTierAll(tier)) {
@@ -271,24 +258,6 @@ export class MemoryFilesystem {
       entry.obsoleteReason = 'capacity_overflow'
       entry.updatedAt = new Date().toISOString()
       await this.atomicWrite(filePath, `${JSON.stringify(entry, null, 2)}\n`)
-    }
-  }
-
-  private async pruneExpiredEpisodic(): Promise<void> {
-    const policy = TIER_POLICIES.episodic
-    const now = Date.now()
-    const all = await this.listTierAll('episodic')
-    for (const entry of all) {
-      const ageDays = (now - Date.parse(entry.lastAccessedAt)) / 86_400_000
-      const obsoleteAge = (now - Date.parse(entry.updatedAt)) / 86_400_000
-      if (!entry.obsolete && ageDays > policy.decayDays) {
-        entry.obsolete = true
-        entry.obsoleteReason = 'episodic_decay'
-        entry.updatedAt = new Date(now).toISOString()
-        await this.atomicWrite(this.entryPath('episodic', entry.id), `${JSON.stringify(entry, null, 2)}\n`)
-      } else if (entry.obsolete && obsoleteAge > policy.hardDeleteDays) {
-        await unlink(this.entryPath('episodic', entry.id)).catch(() => {})
-      }
     }
   }
 

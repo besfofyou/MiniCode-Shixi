@@ -11,7 +11,7 @@ import { discoverInstructionFiles, renderMemoryReport } from './memory.js'
 import type { ToolRegistry } from './tool.js'
 import type { PlanManager } from './plan/manager.js'
 import { formatPlan } from './plan/context.js'
-import type { MemoryFilesystem } from './memory/filesystem.js'
+import type { MemoryRuntime } from './memory/runtime.js'
 
 export type SlashCommand = {
   name: string
@@ -202,7 +202,7 @@ export async function tryHandleLocalCommand(
     tools?: ToolRegistry
     permissionSummary?: string[]
     plan?: PlanManager
-    memoryStore?: MemoryFilesystem
+    memoryRuntime?: MemoryRuntime
   },
 ): Promise<string | null> {
   const cwd = context?.cwd ?? process.cwd()
@@ -292,13 +292,21 @@ export async function tryHandleLocalCommand(
   if (input === '/memory') {
     const files = await discoverInstructionFiles(cwd)
     let output = renderMemoryReport(files, cwd)
-    if (context?.memoryStore) {
+    if (context?.memoryRuntime) {
       try {
         const { generateHealthReport, formatHealthReport } = await import('./memory/health.js')
-        const report = await generateHealthReport(context.memoryStore)
+        const report = await generateHealthReport(context.memoryRuntime.proceduralStore)
         output += `\n\n${formatHealthReport(report)}`
       } catch {
         // Memory health is optional and must not hide the instruction-file report.
+      }
+      try {
+        const stats = context.memoryRuntime.getStats()
+        output += `\n\nCogMem Knowledge Graph:\n${Object.entries(stats)
+          .map(([key, value]) => `  ${key}: ${value}`)
+          .join('\n')}`
+      } catch {
+        // Graph stats are optional and must not hide the rest of the report.
       }
     }
     return output

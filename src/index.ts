@@ -33,6 +33,7 @@ import {
 } from './compact/context-collapse.js'
 import { createContentReplacementState } from './utils/tool-result-storage.js'
 import { MemoryRuntime } from './memory/runtime.js'
+import { distillSessionEnd } from './memory/distiller.js'
 
 async function main(): Promise<void> {
   const cwd = process.cwd()
@@ -83,11 +84,9 @@ async function main(): Promise<void> {
     cwd,
     runtime,
     plan,
-    memoryStore: memoryRuntime?.store,
-    memoryRetriever: memoryRuntime?.retriever,
-    onMemoryOutcome: (action, success) => {
-      void memoryRuntime?.recordToolOutcome(action, success)
-    },
+    memoryStore: memoryRuntime?.proceduralStore,
+    memoryGraph: memoryRuntime?.graph,
+    memoryVectorStore: memoryRuntime?.vectorStore,
   })
   const mcpHydration = hydrateMcpTools({
     cwd,
@@ -102,6 +101,7 @@ async function main(): Promise<void> {
     process.env.MINI_CODE_MODEL_MODE === 'mock'
       ? new MockModelAdapter()
       : new AnthropicModelAdapter(tools, loadRuntimeConfig)
+  memoryRuntime?.initModel(model)
   const subAgents = new SubAgentManager({
     model,
     tools: tools.subset(SUB_AGENT_TOOL_NAMES),
@@ -115,7 +115,7 @@ async function main(): Promise<void> {
         skills: tools.getSkills(),
         mcpServers: tools.getMcpServers(),
         subAgents: { maxConcurrent: subAgents.maxConcurrent },
-        memory: memoryRuntime?.promptExtras(),
+        memory: memoryRuntime ? { runtime: memoryRuntime } : undefined,
       }),
     },
   ]
@@ -129,7 +129,7 @@ async function main(): Promise<void> {
         skills: tools.getSkills(),
         mcpServers: tools.getMcpServers(),
         subAgents: { maxConcurrent: subAgents.maxConcurrent },
-        memory: memoryRuntime?.promptExtras(userQuery),
+        memory: memoryRuntime ? { runtime: memoryRuntime, userQuery } : undefined,
       }),
     }
   }
@@ -165,7 +165,12 @@ async function main(): Promise<void> {
         resumeTarget: resolvedResumeTarget,
         memoryRuntime,
         distillSession: async (sessionMessages, endedSessionId) => {
-          if (memoryRuntime) await memoryRuntime.distill(sessionMessages, model, endedSessionId)
+          if (memoryRuntime) {
+            await memoryRuntime.distill(sessionMessages, model, endedSessionId)
+            await distillSessionEnd(sessionMessages, model, memoryRuntime.proceduralStore, endedSessionId, {
+              skillBank: memoryRuntime.skillBank,
+            })
+          }
         },
       })
       return
@@ -199,8 +204,6 @@ async function main(): Promise<void> {
             signal: request.signal, maxSteps: request.mode ? 50 : undefined,
             stopOnFatalToolError: !!request.mode,
             modelName: runtime?.model ?? '', contentReplacementState, contextCollapseState,
-            onToolStart: toolName => memoryRuntime?.recordTurnTool(toolName),
-            onToolResult: (toolName, _output, isError) => memoryRuntime?.recordTurnTool(toolName, isError),
             onAssistantMessage: content => console.log(`\n${content}\n`),
           })
           messages = result.messages
@@ -304,7 +307,7 @@ async function main(): Promise<void> {
             tools,
             plan,
             permissionSummary: permissions.getSummary(),
-            memoryStore: memoryRuntime?.store,
+            memoryRuntime,
           })
           if (localCommandResult !== null) {
             console.log(`\n${localCommandResult}\n`)
@@ -339,7 +342,12 @@ async function main(): Promise<void> {
     }
 
     await execution.stop()
-    await memoryRuntime?.distill(messages, model, sessionId)
+    if (memoryRuntime) {
+      await memoryRuntime.distill(messages, model, sessionId)
+      await distillSessionEnd(messages, model, memoryRuntime.proceduralStore, sessionId, {
+        skillBank: memoryRuntime.skillBank,
+      })
+    }
     execution.goal.manager.dispose()
     process.off('SIGINT', stopOnInterrupt)
 
@@ -351,7 +359,7 @@ async function main(): Promise<void> {
   } finally {
     await subAgents.closeAll()
     await mcpHydration
-    await memoryRuntime?.controller.saveToDisk().catch(() => {})
+    await memoryRuntime?.save().catch(() => {})
     await tools.dispose()
   }
 }

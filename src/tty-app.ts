@@ -894,7 +894,7 @@ async function refreshSystemPrompt(args: TtyAppArgs, userQuery?: string): Promis
       skills: args.tools.getSkills(),
       mcpServers: args.tools.getMcpServers(),
       subAgents: { maxConcurrent: args.subAgents.maxConcurrent },
-      memory: args.memoryRuntime?.promptExtras(userQuery),
+      memory: args.memoryRuntime ? { runtime: args.memoryRuntime, userQuery } : undefined,
     }),
   }
 }
@@ -1406,7 +1406,7 @@ async function handleInput(
     tools: args.tools,
     plan: args.plan,
     permissionSummary: args.permissions.getSummary(),
-    memoryStore: args.memoryRuntime?.store,
+    memoryRuntime: args.memoryRuntime,
   })
   if (localCommandResult !== null) {
     pushTranscriptEntry(state, {
@@ -1617,7 +1617,6 @@ async function executeTtyTurn(
         rerender()
       },
       onToolResult(toolName, output, isError) {
-        args.memoryRuntime?.recordTurnTool(toolName, isError)
         const pending = pendingToolEntries.get(toolName) ?? []
         const entryId = pending.shift()
         pendingToolEntries.set(toolName, pending)

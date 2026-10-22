@@ -18,8 +18,8 @@ import { writeFileTool } from './write-file.js'
 import type { PlanManager } from '../plan/manager.js'
 import { createUpdatePlanTool } from './plan.js'
 import type { MemoryFilesystem } from '../memory/filesystem.js'
-import type { MemoryRetriever } from '../memory/retrieval.js'
-import type { ActionType } from '../memory/controller.js'
+import type { GraphStore } from '../memory/graph-store.js'
+import type { VectorStore } from '../memory/vector-store.js'
 import { createMemoryTools } from './memory-tools.js'
 
 export const SUB_AGENT_TOOL_NAMES = [
@@ -60,8 +60,8 @@ export async function createDefaultToolRegistry(args: {
   runtime: RuntimeConfig | null
   plan?: PlanManager
   memoryStore?: MemoryFilesystem
-  memoryRetriever?: MemoryRetriever
-  onMemoryOutcome?: (action: ActionType, success: boolean) => void
+  memoryGraph?: GraphStore
+  memoryVectorStore?: VectorStore
 }): Promise<ToolRegistry> {
   const skills = await discoverSkills(args.cwd)
   const mcpServers = args.runtime?.mcpServers ?? {}
@@ -80,8 +80,12 @@ export async function createDefaultToolRegistry(args: {
     createLoadSkillTool(args.cwd),
     webFetchTool,
     webSearchTool,
-    ...(args.memoryStore && args.memoryRetriever
-      ? createMemoryTools(args.memoryStore, args.memoryRetriever, args.onMemoryOutcome)
+    ...(args.memoryStore && args.memoryGraph && args.memoryVectorStore
+      ? createMemoryTools({
+          store: args.memoryStore,
+          graph: args.memoryGraph,
+          vectorStore: args.memoryVectorStore,
+        })
       : []),
   ], {
     skills,

@@ -44,8 +44,32 @@ export const MINI_CODE_MCP_TOKENS_PATH = path.join(MINI_CODE_DIR, 'mcp-tokens.js
 export const MINI_CODE_MEMORY_PATH = path.join(MINI_CODE_DIR, 'memory')
 export const MINI_CODE_MEMORY_ENABLED = process.env.MINI_CODE_MEMORY !== '0'
 export const MINI_CODE_MEMORY_DISTILL_ENABLED = process.env.MINI_CODE_MEMORY_DISTILL !== '0'
-export const MINI_CODE_MEMORY_CONTROLLER_ENABLED = process.env.MINI_CODE_MEMORY_CONTROLLER !== '0'
 export const MINI_CODE_DEBUG_MEMORY = process.env.MINI_CODE_DEBUG_MEMORY === '1'
+
+// ---- CogMem 记忆管理配置 ----
+export interface CogMemSettings {
+  embeddingApiBase: string   // COGMEM_EMBEDDING_API_BASE
+  embeddingApiKey: string    // COGMEM_EMBEDDING_API_KEY
+  embeddingModel: string     // COGMEM_EMBEDDING_MODEL (默认 BAAI/bge-m3)
+  chatApiBase: string        // 复用 ANTHROPIC_BASE_URL 或单独配置
+  chatApiKey: string         // 复用 ANTHROPIC_AUTH_TOKEN
+  chatModel: string          // 复用 settings.json 中的 model
+}
+
+export function loadCogMemSettings(): CogMemSettings {
+  return {
+    embeddingApiBase: process.env.COGMEM_EMBEDDING_API_BASE
+      ?? process.env.ANTHROPIC_BASE_URL?.replace('/messages', '')
+      ?? 'https://api.siliconflow.cn/v1',
+    embeddingApiKey: process.env.COGMEM_EMBEDDING_API_KEY
+      ?? process.env.SILICONFLOW_API_KEY
+      ?? '',
+    embeddingModel: process.env.COGMEM_EMBEDDING_MODEL ?? 'BAAI/bge-m3',
+    chatApiBase: process.env.ANTHROPIC_BASE_URL ?? '',
+    chatApiKey: process.env.ANTHROPIC_AUTH_TOKEN ?? process.env.ANTHROPIC_API_KEY ?? '',
+    chatModel: process.env.MINI_CODE_MODEL ?? process.env.ANTHROPIC_MODEL ?? '',
+  }
+}
 export const MINI_CODE_PROJECTS_DIR = path.join(MINI_CODE_DIR, 'projects')
 export const CLAUDE_SETTINGS_PATH = path.join(os.homedir(), '.claude', 'settings.json')
 export const PROJECT_MCP_PATH = path.join(process.cwd(), '.mcp.json')

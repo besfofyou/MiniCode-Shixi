@@ -1,5 +1,4 @@
 import type { MemoryFilesystem } from './filesystem.js'
-import type { MemoryTier } from './types.js'
 
 export type StoreHealthReport = {
   timestamp: string
@@ -15,7 +14,8 @@ export type StoreHealthReport = {
 }
 
 export async function generateHealthReport(store: MemoryFilesystem): Promise<StoreHealthReport> {
-  const tiers: MemoryTier[] = ['episodic', 'semantic', 'procedural']
+  // episodic/semantic 现在由 GraphStore 管理，健康报告仅覆盖 procedural 层
+  const tiers = ['procedural'] as const
   let totalEntries = 0
   let obsoleteCount = 0
   let supersededCount = 0

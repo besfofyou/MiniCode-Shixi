@@ -1,8 +1,10 @@
+// distiller.ts 精简后只负责 procedural + SkillBank
+// 语义/情景记忆的抽取由 extractor.ts 的结构化抽取处理
 import { randomUUID } from 'node:crypto'
 import type { ModelAdapter, ChatMessage } from '../types.js'
 import type { MemoryFilesystem } from './filesystem.js'
 import { tokenize } from './filesystem.js'
-import { validateMemoryWrite, sanitizeMemoryContent, looksLikeVolatileState } from './safety.js'
+import { validateMemoryWrite, sanitizeMemoryContent } from './safety.js'
 import type { SkillBank } from './skill-bank.js'
 
 const DISTILL_PROMPT = `Extract concise, durable information useful in a future coding session from the conversation.
@@ -107,7 +109,6 @@ function safeTags(tags: unknown): string[] {
 
 async function writeValidated(
   store: MemoryFilesystem,
-  tier: 'semantic' | 'procedural' | 'episodic',
   content: unknown,
   tags: unknown,
   sessionId: string,
@@ -118,21 +119,10 @@ async function writeValidated(
   const normalized = sanitizeMemoryContent(content.trim().slice(0, 500))
   if (!validateMemoryWrite(normalized).allowed) return false
 
-  let effectiveTier = tier
-  if (tier === 'semantic' && looksLikeVolatileState(normalized)) {
-    effectiveTier = 'episodic'
-  }
-  if (durability === 'volatile' && tier === 'semantic') {
-    effectiveTier = 'episodic'
-  }
-
-  await store.write(effectiveTier, normalized, {
-    tags: [
-      ...safeTags(tags),
-      ...(effectiveTier !== tier ? ['_downgraded_from_' + tier] : []),
-    ],
+  await store.write('procedural', normalized, {
+    tags: safeTags(tags),
     source: { sessionId, trigger },
-    confidence: effectiveTier === 'episodic' ? 0.8 : 0.6,
+    confidence: 0.6,
     origin: 'agent',
     durability: durability === 'durable' || durability === 'session' || durability === 'volatile'
       ? durability
@@ -144,7 +134,7 @@ async function writeValidated(
 export async function distillSessionEnd(
   messages: ChatMessage[],
   model: ModelAdapter,
-  store: MemoryFilesystem,
+  proceduralStore: MemoryFilesystem,
   sessionId: string,
   options?: { skillBank?: SkillBank },
 ): Promise<DistillResult> {
@@ -154,11 +144,10 @@ export async function distillSessionEnd(
     return { factsCount: 0, skillsCount: 0 }
   }
 
-  const maxFacts = userTurnCount <= 3 ? 2 : userTurnCount <= 8 ? 3 : 5
   const maxSkills = userTurnCount <= 3 ? 1 : userTurnCount <= 8 ? 2 : 3
 
   const conversation = compressForDistillation(relevant)
-  const guidanceNote = `\n\n[Note: This was a ${userTurnCount}-turn conversation. Return at most ${maxFacts} facts and ${maxSkills} skills. Prefer merging related information into fewer entries.]`
+  const guidanceNote = `\n\n[Note: This was a ${userTurnCount}-turn conversation. Return at most ${maxSkills} skills. Prefer merging related information into fewer entries.]`
 
   try {
     const response = await model.next([
@@ -170,13 +159,11 @@ export async function distillSessionEnd(
     const extracted = parseDistilledItems(text)
     if (!extracted) return { factsCount: 0, skillsCount: 0 }
 
-    let factsCount = 0
     let skillsCount = 0
 
     const writtenContents: string[] = []
 
     async function writeIfNotRedundant(
-      tier: 'semantic' | 'procedural' | 'episodic',
       content: unknown,
       tags: unknown,
       durability?: unknown,
@@ -189,18 +176,16 @@ export async function distillSessionEnd(
         if (overlap > 0.6) return false
       }
 
-      if (!(await writeValidated(store, tier, normalized, tags, sessionId, 'auto_distill', durability))) return false
+      if (!(await writeValidated(proceduralStore, normalized, tags, sessionId, 'auto_distill', durability))) return false
       writtenContents.push(normalized)
       return true
     }
 
-    for (const fact of extracted.facts.slice(0, maxFacts)) {
-      if (await writeIfNotRedundant('semantic', fact.content, fact.tags, fact.durability)) factsCount++
-    }
+    // 只写入 procedural 层；facts（semantic）和 summary（episodic）
+    // 现在由 extractor.ts 的结构化抽取处理
     for (const skill of extracted.skills.slice(0, maxSkills)) {
-      if (await writeIfNotRedundant('procedural', skill.content, skill.tags, skill.durability)) skillsCount++
+      if (await writeIfNotRedundant(skill.content, skill.tags, skill.durability)) skillsCount++
     }
-    await writeIfNotRedundant('episodic', extracted.summary, ['session-summary'])
 
     // 将蒸馏出的 skills 同步写入 SkillBank（如果提供了引用）
     if (extracted.skills.length > 0 && options?.skillBank) {
@@ -226,7 +211,7 @@ export async function distillSessionEnd(
       }
     }
 
-    return { factsCount, skillsCount }
+    return { factsCount: 0, skillsCount }
   } catch {
     return { factsCount: 0, skillsCount: 0 }
   }
