@@ -33,7 +33,6 @@ import {
 } from './compact/context-collapse.js'
 import { createContentReplacementState } from './utils/tool-result-storage.js'
 import { MemoryRuntime } from './memory/runtime.js'
-import { distillSessionEnd } from './memory/distiller.js'
 
 async function main(): Promise<void> {
   const cwd = process.cwd()
@@ -167,9 +166,6 @@ async function main(): Promise<void> {
         distillSession: async (sessionMessages, endedSessionId) => {
           if (memoryRuntime) {
             await memoryRuntime.distill(sessionMessages, model, endedSessionId)
-            await distillSessionEnd(sessionMessages, model, memoryRuntime.proceduralStore, endedSessionId, {
-              skillBank: memoryRuntime.skillBank,
-            })
           }
         },
       })
@@ -210,9 +206,7 @@ async function main(): Promise<void> {
           await memoryRuntime?.completeTurn({
             outcome: result.outcome,
             messages: result.messages,
-            toolNames: result.messages
-              .filter(message => message.role === 'assistant_tool_call')
-              .map(message => message.toolName),
+            userQuery: request.input.content,
           })
           if (result.error) console.log(`\n${result.error}\n`)
           return result
@@ -344,9 +338,6 @@ async function main(): Promise<void> {
     await execution.stop()
     if (memoryRuntime) {
       await memoryRuntime.distill(messages, model, sessionId)
-      await distillSessionEnd(messages, model, memoryRuntime.proceduralStore, sessionId, {
-        skillBank: memoryRuntime.skillBank,
-      })
     }
     execution.goal.manager.dispose()
     process.off('SIGINT', stopOnInterrupt)

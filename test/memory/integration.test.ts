@@ -223,8 +223,16 @@ describe('CogMem integration', () => {
       })
       assert.match(prompt, /# Learned Skills \(dynamic\)/)
 
-      // SkillForge 信用分配不受影响
-      await runtime.completeTurn({ outcome: 'final', messages: [], toolNames: ['run_command'] })
+      // SkillForge 信用分配：final 延迟到下一条用户消息结算
+      await runtime.completeTurn({ outcome: 'final', messages: [], userQuery: 'npm check workflow' })
+      assert.equal(runtime.skillBank.data.general_skills[0]!.usage_count, 0)
+      await runtime.getMemoryContext('还是报错')
+      assert.equal(runtime.skillBank.data.general_skills[0]!.usage_count, 1)
+      assert.equal(runtime.skillBank.data.general_skills[0]!.success_count, 0)
+      assert.equal(runtime.skillBank.data.general_skills[0]!.recent_failures.length, 1)
+
+      // awaiting_user 不计分
+      await runtime.completeTurn({ outcome: 'awaiting_user', messages: [], userQuery: '请补充细节' })
       assert.equal(runtime.skillBank.data.general_skills[0]!.usage_count, 1)
 
       // /memory 命令包含图谱统计

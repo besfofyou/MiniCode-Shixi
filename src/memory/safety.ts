@@ -1,3 +1,5 @@
+import type { Skill } from './types.js'
+
 const INSTRUCTION_PATTERNS = [
   /\b(?:from now on|always|never|whenever|remember that you must)\b/i,
   /\b(?:ignore previous|disregard|override|bypass|forget your)\b/i,
@@ -65,4 +67,14 @@ export function sanitizeMemoryContent(content: string): string {
     sanitized = sanitized.replace(new RegExp(pattern.source, 'g'), '<local-path>')
   }
   return sanitized
+}
+
+/** 所有写入技能库的内容都经过这一个出口 */
+export function sanitizeSkill(s: Skill): Skill | null {
+  const title = sanitizeMemoryContent(String(s.title ?? '').trim().slice(0, 120))
+  const principle = sanitizeMemoryContent(String(s.principle ?? '').trim().slice(0, 500))
+  const when = sanitizeMemoryContent(String(s.when_to_apply ?? '').trim().slice(0, 300))
+  if (title.length < 3 || principle.length < 10) return null
+  if (!validateMemoryWrite(`${title}\n${principle}\n${when}`).allowed) return null
+  return { ...s, title, principle, when_to_apply: when }
 }

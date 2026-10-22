@@ -1451,7 +1451,6 @@ async function executeTtyTurn(
   request: TurnRequest,
 ): Promise<AgentTurnResult> {
   let result: AgentTurnResult = { messages: args.messages, outcome: 'failed', toolCalls: 0 }
-  const recentToolCount = state.recentTools.length
   state.isBusy = true
   args.permissions.beginTurn(request.signal)
   try {
@@ -1711,8 +1710,11 @@ async function executeTtyTurn(
     state.isBusy = false
   }
 
-  const toolNames = state.recentTools.slice(recentToolCount).map(tool => tool.name)
-  await args.memoryRuntime?.completeTurn({ outcome: result.outcome, messages: args.messages, toolNames })
+  await args.memoryRuntime?.completeTurn({
+    outcome: result.outcome,
+    messages: args.messages,
+    userQuery: request.input.content,
+  })
   finalizeDanglingRunningTools(state)
   if (getRunningToolEntries(state).length === 0) {
     setStatus(state, null)

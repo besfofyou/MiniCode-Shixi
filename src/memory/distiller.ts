@@ -4,12 +4,12 @@ import { randomUUID } from 'node:crypto'
 import type { ModelAdapter, ChatMessage } from '../types.js'
 import type { MemoryFilesystem } from './filesystem.js'
 import { tokenize } from './filesystem.js'
-import { validateMemoryWrite, sanitizeMemoryContent } from './safety.js'
+import { validateMemoryWrite, sanitizeMemoryContent, sanitizeSkill } from './safety.js'
 import type { SkillBank } from './skill-bank.js'
 
 const DISTILL_PROMPT = `Extract concise, durable information useful in a future coding session from the conversation.
 Return only JSON with this shape:
-{"facts":[{"content":"...","tags":["..."],"durability":"durable|volatile"}],"skills":[{"content":"...","tags":["..."],"durability":"durable|volatile"}],"summary":"..."}.
+{"facts":[{"content":"...","tags":["..."],"durability":"durable|volatile"}],"skills":[{"content":"...","when_to_apply":"...","tags":["..."],"durability":"durable|volatile"}],"summary":"..."}.
 
 ## Rules for "summary" (episodic layer)
 - Write as a **neutral third-person event record**, e.g. "用户请求列出项目文件树，助手遍历了目录并输出结果".
@@ -192,22 +192,18 @@ export async function distillSessionEnd(
       const now = new Date().toISOString()
       for (const skill of extracted.skills.slice(0, maxSkills)) {
         if (typeof skill.content !== 'string' || skill.content.trim().length < 10) continue
-        options.skillBank.add({
+        const raw = String(skill.content).trim()
+        if (options.skillBank.findNearDuplicate(raw)) continue
+        const candidate = sanitizeSkill({
           skill_id: `distill_${randomUUID().slice(0, 8)}`,
-          title: skill.content.split(/[。.!？\n]/)[0]?.slice(0, 80) ?? 'Untitled',
-          principle: skill.content,
-          when_to_apply: '',
+          title: raw.split(/[。.!？\n]/)[0]?.slice(0, 80) || 'Untitled',
+          principle: raw,
+          when_to_apply: typeof (skill as any).when_to_apply === 'string' ? (skill as any).when_to_apply : '',
           tags: safeTags(skill.tags),
-          usage_count: 0,
-          success_count: 0,
-          lifecycle: 'trial',
-          parent_id: null,
-          generation: 0,
-          children: [],
-          recent_failures: [],
-          createdAt: now,
-          updatedAt: now,
-        }, 'general')
+          usage_count: 0, success_count: 0, lifecycle: 'trial', parent_id: null,
+          generation: 0, children: [], recent_failures: [], createdAt: now, updatedAt: now,
+        })
+        if (candidate) options.skillBank.add(candidate, 'general')
       }
     }
 

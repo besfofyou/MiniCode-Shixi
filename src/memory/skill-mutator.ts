@@ -36,7 +36,7 @@ export class SkillMutator {
       ? parent.success_count / parent.usage_count
       : 0
 
-    const failureText = parent.recent_failures.slice(0, 8).map(f =>
+    const failureText = parent.recent_failures.slice(-8).map(f =>
       `- Task: ${f.task.slice(0, 300)}\n  Trajectory: ${f.trajectory.slice(0, 500)}`
     ).join('\n') || 'No failure trace was recorded.'
 

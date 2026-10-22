@@ -1,5 +1,6 @@
-import { readFile, writeFile, mkdir } from 'node:fs/promises'
+import { readFile } from 'node:fs/promises'
 import path from 'node:path'
+import { writeJsonAtomic } from './fs-util.js'
 import type { Skill, EvolutionSummary } from './types.js'
 import type { SkillBank } from './skill-bank.js'
 
@@ -41,6 +42,12 @@ export const DEFAULT_EVOLUTION_CONFIG: EvolutionConfig = {
   originalSkillProtectionUsage: 50,
 }
 
+/** CLI 场景预设：会话轮次远少于 RL episode，阈值按比例下调 */
+export const CLI_EVOLUTION_PRESET: Partial<EvolutionConfig> = {
+  promoteMinUsage: 5, retireMinUsage: 12, stabilizeMinUsage: 20,
+  mutateMinUsage: 8, originalSkillProtectionUsage: 25, evolveEveryNTurns: 5,
+}
+
 export type MutateFn = (parent: Skill, bank: SkillBank) => Promise<Skill | null>
 
 export class ForgeEngine {
@@ -48,12 +55,25 @@ export class ForgeEngine {
   private turnCount = 0
   private history: EvolutionSummary[] = []
   private readonly trackerPath: string | null
+  private readonly statePath: string | null
 
   constructor(config?: Partial<EvolutionConfig>, trackerDir?: string) {
     this.config = { ...DEFAULT_EVOLUTION_CONFIG, ...config }
     this.trackerPath = trackerDir
       ? path.join(trackerDir, 'evolution.json')
       : null
+    this.statePath = trackerDir ? path.join(trackerDir, 'forge-state.json') : null
+  }
+
+  async load(): Promise<void> {
+    try {
+      const h = JSON.parse(await readFile(this.trackerPath!, 'utf8'))
+      if (Array.isArray(h)) this.history = h.slice(-200)
+    } catch {}
+    try {
+      const s = JSON.parse(await readFile(this.statePath!, 'utf8'))
+      if (Number.isInteger(s?.turnCount)) this.turnCount = s.turnCount
+    } catch {}
   }
 
   fitness(skill: Skill): number {
@@ -68,6 +88,7 @@ export class ForgeEngine {
     mutateFn?: MutateFn,
   ): Promise<EvolutionSummary | null> {
     this.turnCount++
+    if (this.statePath) await writeJsonAtomic(this.statePath, { turnCount: this.turnCount })
     if (this.turnCount % this.config.evolveEveryNTurns !== 0) return null
 
     const summary: EvolutionSummary = {
@@ -211,7 +232,6 @@ export class ForgeEngine {
 
   private async saveTracker(): Promise<void> {
     if (!this.trackerPath) return
-    await mkdir(path.dirname(this.trackerPath), { recursive: true })
-    await writeFile(this.trackerPath, JSON.stringify(this.history, null, 2), 'utf8')
+    await writeJsonAtomic(this.trackerPath, this.history.slice(-200))
   }
 }
