@@ -5,6 +5,7 @@ import { VectorStore } from './vector-store.js'
 import { SEARCH_AGENT_SYSTEM, SEARCH_AGENT_STEP } from './cogmem-prompts.js'
 import { isRetrievable, rerank } from './retrieval-policy.js'
 import { fill } from './json-util.js'
+import { memoryModelText } from './model-call.js'
 
 const MAX_ITERATIONS = 3
 const FAST_PATH_SCORE = Number(process.env.COGMEM_FAST_PATH_SCORE ?? 0.62)   // bge-m3 的经验值，需按自己的数据调
@@ -58,11 +59,10 @@ export class MemorySearchAgent {
       const historyText = history.map(h => `Step ${h.step}: [${h.action}] → ${h.observation.slice(0, 600)}`).join('\n')
       let out = ''
       try {
-        const res = await this.model.next([
+        out = (await memoryModelText(this.model, [
           { role: 'system', content: fill(SEARCH_AGENT_SYSTEM, { max_iterations: String(MAX_ITERATIONS) }) },
           { role: 'user', content: fill(SEARCH_AGENT_STEP, { query, history: historyText }) },
-        ], {})
-        out = res.type === 'assistant' ? res.content : ''
+        ])) ?? ''
       } catch { break }
 
       const fin = out.match(/FINAL_ANSWER:\s*([\s\S]+)/i)

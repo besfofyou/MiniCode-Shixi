@@ -9,6 +9,7 @@ import { VectorStore } from './vector-store.js'
 import { EXTRACTION_SYSTEM_PROMPT, EXTRACTION_USER_PROMPT } from './cogmem-prompts.js'
 import { stableId, normalizeConceptName, canonicalPersonName, resolveRelativeTime } from './graph-ids.js'
 import { extractJsonObject, fill } from './json-util.js'
+import { memoryModelText } from './model-call.js'
 import { sanitizeMemoryContent, validateMemoryWrite } from './safety.js'
 import { tokenize } from './filesystem.js'
 
@@ -48,12 +49,12 @@ export class CogMemExtractor {
 
   private async callLLM(text: string, sessionDate: string): Promise<ExtractionResult | null> {
     try {
-      const res = await this.model.next([
+      const content = await memoryModelText(this.model, [
         { role: 'system', content: EXTRACTION_SYSTEM_PROMPT },
         { role: 'user', content: fill(EXTRACTION_USER_PROMPT, { text, session_date: sessionDate }) },
-      ], {})
-      if (res.type !== 'assistant') return null
-      const p = extractJsonObject(res.content) as Partial<ExtractionResult> | null
+      ])
+      if (!content) return null
+      const p = extractJsonObject(content) as Partial<ExtractionResult> | null
       if (!p) return null
       const arr = <T>(v: unknown) => (Array.isArray(v) ? v : []) as T[]
       return { events: arr(p.events), facts: arr(p.facts), claims: arr(p.claims), persons: arr(p.persons), concepts: arr(p.concepts) }

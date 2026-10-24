@@ -100,7 +100,7 @@ type TtyAppArgs = {
   resumeTarget?: string | 'picker'
   execution?: SessionRuntime
   memoryRuntime?: MemoryRuntime
-  distillSession?: (messages: ChatMessage[], sessionId: string) => Promise<void>
+  distillSession?: (messages: ChatMessage[], sessionId: string, onProgress?: (s: string) => void) => Promise<void>
 }
 
 type PendingApproval = {
@@ -1923,18 +1923,30 @@ export async function runTtyApp(args: TtyAppArgs): Promise<void> {
     const finish = () => {
       if (finished) return
       finished = true
-      void permissionArgs.execution!.stop().then(async () => {
-        await permissionArgs.distillSession?.(permissionArgs.messages, permissionArgs.sessionId)
-      }).finally(() => {
-        permissionArgs.execution!.goal.manager.dispose()
-        cleanup()
-        resolve()
-      })
+      setStatus(state, '正在保存记忆，请勿关闭终端…')
+      scheduleRender()
+      void permissionArgs.execution!.stop()
+        .then(async () => {
+          await permissionArgs.distillSession?.(permissionArgs.messages, permissionArgs.sessionId,
+            (s: string) => { setStatus(state, `${s}（请勿关闭终端）`); scheduleRender() })
+          await permissionArgs.memoryRuntime?.save()        // 保存完成后才打印"saved"
+        })
+        .catch(() => {})
+        .finally(() => {
+          permissionArgs.execution!.goal.manager.dispose()
+          cleanup()
+          resolve()
+        })
     }
 
     const handleEvent = async (event: ParsedInputEvent) => {
       try {
-        if (finished) return
+        if (finished) {
+          if (event.kind === 'text' && event.ctrl && event.text === 'c') {
+            setStatus(state, '仍在保存记忆（各步骤均有超时上限），请稍候…'); scheduleRender()
+          }
+          return
+        }
         if (state.pendingApproval && !state.pendingApproval.feedbackMode && !state.input &&
           event.kind === 'text' && !event.ctrl && event.text.startsWith('/')) {
           state.input = event.text

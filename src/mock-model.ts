@@ -23,6 +23,22 @@ function extractLatestAssistantCall(messages: ChatMessage[]): string | undefined
 
 export class MockModelAdapter implements ModelAdapter {
   async next(messages: ChatMessage[]): Promise<AgentStep> {
+    const system = messages.find(m => m.role === 'system')?.content ?? ''
+    if (system.startsWith('Extract concise, durable information')) {        // DISTILL_PROMPT
+      return {
+        type: 'assistant',
+        content: JSON.stringify({
+          facts: [],
+          skills: [{ content: '该项目的验证命令是 npm run check && npm test', when_to_apply: '修改代码之后、提交之前',
+                     tags: ['workflow'], durability: 'durable' }],
+          summary: '',
+        }),
+      }
+    }
+    if (system.startsWith('You extract long-term memory')) {                // EXTRACTION_SYSTEM_PROMPT
+      return { type: 'assistant', content: '{"persons":[],"concepts":[],"events":[],"facts":[],"claims":[]}' }
+    }
+
     const toolMessage = lastToolMessage(messages)
     if (toolMessage?.role === 'tool_result') {
       const lastCall = extractLatestAssistantCall(messages)

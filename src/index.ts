@@ -163,9 +163,9 @@ async function main(): Promise<void> {
         alreadySavedCount: 0,
         resumeTarget: resolvedResumeTarget,
         memoryRuntime,
-        distillSession: async (sessionMessages, endedSessionId) => {
+        distillSession: async (sessionMessages, endedSessionId, onProgress) => {
           if (memoryRuntime) {
-            await memoryRuntime.distill(sessionMessages, model, endedSessionId)
+            await memoryRuntime.distill(sessionMessages, model, endedSessionId, onProgress ? { onProgress } : undefined)
           }
         },
       })
@@ -348,10 +348,13 @@ async function main(): Promise<void> {
       // Ignore double-close during EOF teardown.
     }
   } finally {
-    await subAgents.closeAll()
-    await mcpHydration
+    const onSig = () => process.stderr.write('\n[minicode] 正在保存记忆，请稍候…\n')
+    process.on('SIGINT', onSig); process.on('SIGTERM', onSig)
     await memoryRuntime?.save().catch(() => {})
+    await subAgents.closeAll()
+    await Promise.race([mcpHydration, new Promise(r => setTimeout(r, 3000))])
     await tools.dispose()
+    process.off('SIGINT', onSig); process.off('SIGTERM', onSig)
   }
 }
 

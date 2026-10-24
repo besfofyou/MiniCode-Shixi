@@ -1,6 +1,7 @@
 import type { ModelAdapter } from '../types.js'
 import type { Skill } from './types.js'
 import type { SkillBank } from './skill-bank.js'
+import { memoryModelText } from './model-call.js'
 
 export class SkillMutator {
   private model: ModelAdapter
@@ -55,12 +56,9 @@ Recent failures where this skill was active but the task failed:
 ${failureText}`
 
     try {
-      const response = await this.model.next(
-        [{ role: 'user', content: prompt }],
-        {}
-      )
-      if (response.type !== 'assistant') return null
-      const parsed = this.extractJSON(response.content, false) as Record<string, any> | null
+      const text = await memoryModelText(this.model, [{ role: 'user', content: prompt }])
+      if (!text) return null
+      const parsed = this.extractJSON(text, false) as Record<string, any> | null
       if (!parsed || !parsed.title || !parsed.principle) return null
 
       return {
@@ -107,12 +105,9 @@ Failed episodes:
 ${examples}`
 
     try {
-      const response = await this.model.next(
-        [{ role: 'user', content: prompt }],
-        {}
-      )
-      if (response.type !== 'assistant') return []
-      const parsed = this.extractJSON(response.content, true) as any[] | null
+      const text = await memoryModelText(this.model, [{ role: 'user', content: prompt }])
+      if (!text) return []
+      const parsed = this.extractJSON(text, true) as any[] | null
       if (!Array.isArray(parsed)) return []
 
       const startId = this.nextId(bank, 'dyn')

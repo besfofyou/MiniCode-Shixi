@@ -1,4 +1,5 @@
 import path from 'node:path'
+import { appendFile } from 'node:fs/promises'
 import type { AgentTurnOutcome, ChatMessage, ModelAdapter } from '../types.js'
 import { MINI_CODE_DIR } from '../config.js'
 import { GraphStore } from './graph-store.js'
@@ -14,6 +15,7 @@ import { CLI_EVOLUTION_PRESET, ForgeEngine } from './skill-evolution.js'
 import { SkillMutator } from './skill-mutator.js'
 import { distillSessionEnd } from './distiller.js'
 import { sanitizeSkill } from './safety.js'
+import { cleanupStaleTmp } from './fs-util.js'
 import { feedbackFromNextUserMessage, immediateSignal, summarizeLastTurn, type CreditSignal } from './credit.js'
 import { MEMORY_CONTEXT_BUDGET, SKILL_BANK_CONFIG } from './constants.js'
 import type { Skill, MemoryRetrievalResult } from './types.js'
@@ -47,6 +49,9 @@ export class MemoryRuntime {
   private readonly root: string
   private readonly graphPath: string
   private readonly vectorPath: string
+  private turnsSinceSkillDistill = 0
+  private bgSkillDistill: Promise<unknown> | null = null
+  private saveChain: Promise<void> = Promise.resolve()
 
   private constructor(root: string | undefined, bank: SkillBank) {
     this.root = root ?? path.join(MINI_CODE_DIR, 'memory')
@@ -65,6 +70,7 @@ export class MemoryRuntime {
     const r = root ?? path.join(MINI_CODE_DIR, 'memory')
     const runtime = new MemoryRuntime(root, await SkillBank.fromJSON(path.join(r, 'skill-bank.json')))
     await runtime.proceduralStore.ensureStructure()
+    await cleanupStaleTmp(r)
     // 加载图谱和向量索引
     await runtime.graph.load(runtime.graphPath)
     await runtime.vectorStore.load(runtime.vectorPath)
@@ -177,7 +183,7 @@ export class MemoryRuntime {
     const skills = this.turnRetrievedSkills
     this.turnRetrievedSkills = []
 
-    if (skills.length > 0 && args.userQuery) {
+    if (args.userQuery) {
       const task = args.userQuery.slice(0, 500)
       const { trajectory, toolErrors, lastToolOk } = summarizeLastTurn(args.messages)
       const sig = immediateSignal(args.outcome)
@@ -200,6 +206,17 @@ export class MemoryRuntime {
       : undefined
     await this.forgeEngine.maybeEvolve(this.skillBank, mutateFn)
 
+    const every = Number(process.env.MINI_CODE_SKILL_DISTILL_EVERY ?? 3)
+    if (this.model && ++this.turnsSinceSkillDistill >= every && !this.bgSkillDistill) {
+      this.turnsSinceSkillDistill = 0
+      const snapshot = [...args.messages]
+      this.bgSkillDistill = distillSessionEnd(snapshot, this.model, this.proceduralStore, `turn-${this.turnIndex}`, { skillBank: this.skillBank })
+        .then(r => this.log(`incremental-skill ${JSON.stringify(r)}`))
+        .then(() => this.skillBank.save())
+        .catch(e => this.log(`incremental-skill FAILED: ${e}`))
+        .finally(() => { this.bgSkillDistill = null })
+    }
+
     await this.skillBank.save()
   }
 
@@ -220,6 +237,11 @@ export class MemoryRuntime {
     this.sessionFailures.length = 0
   }
 
+  private async log(msg: string) {
+    this.lastErrors.push(msg)
+    await appendFile(path.join(this.root, 'memory-debug.log'), `[${new Date().toISOString()}] ${msg}\n`).catch(() => {})
+  }
+
   /**
    * 会话结束蒸馏（替代原有 distill）
    * 使用 CogMem 结构化抽取代替原有的扁平蒸馏
@@ -228,32 +250,60 @@ export class MemoryRuntime {
     messages: ChatMessage[],
     model: ModelAdapter,
     sessionId: string,
+    opts: { onProgress?: (s: string) => void } = {},
   ): Promise<void> {
     if (process.env.MINI_CODE_MEMORY_DISTILL === '0' || this.distilledSessions.has(sessionId)) return
     this.distilledSessions.add(sessionId)
     if (!this.extractor) this.initModel(model)
 
-    const step = async <T>(name: string, fn: () => Promise<T>): Promise<T | undefined> => {
-      try { return await fn() } catch (e) { this.lastErrors.push(`${name}: ${e instanceof Error ? e.message : String(e)}`); return undefined }
+    await this.bgSkillDistill
+
+    const step = async <T>(name: string, fn: () => Promise<T>, ms = 60_000): Promise<T | undefined> => {
+      const t0 = Date.now()
+      let timer: NodeJS.Timeout | undefined
+      try {
+        const r = await Promise.race([
+          fn(),
+          new Promise<never>((_, rej) => { timer = setTimeout(() => rej(new Error(`timeout ${ms}ms`)), ms) }),
+        ])
+        await this.log(`${name} ok (${Date.now() - t0}ms) ${r && typeof r === 'object' ? JSON.stringify(r).slice(0, 300) : ''}`)
+        return r
+      } catch (e) {
+        await this.log(`${name} FAILED (${Date.now() - t0}ms): ${e instanceof Error ? e.message : String(e)}`)
+        return undefined
+      } finally { clearTimeout(timer) }
     }
 
-    if (this.graphMemoryEnabled) {
-      const ext = await step('extract', () => this.extractor!.extractFromMessages(messages, sessionId))
-      const cons = await step('consolidate', () => this.consolidator!.consolidate())
-      await step('reconcile', () => this.reconciler!.reconcile([...(ext?.touchedFactIds ?? []), ...(cons?.touchedFactIds ?? [])]))
-      await step('flush-vectors', () => this.vectorStore.flushPending())
-    }
-    // 程序记忆部分不受图谱失败影响
+    // ① 程序记忆优先：只需 1 次 LLM 调用，完成后立即落盘
     this.resolvePendingEpisode()
+    opts.onProgress?.('正在提取技能…')
     await step('procedural', () => distillSessionEnd(messages, model, this.proceduralStore, sessionId, { skillBank: this.skillBank }))
     await step('skill-failures', () => this.learnFromSessionFailures())
-    await step('save-skills', () => this.skillBank.save())
-    await step('save-graph', () => this.save())
+    await step('save-skills', () => this.skillBank.save(), 10_000)
+
+    // ② 图谱记忆耗时长，放在后面；每一步都有超时
+    if (this.graphMemoryEnabled) {
+      opts.onProgress?.('正在写入知识图谱…')
+      const ext = await step('extract', () => this.extractor!.extractFromMessages(messages, sessionId), 90_000)
+      const cons = await step('consolidate', () => this.consolidator!.consolidate(), 60_000)
+      await step('reconcile', () => this.reconciler!.reconcile([...(ext?.touchedFactIds ?? []), ...(cons?.touchedFactIds ?? [])]))
+      await step('flush-vectors', () => this.vectorStore.flushPending(), 30_000)
+    } else {
+      await this.log(`graph skipped: ${this.embedClient.unavailableReason}`)
+    }
+    opts.onProgress?.('正在保存…')
+    await step('save-all', () => this.save(), 15_000)
   }
 
-  async save(): Promise<void> {
-    await this.graph.save(this.graphPath)
-    await this.vectorStore.save(this.vectorPath)
+  /** 所有保存操作串行执行，避免并发写同一文件 */
+  save(): Promise<void> {
+    const run = this.saveChain.then(async () => {
+      await this.skillBank.save()
+      await this.graph.save(this.graphPath)
+      await this.vectorStore.save(this.vectorPath)
+    })
+    this.saveChain = run.catch(e => this.log(`save FAILED: ${e instanceof Error ? e.message : e}`))
+    return run
   }
 
   /** 图谱统计（用于 /memory 命令） */

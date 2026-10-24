@@ -327,15 +327,18 @@ export class AnthropicModelAdapter implements ModelAdapter {
       headers['x-api-key'] = runtime.apiKey
     }
 
+    const toolList = options.tools ?? this.tools.list()
     const requestBody = {
       model: runtime.model,
       system: payload.system,
       messages: payload.messages,
-      tools: (options.tools ?? this.tools.list()).map(tool => ({
-        name: tool.name,
-        description: tool.description,
-        input_schema: tool.inputSchema,
-      })),
+      ...(toolList.length > 0 ? {
+        tools: toolList.map(tool => ({
+          name: tool.name,
+          description: tool.description,
+          input_schema: tool.inputSchema,
+        })),
+      } : {}),          // 空数组时不发送 tools 字段
       max_tokens: maxOutputTokens,
     }
 

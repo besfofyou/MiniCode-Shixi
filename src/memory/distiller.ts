@@ -6,6 +6,8 @@ import type { MemoryFilesystem } from './filesystem.js'
 import { tokenize } from './filesystem.js'
 import { validateMemoryWrite, sanitizeMemoryContent, sanitizeSkill } from './safety.js'
 import type { SkillBank } from './skill-bank.js'
+import { extractJsonObject } from './json-util.js'
+import { memoryModelText } from './model-call.js'
 
 const DISTILL_PROMPT = `Extract concise, durable information useful in a future coding session from the conversation.
 Return only JSON with this shape:
@@ -44,28 +46,18 @@ Return only JSON with this shape:
 
 const MAX_PER_MESSAGE_CHARS = 1500
 
-export type DistillResult = {
-  factsCount: number
-  skillsCount: number
-}
+export type DistillResult = { factsCount: number; skillsCount: number; bankAdded: number; reason?: string }
 
 type DistilledItem = { content?: unknown; tags?: unknown; durability?: unknown }
 
-function parseDistilledItems(content: string): {
-  facts: DistilledItem[]
-  skills: DistilledItem[]
-  summary: string
-} | null {
-  const match = content.match(/\{[\s\S]*\}/)
-  if (!match) return null
-  try {
-    const parsed = JSON.parse(match[0]) as Record<string, unknown>
-    const facts = Array.isArray(parsed.facts) ? parsed.facts as DistilledItem[] : []
-    const skills = Array.isArray(parsed.skills) ? parsed.skills as DistilledItem[] : []
-    const summary = typeof parsed.summary === 'string' ? parsed.summary : ''
-    return { facts, skills, summary }
-  } catch {
-    return null
+// parseDistilledItems：用括号配对解析替代贪婪正则
+function parseDistilledItems(content: string) {
+  const parsed = extractJsonObject(content) as Record<string, unknown> | null
+  if (!parsed) return null
+  return {
+    facts: Array.isArray(parsed.facts) ? parsed.facts as DistilledItem[] : [],
+    skills: Array.isArray(parsed.skills) ? parsed.skills as DistilledItem[] : [],
+    summary: typeof parsed.summary === 'string' ? parsed.summary : '',
   }
 }
 
@@ -140,27 +132,27 @@ export async function distillSessionEnd(
 ): Promise<DistillResult> {
   const relevant = messages.filter(message => extractText(message) !== null).slice(-30)
   const userTurnCount = relevant.filter(message => message.role === 'user').length
-  if (userTurnCount < 2) {
-    return { factsCount: 0, skillsCount: 0 }
-  }
+  if (userTurnCount < 2) return { factsCount: 0, skillsCount: 0, bankAdded: 0, reason: `only ${userTurnCount} user turn(s)` }
 
-  const maxSkills = userTurnCount <= 3 ? 1 : userTurnCount <= 8 ? 2 : 3
+  const maxSkills = userTurnCount <= 3 ? 2 : userTurnCount <= 8 ? 3 : 4
 
   const conversation = compressForDistillation(relevant)
-  const guidanceNote = `\n\n[Note: This was a ${userTurnCount}-turn conversation. Return at most ${maxSkills} skills. Prefer merging related information into fewer entries.]`
+  const guidanceNote = `\n\n[Note: ${userTurnCount}-turn conversation. Return at most ${maxSkills} skills. ` +
+    `If the session revealed any concrete project workflow (build/test/run commands, conventions, a fix procedure), return at least one skill.]`
 
   try {
-    const response = await model.next([
+    const text = await memoryModelText(model, [
       { role: 'system', content: DISTILL_PROMPT },
       { role: 'user', content: conversation + guidanceNote },
-    ], {})
-    if (response.type !== 'assistant') return { factsCount: 0, skillsCount: 0 }
-    const text = response.content
+    ])
+    if (!text) return { factsCount: 0, skillsCount: 0, bankAdded: 0, reason: 'model returned no text (tool_calls?)' }
     const extracted = parseDistilledItems(text)
-    if (!extracted) return { factsCount: 0, skillsCount: 0 }
+    if (!extracted) return { factsCount: 0, skillsCount: 0, bankAdded: 0, reason: `unparseable: ${text.slice(0, 200)}` }
+    if (!extracted.skills.length) return { factsCount: 0, skillsCount: 0, bankAdded: 0, reason: 'model returned empty skills' }
 
     let skillsCount = 0
-
+    let bankAdded = 0
+    const reasons: string[] = []
     const writtenContents: string[] = []
 
     async function writeIfNotRedundant(
@@ -181,10 +173,13 @@ export async function distillSessionEnd(
       return true
     }
 
-    // 只写入 procedural 层；facts（semantic）和 summary（episodic）
-    // 现在由 extractor.ts 的结构化抽取处理
+    // 程序记忆写入：失败不连带技能库
     for (const skill of extracted.skills.slice(0, maxSkills)) {
-      if (await writeIfNotRedundant(skill.content, skill.tags, skill.durability)) skillsCount++
+      try {
+        if (await writeIfNotRedundant(skill.content, skill.tags, skill.durability)) skillsCount++
+      } catch (e) {
+        reasons.push(`procedural write failed: ${e instanceof Error ? e.message : String(e)}`)
+      }
     }
 
     // 将蒸馏出的 skills 同步写入 SkillBank（如果提供了引用）
@@ -203,12 +198,13 @@ export async function distillSessionEnd(
           usage_count: 0, success_count: 0, lifecycle: 'trial', parent_id: null,
           generation: 0, children: [], recent_failures: [], createdAt: now, updatedAt: now,
         })
-        if (candidate) options.skillBank.add(candidate, 'general')
+        if (candidate && options.skillBank.add(candidate, 'general')) bankAdded++
+        else if (!candidate) reasons.push('rejected by sanitizeSkill')
       }
     }
 
-    return { factsCount: 0, skillsCount }
-  } catch {
-    return { factsCount: 0, skillsCount: 0 }
+    return { factsCount: 0, skillsCount, bankAdded, reason: reasons.join('; ') || undefined }
+  } catch (e) {
+    return { factsCount: 0, skillsCount: 0, bankAdded: 0, reason: String(e) }
   }
 }

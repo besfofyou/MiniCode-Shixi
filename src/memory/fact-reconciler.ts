@@ -3,6 +3,7 @@ import type { FactNode } from './types.js'
 import { GraphStore } from './graph-store.js'
 import { VectorStore, cosineSimilarity } from './vector-store.js'
 import { extractJsonObject } from './json-util.js'
+import { memoryModelText } from './model-call.js'
 import { tokenize } from './filesystem.js'
 
 const FULL_MERGE = 0.95        // = CogMem fact_high_threshold
@@ -100,12 +101,12 @@ export class FactReconciler {
     const list = pairs.slice(0, 10)
     const body = list.map(([n, o], i) => `${i}. NEW: ${n.description}\n   OLD: ${o.description}`).join('\n')
     try {
-      const res = await this.model.next([
+      const content = await memoryModelText(this.model, [
         { role: 'system', content: 'For each pair, decide whether NEW makes OLD no longer true (an update of the same attribute, e.g. switched tool/version/convention). Compatible or unrelated facts are NOT conflicts. Return JSON only: {"conflicts":[<indices>]}' },
         { role: 'user', content: body },
-      ], {})
-      if (res.type !== 'assistant') return []
-      const d = extractJsonObject(res.content) as { conflicts?: unknown[] } | null
+      ])
+      if (!content) return []
+      const d = extractJsonObject(content) as { conflicts?: unknown[] } | null
       return (d?.conflicts ?? []).filter((i): i is number => Number.isInteger(i) && !!list[i as number]).map(i => list[i])
     } catch { return [] }
   }

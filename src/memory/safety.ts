@@ -1,9 +1,12 @@
 import type { Skill } from './types.js'
 
-const INSTRUCTION_PATTERNS = [
-  /\b(?:from now on|always|never|whenever|remember that you must)\b/i,
-  /\b(?:ignore previous|disregard|override|bypass|forget your)\b/i,
-  /\b(?:you are now|act as|pretend to be|your new role)\b/i,
+const INJECTION_PATTERNS = [
+  /\b(?:ignore|disregard|forget)\s+(?:all\s+)?(?:previous|prior|above|your)\s+(?:instructions?|rules?|prompts?)\b/i,
+  /\b(?:override|bypass)\s+(?:the\s+)?(?:system|safety|instructions?|rules?)\b/i,
+  /\b(?:you are now|pretend to be|your new role)\b/i,
+  /\bfrom now on,?\s+you\s+(?:must|will|are)\b/i,
+  /忽略(?:之前|以上|所有)的?(?:指令|规则|提示)/,
+  /你现在是|假装你是/,
 ]
 
 const CREDENTIAL_PATTERNS = [
@@ -40,11 +43,8 @@ export function validateMemoryWrite(content: string): ValidationResult {
   if (looksLikeCredential(content)) {
     return { allowed: false, reason: 'Content appears to contain credentials or secrets.' }
   }
-  if (INSTRUCTION_PATTERNS.some(pattern => pattern.test(content))) {
-    return {
-      allowed: false,
-      reason: 'Content contains instruction-like language that could be a prompt injection attempt.',
-    }
+  if (INJECTION_PATTERNS.some(p => p.test(content))) {
+    return { allowed: false, reason: 'Content looks like a prompt-injection attempt.' }
   }
   return { allowed: true }
 }

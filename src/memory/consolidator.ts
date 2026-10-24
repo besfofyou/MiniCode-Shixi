@@ -4,6 +4,7 @@ import { GraphStore } from './graph-store.js'
 import { VectorStore } from './vector-store.js'
 import { stableId } from './graph-ids.js'
 import { extractJsonObject, fill } from './json-util.js'
+import { memoryModelText } from './model-call.js'
 import { CONSOLIDATION_CLUSTER_SYSTEM, CONSOLIDATION_CLUSTER_USER } from './cogmem-prompts.js'
 
 type Cluster = { personId: string; conceptId: string; events: EventNode[] }
@@ -98,9 +99,9 @@ export class MemoryConsolidator {
       events_json: JSON.stringify(events.map(e => ({ id: e.node_id, title: e.title, description: e.description, time: e.resolved_time ?? e.time_expression ?? e.session_time }))),
     })
     try {
-      const res = await this.model.next([{ role: 'system', content: CONSOLIDATION_CLUSTER_SYSTEM }, { role: 'user', content: user }], {})
-      if (res.type !== 'assistant') return null
-      const d = extractJsonObject(res.content) as { skip?: boolean; content?: string; predicate?: string; confidence?: number; valid_from?: string } | null
+      const content = await memoryModelText(this.model, [{ role: 'system', content: CONSOLIDATION_CLUSTER_SYSTEM }, { role: 'user', content: user }])
+      if (!content) return null
+      const d = extractJsonObject(content) as { skip?: boolean; content?: string; predicate?: string; confidence?: number; valid_from?: string } | null
       if (!d || d.skip || !d.content || !d.predicate) return null           // = CogMem 必填字段校验
       return {
         content: String(d.content).slice(0, 300),

@@ -5,6 +5,7 @@ import type { GraphStore } from '../memory/graph-store.js'
 import type { VectorStore } from '../memory/vector-store.js'
 import type { AnyGraphNode } from '../memory/types.js'
 import { validateMemoryWrite } from '../memory/safety.js'
+import { isRetrievable } from '../memory/retrieval-policy.js'
 
 export function createMemoryTools(args: {
   store: MemoryFilesystem
@@ -32,7 +33,10 @@ export function createMemoryTools(args: {
     async run(input): Promise<ToolResult> {
       let results: { id: string; score: number }[]
       try {
-        results = await vectorStore.search(input.query, input.limit)
+        results = await vectorStore.search(input.query, input.limit, id => {
+          const n = graph.getNode(id)
+          return !!n && isRetrievable(n)
+        })
       } catch (error) {
         return {
           ok: false,
