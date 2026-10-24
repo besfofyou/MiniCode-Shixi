@@ -1,0 +1,3286 @@
+{
+  "schema_version": 2,
+  "nodes": [
+    {
+      "node_id": "p_12dea96fec205935",
+      "node_type": "person",
+      "canonical_name": "User",
+      "aliases": [],
+      "description": "Person: User",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "User"
+    },
+    {
+      "node_id": "p_27a9612b3207eb0f",
+      "node_type": "person",
+      "canonical_name": "Assistant",
+      "aliases": [],
+      "description": "Person: Assistant",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Assistant"
+    },
+    {
+      "node_id": "concept_9dd6ccb0a9c562ac",
+      "node_type": "concept",
+      "name": "minicode",
+      "description": "TypeScript terminal AI coding assistant project analyzed in the session.",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: minicode. TypeScript terminal AI coding assistant project analyzed in the session."
+    },
+    {
+      "node_id": "concept_d91835cc0ae68ddc",
+      "node_type": "concept",
+      "name": "agent-loop",
+      "description": "The model→tool→model execution loop implemented in src/agent-loop.ts.",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: agent-loop. The model→tool→model execution loop implemented in src/agent-loop.ts."
+    },
+    {
+      "node_id": "concept_f45cdef276e2c668",
+      "node_type": "concept",
+      "name": "context-compaction",
+      "description": "Context management mechanisms including auto-compact, microcompact, snipCompact and context collapse.",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: context-compaction. Context management mechanisms including auto-compact, microcompact, snipCompact and context collapse."
+    },
+    {
+      "node_id": "concept_864e24955e8c6968",
+      "node_type": "concept",
+      "name": "tui",
+      "description": "Custom full-screen ANSI terminal interface, not built with Ink/React.",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: tui. Custom full-screen ANSI terminal interface, not built with Ink/React."
+    },
+    {
+      "node_id": "concept_81c5d49be9505089",
+      "node_type": "concept",
+      "name": "memory",
+      "description": "Layered memory system including MINI.md/CLAUDE.md, knowledge graph and vector long-term memory.",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: memory. Layered memory system including MINI.md/CLAUDE.md, knowledge graph and vector long-term memory."
+    },
+    {
+      "node_id": "concept_b2c9fd9e39274358",
+      "node_type": "concept",
+      "name": "subagents",
+      "description": "Sub-agent runtime with parallel execution support.",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: subagents. Sub-agent runtime with parallel execution support."
+    },
+    {
+      "node_id": "concept_c3ecbf70b781d07f",
+      "node_type": "concept",
+      "name": "mcp",
+      "description": "Model Context Protocol integration for external tools.",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: mcp. Model Context Protocol integration for external tools."
+    },
+    {
+      "node_id": "concept_fb0dfd38de288a01",
+      "node_type": "concept",
+      "name": "repository-hygiene",
+      "description": "Keeping third-party tool artifacts out of version control with .gitignore and git rm --cached.",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: repository-hygiene. Keeping third-party tool artifacts out of version control with .gitignore and git rm --cached."
+    },
+    {
+      "node_id": "concept_26aca7941a99d90e",
+      "node_type": "concept",
+      "name": "introduction",
+      "description": "introduction",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: introduction. "
+    },
+    {
+      "node_id": "event_83123734d0d67ba8",
+      "node_type": "event",
+      "title": "Assistant introduced itself as mini-code",
+      "description": "On greeting, the assistant introduced itself as mini-code and offered to read and modify code in the MiniCode-main repository.",
+      "participants": [
+        "p_27a9612b3207eb0f",
+        "p_12dea96fec205935"
+      ],
+      "concepts": [
+        "concept_9dd6ccb0a9c562ac",
+        "concept_26aca7941a99d90e"
+      ],
+      "session_time": "2026-10-23",
+      "archived": false,
+      "evidence": [
+        "你好！我是 mini-code，可以在 MiniCode-main 这个仓库里帮你读代码、改代码并验证运行。"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Event: Assistant introduced itself as mini-code. On greeting, the assistant introduced itself as mini-code and offered to read and modify code in the MiniCode-main repository.. Concepts: minicode, introduction"
+    },
+    {
+      "node_id": "concept_1db089a9f84e14e9",
+      "node_type": "concept",
+      "name": "identity",
+      "description": "identity",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: identity. "
+    },
+    {
+      "node_id": "concept_61e7a9a44ec34ad4",
+      "node_type": "concept",
+      "name": "deepseek",
+      "description": "deepseek",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: deepseek. "
+    },
+    {
+      "node_id": "event_efb88d2ec44b7e50",
+      "node_type": "event",
+      "title": "User asked assistant to act as DeepSeek code expert; assistant corrected identity",
+      "description": "User addressed the assistant as DeepSeek and asked it to serve as their code expert. The assistant corrected that it is mini-code, not DeepSeek, and offered to work as a code expert.",
+      "participants": [
+        "p_12dea96fec205935",
+        "p_27a9612b3207eb0f"
+      ],
+      "concepts": [
+        "concept_1db089a9f84e14e9",
+        "concept_61e7a9a44ec34ad4"
+      ],
+      "session_time": "2026-10-23",
+      "archived": false,
+      "evidence": [
+        "有个小更正：我是 **mini-code**，这个终端里的编码助手，不是 DeepSeek。"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Event: User asked assistant to act as DeepSeek code expert; assistant corrected identity. User addressed the assistant as DeepSeek and asked it to serve as their code expert. The assistant corrected that it is mini-code, not DeepSeek, and offered to work as a code expert.. Concepts: identity, deepseek"
+    },
+    {
+      "node_id": "concept_25fc2ec16f543324",
+      "node_type": "concept",
+      "name": "response-format",
+      "description": "response-format",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: response-format. "
+    },
+    {
+      "node_id": "concept_77323db9a4451d6d",
+      "node_type": "concept",
+      "name": "user-preference",
+      "description": "user-preference",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: user-preference. "
+    },
+    {
+      "node_id": "event_c49e1d11e8c7fb2c",
+      "node_type": "event",
+      "title": "User requested a fixed closing phrase for every answer",
+      "description": "User asked that every future answer end with the phrase 陛下，我已经完成，请您批阅. The assistant agreed and said it would state unfinished status before the phrase when applicable.",
+      "participants": [
+        "p_12dea96fec205935",
+        "p_27a9612b3207eb0f"
+      ],
+      "concepts": [
+        "concept_25fc2ec16f543324",
+        "concept_77323db9a4451d6d"
+      ],
+      "session_time": "2026-10-23",
+      "archived": false,
+      "evidence": [
+        "之后你的每次回答都要在说“陛下，我已经完成，请您批阅”"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Event: User requested a fixed closing phrase for every answer. User asked that every future answer end with the phrase 陛下，我已经完成，请您批阅. The assistant agreed and said it would state unfinished status before the phrase when applicable.. Concepts: response-format, user-preference"
+    },
+    {
+      "node_id": "concept_4e7560f1a014f1a1",
+      "node_type": "concept",
+      "name": "directory-structure",
+      "description": "directory-structure",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: directory-structure. "
+    },
+    {
+      "node_id": "concept_f380cbcd9a79a4ea",
+      "node_type": "concept",
+      "name": "architecture",
+      "description": "architecture",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: architecture. "
+    },
+    {
+      "node_id": "event_68adb9bc2d3118be",
+      "node_type": "event",
+      "title": "Assistant analyzed the project directory structure",
+      "description": "Assistant produced a top-level and layered analysis of the repository, covering src layers, tests, docs, external submodules and scale.",
+      "participants": [
+        "p_12dea96fec205935",
+        "p_27a9612b3207eb0f"
+      ],
+      "concepts": [
+        "concept_4e7560f1a014f1a1",
+        "concept_f380cbcd9a79a4ea"
+      ],
+      "session_time": "2026-10-23",
+      "archived": false,
+      "evidence": [
+        "规模：`src` 103 个 .ts / 约 17.3k 行；`test` 38 个 .ts / 约 5.7k 行。"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Event: Assistant analyzed the project directory structure. Assistant produced a top-level and layered analysis of the repository, covering src layers, tests, docs, external submodules and scale.. Concepts: directory-structure, architecture"
+    },
+    {
+      "node_id": "concept_d21ef039dc144aab",
+      "node_type": "concept",
+      "name": "response-style",
+      "description": "response-style",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: response-style. "
+    },
+    {
+      "node_id": "event_7b0b0e69d8dd500f",
+      "node_type": "event",
+      "title": "User asked for more concise answers",
+      "description": "User asked for future answers to be more concise; the assistant agreed to give conclusions and key points only.",
+      "participants": [
+        "p_12dea96fec205935",
+        "p_27a9612b3207eb0f"
+      ],
+      "concepts": [
+        "concept_d21ef039dc144aab",
+        "concept_77323db9a4451d6d"
+      ],
+      "session_time": "2026-10-23",
+      "archived": false,
+      "evidence": [
+        "你之后的回答还应该简洁一点"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Event: User asked for more concise answers. User asked for future answers to be more concise; the assistant agreed to give conclusions and key points only.. Concepts: response-style, user-preference"
+    },
+    {
+      "node_id": "concept_5e6a73aed591b502",
+      "node_type": "concept",
+      "name": "zcode",
+      "description": "zcode",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: zcode. "
+    },
+    {
+      "node_id": "concept_1c41cb55883b7d5d",
+      "node_type": "concept",
+      "name": "workbuddy",
+      "description": "workbuddy",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: workbuddy. "
+    },
+    {
+      "node_id": "event_b5e20c8c925fd43f",
+      "node_type": "event",
+      "title": "Assistant explained .zcode and .workbuddy directories",
+      "description": "Assistant explained that .zcode/plans is empty output from another tool and .workbuddy/memory contains daily logs from an external AI assistant linked to uncommitted memory changes; recommended gitignoring them.",
+      "participants": [
+        "p_12dea96fec205935",
+        "p_27a9612b3207eb0f"
+      ],
+      "concepts": [
+        "concept_5e6a73aed591b502",
+        "concept_1c41cb55883b7d5d",
+        "concept_fb0dfd38de288a01"
+      ],
+      "session_time": "2026-10-23",
+      "archived": false,
+      "evidence": [
+        "这两个目录都不是项目代码的一部分，而是两个外部 AI 编码工具在你仓库里留下的工作产物。"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Event: Assistant explained .zcode and .workbuddy directories. Assistant explained that .zcode/plans is empty output from another tool and .workbuddy/memory contains daily logs from an external AI assistant linked to uncommitted memory changes; recommended gitignoring them.. Concepts: zcode, workbuddy, repository-hygiene"
+    },
+    {
+      "node_id": "concept_fed758b7a842befd",
+      "node_type": "concept",
+      "name": "overview",
+      "description": "overview",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: overview. "
+    },
+    {
+      "node_id": "event_53afd4af21845cca",
+      "node_type": "event",
+      "title": "Assistant summarized the MiniCode project purpose",
+      "description": "Assistant described MiniCode as a hand-written TypeScript terminal AI coding assistant with a model→tool→model loop, custom ANSI TUI, context management, memory, subagents, MCP and minimal runtime dependencies.",
+      "participants": [
+        "p_12dea96fec205935",
+        "p_27a9612b3207eb0f"
+      ],
+      "concepts": [
+        "concept_9dd6ccb0a9c562ac",
+        "concept_fed758b7a842befd"
+      ],
+      "session_time": "2026-10-23",
+      "archived": false,
+      "evidence": [
+        "MiniCode 是一个用 TypeScript 自己手写的终端 AI 编码助手"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Event: Assistant summarized the MiniCode project purpose. Assistant described MiniCode as a hand-written TypeScript terminal AI coding assistant with a model→tool→model loop, custom ANSI TUI, context management, memory, subagents, MCP and minimal runtime dependencies.. Concepts: minicode, overview"
+    },
+    {
+      "node_id": "concept_02ee3cf1a87ecec6",
+      "node_type": "concept",
+      "name": "context-management",
+      "description": "context-management",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: context-management. "
+    },
+    {
+      "node_id": "event_b34a0a371f40a9c7",
+      "node_type": "event",
+      "title": "Assistant summarized the agent loop",
+      "description": "Assistant explained the agent loop in src/agent-loop.ts: each step performs context maintenance, calls the model, and branches on final answer, progress, or tool calls until final, aborted or failed.",
+      "participants": [
+        "p_12dea96fec205935",
+        "p_27a9612b3207eb0f"
+      ],
+      "concepts": [
+        "concept_d91835cc0ae68ddc",
+        "concept_02ee3cf1a87ecec6"
+      ],
+      "session_time": "2026-10-23",
+      "archived": false,
+      "evidence": [
+        "收敛上下文 → 模型思考 → 执行工具 → 回灌结果 → 直到给出 final 或撞到预算/中止。"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Event: Assistant summarized the agent loop. Assistant explained the agent loop in src/agent-loop.ts: each step performs context maintenance, calls the model, and branches on final answer, progress, or tool calls until final, aborted or failed.. Concepts: agent-loop, context-management"
+    },
+    {
+      "node_id": "concept_e39add1be3b92e12",
+      "node_type": "concept",
+      "name": "project-timeline",
+      "description": "project-timeline",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: project-timeline. "
+    },
+    {
+      "node_id": "event_319eb32781b8635f",
+      "node_type": "event",
+      "title": "User stated the project took 10 months",
+      "description": "User said they had spent 10 months completing the project; the assistant responded that the pace was reasonable for the codebase size.",
+      "participants": [
+        "p_12dea96fec205935",
+        "p_27a9612b3207eb0f"
+      ],
+      "concepts": [
+        "concept_e39add1be3b92e12"
+      ],
+      "session_time": "2026-10-23",
+      "archived": false,
+      "evidence": [
+        "我完成这个项目用了10个月"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Event: User stated the project took 10 months. User said they had spent 10 months completing the project; the assistant responded that the pace was reasonable for the codebase size.. Concepts: project-timeline"
+    },
+    {
+      "node_id": "event_79de950e05554d9b",
+      "node_type": "event",
+      "title": "User corrected project duration to 3 months",
+      "description": "User corrected the previous statement and said the project took 3 months. The assistant noted that 3 months would be even tighter for the scope.",
+      "participants": [
+        "p_12dea96fec205935",
+        "p_27a9612b3207eb0f"
+      ],
+      "concepts": [
+        "concept_e39add1be3b92e12"
+      ],
+      "session_time": "2026-10-23",
+      "archived": false,
+      "evidence": [
+        "弄错了，我完成这个项目是3个月"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Event: User corrected project duration to 3 months. User corrected the previous statement and said the project took 3 months. The assistant noted that 3 months would be even tighter for the scope.. Concepts: project-timeline"
+    },
+    {
+      "node_id": "concept_ee11771ce87d177b",
+      "node_type": "concept",
+      "name": "git-history",
+      "description": "git-history",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: git-history. "
+    },
+    {
+      "node_id": "event_4aa68b431b28ac4a",
+      "node_type": "event",
+      "title": "Assistant reported git history conflicting with stated duration",
+      "description": "Assistant reported that git commits span 2026-10-13 to 2026-10-22 with 12 commits, i.e. 10 days, conflicting with the user's stated 3 months.",
+      "participants": [
+        "p_27a9612b3207eb0f",
+        "p_12dea96fec205935"
+      ],
+      "concepts": [
+        "concept_ee11771ce87d177b",
+        "concept_e39add1be3b92e12"
+      ],
+      "session_time": "2026-10-23",
+      "archived": false,
+      "evidence": [
+        "`2026-10-13` 首次提交 → `2026-10-22` 最新提交，共 12 个 commit，跨度 **10 天**。"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Event: Assistant reported git history conflicting with stated duration. Assistant reported that git commits span 2026-10-13 to 2026-10-22 with 12 commits, i.e. 10 days, conflicting with the user's stated 3 months.. Concepts: git-history, project-timeline"
+    },
+    {
+      "node_id": "concept_3cac7efec42e8cfb",
+      "node_type": "concept",
+      "name": "typescript terminal ai coding assistant",
+      "description": "typescript terminal ai coding assistant",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: typescript terminal ai coding assistant. "
+    },
+    {
+      "node_id": "fact_f1b2b3a5cfc5e06c",
+      "node_type": "fact",
+      "subject": "MiniCode",
+      "predicate": "is_a",
+      "object": "TypeScript terminal AI coding assistant",
+      "description": "MiniCode is a TypeScript terminal AI coding assistant",
+      "subject_id": "p_27a9612b3207eb0f",
+      "object_id": "concept_3cac7efec42e8cfb",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "fc0f3d51"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "MiniCode 是一个用 TypeScript 自己手写的终端 AI 编码助手"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Fact: MiniCode is a TypeScript terminal AI coding assistant"
+    },
+    {
+      "node_id": "concept_98f54143ab4e86b2",
+      "node_type": "concept",
+      "name": "project",
+      "description": "project",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: project. "
+    },
+    {
+      "node_id": "concept_4cd888a0ecdf4687",
+      "node_type": "concept",
+      "name": "103 typescript files, about 17.3k lines",
+      "description": "103 typescript files, about 17.3k lines",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: 103 typescript files, about 17.3k lines. "
+    },
+    {
+      "node_id": "fact_1893476685d8aad2",
+      "node_type": "fact",
+      "subject": "project",
+      "predicate": "has_source_files",
+      "object": "103 TypeScript files, about 17.3k lines",
+      "description": "project has source files 103 TypeScript files, about 17.3k lines",
+      "subject_id": "concept_98f54143ab4e86b2",
+      "object_id": "concept_4cd888a0ecdf4687",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "fc0f3d51"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "`src` 103 个 .ts / 约 17.3k 行"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Fact: project has source files 103 TypeScript files, about 17.3k lines"
+    },
+    {
+      "node_id": "concept_cd66d24f20829ecb",
+      "node_type": "concept",
+      "name": "38 typescript test files, about 5.7k lines",
+      "description": "38 typescript test files, about 5.7k lines",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: 38 typescript test files, about 5.7k lines. "
+    },
+    {
+      "node_id": "fact_cfce8f84700dc307",
+      "node_type": "fact",
+      "subject": "project",
+      "predicate": "has_test_files",
+      "object": "38 TypeScript test files, about 5.7k lines",
+      "description": "project has test files 38 TypeScript test files, about 5.7k lines",
+      "subject_id": "concept_98f54143ab4e86b2",
+      "object_id": "concept_cd66d24f20829ecb",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "fc0f3d51"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "`test` 38 个 .ts / 约 5.7k 行"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Fact: project has test files 38 TypeScript test files, about 5.7k lines"
+    },
+    {
+      "node_id": "concept_88c42379f3bbf017",
+      "node_type": "concept",
+      "name": "diff and zod",
+      "description": "diff and zod",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: diff and zod. "
+    },
+    {
+      "node_id": "fact_de5ca5443d31ec26",
+      "node_type": "fact",
+      "subject": "project",
+      "predicate": "runtime_dependencies",
+      "object": "diff and zod",
+      "description": "project runtime dependencies diff and zod",
+      "subject_id": "concept_98f54143ab4e86b2",
+      "object_id": "concept_88c42379f3bbf017",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "fc0f3d51"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "依赖极少（运行时只有 `diff`、`zod`）"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Fact: project runtime dependencies diff and zod"
+    },
+    {
+      "node_id": "concept_83cd898e36656805",
+      "node_type": "concept",
+      "name": "self-built ansi tui, not ink/react",
+      "description": "self-built ansi tui, not ink/react",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: self-built ansi tui, not ink/react. "
+    },
+    {
+      "node_id": "fact_13ab53a241b1e9d1",
+      "node_type": "fact",
+      "subject": "project",
+      "predicate": "uses_custom_tui",
+      "object": "self-built ANSI TUI, not Ink/React",
+      "description": "project uses custom tui self-built ANSI TUI, not Ink/React",
+      "subject_id": "concept_98f54143ab4e86b2",
+      "object_id": "concept_83cd898e36656805",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "fc0f3d51"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "渲染是自研 ANSI TUI，不是 Ink/React"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Fact: project uses custom tui self-built ANSI TUI, not Ink/React"
+    },
+    {
+      "node_id": "concept_e21decbd3d98dbbf",
+      "node_type": "concept",
+      "name": "src/agent-loop.ts with runagentturnwithoutcome",
+      "description": "src/agent-loop.ts with runagentturnwithoutcome",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: src/agent-loop.ts with runagentturnwithoutcome. "
+    },
+    {
+      "node_id": "fact_9e0415b380967b82",
+      "node_type": "fact",
+      "subject": "project",
+      "predicate": "agent_loop_location",
+      "object": "src/agent-loop.ts with runAgentTurnWithOutcome",
+      "description": "project agent loop location src/agent-loop.ts with runAgentTurnWithOutcome",
+      "subject_id": "concept_98f54143ab4e86b2",
+      "object_id": "concept_e21decbd3d98dbbf",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "fc0f3d51"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "`src/agent-loop.ts`，`runAgentTurnWithOutcome`"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Fact: project agent loop location src/agent-loop.ts with runAgentTurnWithOutcome"
+    },
+    {
+      "node_id": "concept_17a0dcb349aaa0c3",
+      "node_type": "concept",
+      "name": "minicode-go, minicode-python, minicode-rs, minicode4j",
+      "description": "minicode-go, minicode-python, minicode-rs, minicode4j",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: minicode-go, minicode-python, minicode-rs, minicode4j. "
+    },
+    {
+      "node_id": "fact_2897cfbeb52f8bc5",
+      "node_type": "fact",
+      "subject": "project",
+      "predicate": "has_external_submodules",
+      "object": "MiniCode-go, MiniCode-Python, MiniCode-rs, MiniCode4j",
+      "description": "project has external submodules MiniCode-go, MiniCode-Python, MiniCode-rs, MiniCode4j",
+      "subject_id": "concept_98f54143ab4e86b2",
+      "object_id": "concept_17a0dcb349aaa0c3",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "fc0f3d51"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "external/            # 4 个 git submodule：MiniCode-go / -Python / -rs / MiniCode4j"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Fact: project has external submodules MiniCode-go, MiniCode-Python, MiniCode-rs, MiniCode4j"
+    },
+    {
+      "node_id": "concept_393cb2b9cf555c26",
+      "node_type": "concept",
+      "name": ".workbuddy/memory",
+      "description": ".workbuddy/memory",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: .workbuddy/memory. "
+    },
+    {
+      "node_id": "concept_71c7f8e2a3f2f8c4",
+      "node_type": "concept",
+      "name": "daily work logs from an external ai assistant",
+      "description": "daily work logs from an external ai assistant",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: daily work logs from an external ai assistant. "
+    },
+    {
+      "node_id": "fact_6974cabafd227479",
+      "node_type": "fact",
+      "subject": ".workbuddy/memory",
+      "predicate": "contains",
+      "object": "daily work logs from an external AI assistant",
+      "description": ".workbuddy/memory contains daily work logs from an external AI assistant",
+      "subject_id": "concept_393cb2b9cf555c26",
+      "object_id": "concept_71c7f8e2a3f2f8c4",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "fc0f3d51"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "WorkBuddy 类 AI 助手的「每日工作日志/记忆」"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Fact: .workbuddy/memory contains daily work logs from an external AI assistant"
+    },
+    {
+      "node_id": "concept_9e0df00d41c77123",
+      "node_type": "concept",
+      "name": ".zcode/plans",
+      "description": ".zcode/plans",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: .zcode/plans. "
+    },
+    {
+      "node_id": "concept_e4e8287d75179864",
+      "node_type": "concept",
+      "name": "empty and untracked by git",
+      "description": "empty and untracked by git",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: empty and untracked by git. "
+    },
+    {
+      "node_id": "fact_4f99d5e457fedc3f",
+      "node_type": "fact",
+      "subject": ".zcode/plans",
+      "predicate": "is",
+      "object": "empty and untracked by git",
+      "description": ".zcode/plans is empty and untracked by git",
+      "subject_id": "concept_9e0df00d41c77123",
+      "object_id": "concept_e4e8287d75179864",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "fc0f3d51"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "完全为空，git 也不跟踪空目录"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Fact: .zcode/plans is empty and untracked by git"
+    },
+    {
+      "node_id": "concept_2c74b4f8a330b52e",
+      "node_type": "concept",
+      "name": "git history",
+      "description": "git history",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: git history. "
+    },
+    {
+      "node_id": "concept_3d9e35ff5e17ef9d",
+      "node_type": "concept",
+      "name": "2026-10-13 to 2026-10-22, 12 commits",
+      "description": "2026-10-13 to 2026-10-22, 12 commits",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: 2026-10-13 to 2026-10-22, 12 commits. "
+    },
+    {
+      "node_id": "fact_f630a10595c7cb42",
+      "node_type": "fact",
+      "subject": "git history",
+      "predicate": "spans",
+      "object": "2026-10-13 to 2026-10-22, 12 commits",
+      "description": "git history spans 2026-10-13 to 2026-10-22, 12 commits",
+      "subject_id": "concept_2c74b4f8a330b52e",
+      "object_id": "concept_3d9e35ff5e17ef9d",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "fc0f3d51"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "共 12 个 commit，跨度 **10 天**"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Fact: git history spans 2026-10-13 to 2026-10-22, 12 commits"
+    },
+    {
+      "node_id": "concept_712d47b8f627f003",
+      "node_type": "concept",
+      "name": "3 months, corrected from 10 months",
+      "description": "3 months, corrected from 10 months",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: 3 months, corrected from 10 months. "
+    },
+    {
+      "node_id": "fact_9cbe26e7e15ad425",
+      "node_type": "fact",
+      "subject": "user",
+      "predicate": "reports_project_duration",
+      "object": "3 months, corrected from 10 months",
+      "description": "user reports project duration 3 months, corrected from 10 months",
+      "subject_id": "p_12dea96fec205935",
+      "object_id": "concept_712d47b8f627f003",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "fc0f3d51"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "弄错了，我完成这个项目是3个月"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Fact: user reports project duration 3 months, corrected from 10 months"
+    },
+    {
+      "node_id": "concept_e7d0efd48fdee0a6",
+      "node_type": "concept",
+      "name": "concise answers",
+      "description": "concise answers",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: concise answers. "
+    },
+    {
+      "node_id": "fact_f91821a920880d09",
+      "node_type": "fact",
+      "subject": "user",
+      "predicate": "prefers",
+      "object": "concise answers",
+      "description": "user prefers concise answers",
+      "subject_id": "p_12dea96fec205935",
+      "object_id": "concept_e7d0efd48fdee0a6",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "fc0f3d51"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "你之后的回答还应该简洁一点"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Fact: user prefers concise answers"
+    },
+    {
+      "node_id": "concept_40d8b38678ef09f2",
+      "node_type": "concept",
+      "name": "陛下，我已经完成，请您批阅",
+      "description": "陛下，我已经完成，请您批阅",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: 陛下，我已经完成，请您批阅. "
+    },
+    {
+      "node_id": "fact_2f6506c3120c45af",
+      "node_type": "fact",
+      "subject": "user",
+      "predicate": "requires_closing_phrase",
+      "object": "陛下，我已经完成，请您批阅",
+      "description": "user requires closing phrase 陛下，我已经完成，请您批阅",
+      "subject_id": "p_12dea96fec205935",
+      "object_id": "concept_40d8b38678ef09f2",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "fc0f3d51"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "之后你的每次回答都要在说“陛下，我已经完成，请您批阅”"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Fact: user requires closing phrase 陛下，我已经完成，请您批阅"
+    },
+    {
+      "node_id": "concept_b7b5090300999d21",
+      "node_type": "concept",
+      "name": "mini-code",
+      "description": "mini-code",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: mini-code. "
+    },
+    {
+      "node_id": "fact_ecb02bf3567377e9",
+      "node_type": "fact",
+      "subject": "assistant",
+      "predicate": "name_is",
+      "object": "mini-code",
+      "description": "assistant name is mini-code",
+      "subject_id": "p_27a9612b3207eb0f",
+      "object_id": "concept_b7b5090300999d21",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "fc0f3d51"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "我是 **mini-code**，这个终端里的编码助手，不是 DeepSeek。"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Fact: assistant name is mini-code"
+    },
+    {
+      "node_id": "concept_89041b61b49852f2",
+      "node_type": "concept",
+      "name": "tty-app.ts",
+      "description": "tty-app.ts",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: tty-app.ts. "
+    },
+    {
+      "node_id": "claim_e244ec7286bfbf10",
+      "node_type": "claim",
+      "source_person_id": "p_27a9612b3207eb0f",
+      "target": "tty-app.ts",
+      "target_id": "concept_89041b61b49852f2",
+      "content": "at 2446 lines it should be split",
+      "confidence": 0.6,
+      "lifecycle": "stable",
+      "evidence": [
+        "`tty-app.ts` 2446 行该拆了"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Claim by Assistant about tty-app.ts: at 2446 lines it should be split"
+    },
+    {
+      "node_id": "concept_56356caa52500a2e",
+      "node_type": "concept",
+      "name": ".workbuddy and .zcode",
+      "description": ".workbuddy and .zcode",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: .workbuddy and .zcode. "
+    },
+    {
+      "node_id": "claim_9c7e6e9bc700bd7a",
+      "node_type": "claim",
+      "source_person_id": "p_27a9612b3207eb0f",
+      "target": ".workbuddy and .zcode",
+      "target_id": "concept_56356caa52500a2e",
+      "content": "should be added to .gitignore, and the tracked 2026-10-22.md should be removed from version control with git rm --cached",
+      "confidence": 0.6,
+      "lifecycle": "stable",
+      "evidence": [
+        "把 `.workbuddy/`、`.zcode/` 加进 `.gitignore`"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Claim by Assistant about .workbuddy and .zcode: should be added to .gitignore, and the tracked 2026-10-22.md should be removed from version control with git rm --cached"
+    },
+    {
+      "node_id": "concept_419604aee97b733c",
+      "node_type": "concept",
+      "name": "project timeline",
+      "description": "project timeline",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: project timeline. "
+    },
+    {
+      "node_id": "claim_9b2759792bd7dc39",
+      "node_type": "claim",
+      "source_person_id": "p_27a9612b3207eb0f",
+      "target": "project timeline",
+      "target_id": "concept_419604aee97b733c",
+      "content": "git history spans only 10 days, conflicting with the user's stated 3 months",
+      "confidence": 0.6,
+      "lifecycle": "stable",
+      "evidence": [
+        "两者对不上，可能是历史被重建过、或者 3 个月里前面大部分时间没进版本库。"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Claim by Assistant about project timeline: git history spans only 10 days, conflicting with the user's stated 3 months"
+    },
+    {
+      "node_id": "concept_a3ff334be57e1cdd",
+      "node_type": "concept",
+      "name": "3-month timeline",
+      "description": "3-month timeline",
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Concept: 3-month timeline. "
+    },
+    {
+      "node_id": "claim_5a80502a1260e68d",
+      "node_type": "claim",
+      "source_person_id": "p_27a9612b3207eb0f",
+      "target": "3-month timeline",
+      "target_id": "concept_a3ff334be57e1cdd",
+      "content": "is very tight for the project's scope",
+      "confidence": 0.6,
+      "lifecycle": "stable",
+      "evidence": [
+        "3 个月就更紧了"
+      ],
+      "created_at": "2026-10-23T06:05:43.087Z",
+      "updated_at": "2026-10-23T06:05:43.087Z",
+      "source_session_id": "fc0f3d51",
+      "embedding_text": "Claim by Assistant about 3-month timeline: is very tight for the project's scope"
+    },
+    {
+      "node_id": "concept_05c062636488ff27",
+      "node_type": "concept",
+      "name": "project duration",
+      "description": "Recorded elapsed time for completing the project, corrected to 6 months.",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: project duration. Recorded elapsed time for completing the project, corrected to 6 months."
+    },
+    {
+      "node_id": "concept_3c6a4d4601d05e0c",
+      "node_type": "concept",
+      "name": "memory correction",
+      "description": "User correction of previously stated project completion time.",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: memory correction. User correction of previously stated project completion time."
+    },
+    {
+      "node_id": "concept_f696ea8b6f0558f1",
+      "node_type": "concept",
+      "name": "directory structure",
+      "description": "Physical organization of source files and directories.",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: directory structure. Physical organization of source files and directories."
+    },
+    {
+      "node_id": "concept_8482b8ab2f1078e4",
+      "node_type": "concept",
+      "name": "architectural layering",
+      "description": "Separation between entry, core, adapter, and view layers.",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: architectural layering. Separation between entry, core, adapter, and view layers."
+    },
+    {
+      "node_id": "concept_2e81286507cc5b9f",
+      "node_type": "concept",
+      "name": "circular dependency",
+      "description": "Mutual import cycle between modules.",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: circular dependency. Mutual import cycle between modules."
+    },
+    {
+      "node_id": "concept_e286109bbc3441d5",
+      "node_type": "concept",
+      "name": "monolith file",
+      "description": "Large file with many mixed responsibilities.",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: monolith file. Large file with many mixed responsibilities."
+    },
+    {
+      "node_id": "concept_fc439f68d95bd88c",
+      "node_type": "concept",
+      "name": "test coverage",
+      "description": "Relationship between tests and modules.",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: test coverage. Relationship between tests and modules."
+    },
+    {
+      "node_id": "concept_460f2b3405f7e1a9",
+      "node_type": "concept",
+      "name": "cross-platform compatibility",
+      "description": "Ability of installation shims to run on Windows.",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: cross-platform compatibility. Ability of installation shims to run on Windows."
+    },
+    {
+      "node_id": "concept_af36ebda3fbf7873",
+      "node_type": "concept",
+      "name": "documentation drift",
+      "description": "Architecture docs not matching the actual structure.",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: documentation drift. Architecture docs not matching the actual structure."
+    },
+    {
+      "node_id": "event_2f85ca8413c3c0a4",
+      "node_type": "event",
+      "title": "User asked how long they previously said the project took",
+      "description": "User asked about their earlier stated project completion time. Assistant recalled 10 months then a correction to 3 months, and noted git commits spanned only 10 days, creating an inconsistency.",
+      "participants": [
+        "p_12dea96fec205935",
+        "p_27a9612b3207eb0f"
+      ],
+      "concepts": [
+        "concept_05c062636488ff27",
+        "concept_2c74b4f8a330b52e",
+        "concept_81c5d49be9505089"
+      ],
+      "time_expression": "之前",
+      "session_time": "2026-10-23",
+      "archived": false,
+      "evidence": [
+        "你好，我之前说我完成这个项目用了多久？"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Event: User asked how long they previously said the project took. User asked about their earlier stated project completion time. Assistant recalled 10 months then a correction to 3 months, and noted git commits spanned only 10 days, creating an inconsistency.. Concepts: project duration, git history, memory"
+    },
+    {
+      "node_id": "event_5130276bb94f53ad",
+      "node_type": "event",
+      "title": "User corrected project completion time to 6 months",
+      "description": "User stated the project took 6 months and that earlier recollections were wrong. Assistant marked the 10-month and 3-month statements as invalid.",
+      "participants": [
+        "p_12dea96fec205935",
+        "p_27a9612b3207eb0f"
+      ],
+      "concepts": [
+        "concept_05c062636488ff27",
+        "concept_3c6a4d4601d05e0c"
+      ],
+      "time_expression": "现在",
+      "session_time": "2026-10-23",
+      "archived": false,
+      "evidence": [
+        "我的项目使用了6个月才完成，之前是我记错了"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Event: User corrected project completion time to 6 months. User stated the project took 6 months and that earlier recollections were wrong. Assistant marked the 10-month and 3-month statements as invalid.. Concepts: project duration, memory correction"
+    },
+    {
+      "node_id": "concept_566bc72834222f76",
+      "node_type": "concept",
+      "name": "memory persistence",
+      "description": "memory persistence",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: memory persistence. "
+    },
+    {
+      "node_id": "event_961b5c3eba750788",
+      "node_type": "event",
+      "title": "Assistant noted inability to persist fact-type memory",
+      "description": "Assistant said it could only write process/method memories, not fact-type records such as elapsed time.",
+      "participants": [
+        "p_27a9612b3207eb0f"
+      ],
+      "concepts": [
+        "concept_566bc72834222f76",
+        "concept_05c062636488ff27"
+      ],
+      "session_time": "2026-10-23",
+      "archived": false,
+      "evidence": [
+        "我只能写入“流程/方法”类记忆，事实类记录（比如耗时）在这里无法落库"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Event: Assistant noted inability to persist fact-type memory. Assistant said it could only write process/method memories, not fact-type records such as elapsed time.. Concepts: memory persistence, project duration"
+    },
+    {
+      "node_id": "concept_722f4317399fc5d2",
+      "node_type": "concept",
+      "name": "technical debt",
+      "description": "technical debt",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: technical debt. "
+    },
+    {
+      "node_id": "event_33df5d1d1117988f",
+      "node_type": "event",
+      "title": "User asked about defects in project directory structure",
+      "description": "User asked whether the project directory structure had flaws. Assistant identified P0-P2 issues in layering, module size, dependencies, documentation, and repository hygiene.",
+      "participants": [
+        "p_12dea96fec205935",
+        "p_27a9612b3207eb0f"
+      ],
+      "concepts": [
+        "concept_f696ea8b6f0558f1",
+        "concept_f380cbcd9a79a4ea",
+        "concept_722f4317399fc5d2"
+      ],
+      "session_time": "2026-10-23",
+      "archived": false,
+      "evidence": [
+        "这个项目目录结构有什么缺陷吗？"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Event: User asked about defects in project directory structure. User asked whether the project directory structure had flaws. Assistant identified P0-P2 issues in layering, module size, dependencies, documentation, and repository hygiene.. Concepts: directory structure, architecture, technical debt"
+    },
+    {
+      "node_id": "concept_cd75b86f4ff467de",
+      "node_type": "concept",
+      "name": "6 months",
+      "description": "6 months",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: 6 months. "
+    },
+    {
+      "node_id": "fact_417552203c6ba44f",
+      "node_type": "fact",
+      "subject": "project",
+      "predicate": "completion_time",
+      "object": "6 months",
+      "description": "project completion time 6 months",
+      "subject_id": "concept_98f54143ab4e86b2",
+      "object_id": "concept_cd75b86f4ff467de",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "e8406c87"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "我的项目使用了6个月才完成"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Fact: project completion time 6 months"
+    },
+    {
+      "node_id": "concept_af9f85fe1576553e",
+      "node_type": "concept",
+      "name": "2026-10-13 to 2026-10-22, 12 commits, 10 days",
+      "description": "2026-10-13 to 2026-10-22, 12 commits, 10 days",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: 2026-10-13 to 2026-10-22, 12 commits, 10 days. "
+    },
+    {
+      "node_id": "fact_785ddfac1f4ffad7",
+      "node_type": "fact",
+      "subject": "project",
+      "predicate": "git_commit_span",
+      "object": "2026-10-13 to 2026-10-22, 12 commits, 10 days",
+      "description": "project git commit span 2026-10-13 to 2026-10-22, 12 commits, 10 days",
+      "subject_id": "concept_98f54143ab4e86b2",
+      "object_id": "concept_af9f85fe1576553e",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "e8406c87"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "git 提交记录显示 2026-10-13 → 2026-10-22，共 12 个 commit、跨度 10 天"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Fact: project git commit span 2026-10-13 to 2026-10-22, 12 commits, 10 days"
+    },
+    {
+      "node_id": "concept_984e76fdaf636983",
+      "node_type": "concept",
+      "name": "src/",
+      "description": "src/",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: src/. "
+    },
+    {
+      "node_id": "concept_687a0a8a51c07952",
+      "node_type": "concept",
+      "name": "26 files / 9440 lines, 48% of repository",
+      "description": "26 files / 9440 lines, 48% of repository",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: 26 files / 9440 lines, 48% of repository. "
+    },
+    {
+      "node_id": "fact_a65ebfda0603efb9",
+      "node_type": "fact",
+      "subject": "src/",
+      "predicate": "contains",
+      "object": "26 files / 9440 lines, 48% of repository",
+      "description": "src/ contains 26 files / 9440 lines, 48% of repository",
+      "subject_id": "concept_984e76fdaf636983",
+      "object_id": "concept_687a0a8a51c07952",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "e8406c87"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "`src/` 根目录平铺 26 个文件 / 9440 行，占全仓 48%"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Fact: src/ contains 26 files / 9440 lines, 48% of repository"
+    },
+    {
+      "node_id": "concept_3acfff76ded0ed77",
+      "node_type": "concept",
+      "name": "src/tty-app.ts",
+      "description": "src/tty-app.ts",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: src/tty-app.ts. "
+    },
+    {
+      "node_id": "concept_76884f9700f3d266",
+      "node_type": "concept",
+      "name": "2643 lines, 50 top-level declarations",
+      "description": "2643 lines, 50 top-level declarations",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: 2643 lines, 50 top-level declarations. "
+    },
+    {
+      "node_id": "fact_a4d0adb10ef29758",
+      "node_type": "fact",
+      "subject": "src/tty-app.ts",
+      "predicate": "has_size",
+      "object": "2643 lines, 50 top-level declarations",
+      "description": "src/tty-app.ts has size 2643 lines, 50 top-level declarations",
+      "subject_id": "concept_3acfff76ded0ed77",
+      "object_id": "concept_76884f9700f3d266",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "e8406c87"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "`src/tty-app.ts` 2643 行、50 个顶层声明"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Fact: src/tty-app.ts has size 2643 lines, 50 top-level declarations"
+    },
+    {
+      "node_id": "concept_9e74e786739b8729",
+      "node_type": "concept",
+      "name": "src/mcp.ts",
+      "description": "src/mcp.ts",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: src/mcp.ts. "
+    },
+    {
+      "node_id": "concept_84a69e48c436d180",
+      "node_type": "concept",
+      "name": "1278 lines",
+      "description": "1278 lines",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: 1278 lines. "
+    },
+    {
+      "node_id": "fact_ccaf45d4285f7cff",
+      "node_type": "fact",
+      "subject": "src/mcp.ts",
+      "predicate": "has_size",
+      "object": "1278 lines",
+      "description": "src/mcp.ts has size 1278 lines",
+      "subject_id": "concept_9e74e786739b8729",
+      "object_id": "concept_84a69e48c436d180",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "e8406c87"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "`src/mcp.ts` 1278 行"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Fact: src/mcp.ts has size 1278 lines"
+    },
+    {
+      "node_id": "concept_1ff6ab38822c9f4b",
+      "node_type": "concept",
+      "name": "tool.ts and mcp.ts",
+      "description": "tool.ts and mcp.ts",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: tool.ts and mcp.ts. "
+    },
+    {
+      "node_id": "concept_4eaa63613b4e1066",
+      "node_type": "concept",
+      "name": "tool.ts → mcp.ts → tool.ts",
+      "description": "tool.ts → mcp.ts → tool.ts",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: tool.ts → mcp.ts → tool.ts. "
+    },
+    {
+      "node_id": "fact_8e99a0972eb41583",
+      "node_type": "fact",
+      "subject": "tool.ts and mcp.ts",
+      "predicate": "have_circular_dependency",
+      "object": "tool.ts → mcp.ts → tool.ts",
+      "description": "tool.ts and mcp.ts have circular dependency tool.ts → mcp.ts → tool.ts",
+      "subject_id": "concept_1ff6ab38822c9f4b",
+      "object_id": "concept_4eaa63613b4e1066",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "e8406c87"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "`tool.ts → mcp.ts → tool.ts`"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Fact: tool.ts and mcp.ts have circular dependency tool.ts → mcp.ts → tool.ts"
+    },
+    {
+      "node_id": "concept_196c8c2100cdc767",
+      "node_type": "concept",
+      "name": "src/tui/chrome.ts",
+      "description": "src/tui/chrome.ts",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: src/tui/chrome.ts. "
+    },
+    {
+      "node_id": "concept_f907c2de949c1668",
+      "node_type": "concept",
+      "name": "tool.ts, config.ts, permissions.ts, cli-commands.ts",
+      "description": "tool.ts, config.ts, permissions.ts, cli-commands.ts",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: tool.ts, config.ts, permissions.ts, cli-commands.ts. "
+    },
+    {
+      "node_id": "fact_bce79a13e8115bbc",
+      "node_type": "fact",
+      "subject": "src/tui/chrome.ts",
+      "predicate": "imports",
+      "object": "tool.ts, config.ts, permissions.ts, cli-commands.ts",
+      "description": "src/tui/chrome.ts imports tool.ts, config.ts, permissions.ts, cli-commands.ts",
+      "subject_id": "concept_196c8c2100cdc767",
+      "object_id": "concept_f907c2de949c1668",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "e8406c87"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "`src/tui/chrome.ts`（视图）反向 import `tool.ts`、`config.ts`、`permissions.ts`、`cli-commands.ts`"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Fact: src/tui/chrome.ts imports tool.ts, config.ts, permissions.ts, cli-commands.ts"
+    },
+    {
+      "node_id": "concept_330b7921647bbcc7",
+      "node_type": "concept",
+      "name": "src/runtime/session-runtime.ts",
+      "description": "src/runtime/session-runtime.ts",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: src/runtime/session-runtime.ts. "
+    },
+    {
+      "node_id": "concept_53bf0fd88bebe875",
+      "node_type": "concept",
+      "name": "tools/goal.ts",
+      "description": "tools/goal.ts",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: tools/goal.ts. "
+    },
+    {
+      "node_id": "fact_e1b611202d0d4186",
+      "node_type": "fact",
+      "subject": "src/runtime/session-runtime.ts",
+      "predicate": "imports",
+      "object": "tools/goal.ts",
+      "description": "src/runtime/session-runtime.ts imports tools/goal.ts",
+      "subject_id": "concept_330b7921647bbcc7",
+      "object_id": "concept_53bf0fd88bebe875",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "e8406c87"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "`src/runtime/session-runtime.ts` import `tools/goal.ts`"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Fact: src/runtime/session-runtime.ts imports tools/goal.ts"
+    },
+    {
+      "node_id": "concept_001ba32a17ee181b",
+      "node_type": "concept",
+      "name": "src/memory/",
+      "description": "src/memory/",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: src/memory/. "
+    },
+    {
+      "node_id": "concept_b7003ca5713ed454",
+      "node_type": "concept",
+      "name": "25 files / 3240 lines",
+      "description": "25 files / 3240 lines",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: 25 files / 3240 lines. "
+    },
+    {
+      "node_id": "fact_5bff11b121cd99a3",
+      "node_type": "fact",
+      "subject": "src/memory/",
+      "predicate": "contains",
+      "object": "25 files / 3240 lines",
+      "description": "src/memory/ contains 25 files / 3240 lines",
+      "subject_id": "concept_001ba32a17ee181b",
+      "object_id": "concept_b7003ca5713ed454",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "e8406c87"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "`src/memory/`（25 文件 / 3240 行的图-向量记忆子系统）"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Fact: src/memory/ contains 25 files / 3240 lines"
+    },
+    {
+      "node_id": "concept_4d83947b1d335ce4",
+      "node_type": "concept",
+      "name": "utils/context.ts, runtime/context.ts, plan/context.ts, goal/context.ts",
+      "description": "utils/context.ts, runtime/context.ts, plan/context.ts, goal/context.ts",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: utils/context.ts, runtime/context.ts, plan/context.ts, goal/context.ts. "
+    },
+    {
+      "node_id": "fact_9b6c1cd4ce8bd707",
+      "node_type": "fact",
+      "subject": "project",
+      "predicate": "has_context_modules",
+      "object": "utils/context.ts, runtime/context.ts, plan/context.ts, goal/context.ts",
+      "description": "project has context modules utils/context.ts, runtime/context.ts, plan/context.ts, goal/context.ts",
+      "subject_id": "concept_98f54143ab4e86b2",
+      "object_id": "concept_4d83947b1d335ce4",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "e8406c87"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "`context` 有 4 个（`utils/context.ts`、`runtime/context.ts`、`plan/context.ts`、`goal/context.ts`）"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Fact: project has context modules utils/context.ts, runtime/context.ts, plan/context.ts, goal/context.ts"
+    },
+    {
+      "node_id": "concept_b36ba06271690768",
+      "node_type": "concept",
+      "name": "src/loop/",
+      "description": "src/loop/",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: src/loop/. "
+    },
+    {
+      "node_id": "concept_b5907956d45182cd",
+      "node_type": "concept",
+      "name": "one scheduler.ts (174 lines)",
+      "description": "one scheduler.ts (174 lines)",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: one scheduler.ts (174 lines). "
+    },
+    {
+      "node_id": "fact_63b37c99852a03a9",
+      "node_type": "fact",
+      "subject": "src/loop/",
+      "predicate": "contains",
+      "object": "one scheduler.ts (174 lines)",
+      "description": "src/loop/ contains one scheduler.ts (174 lines)",
+      "subject_id": "concept_b36ba06271690768",
+      "object_id": "concept_b5907956d45182cd",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "e8406c87"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "`loop/` 只有 1 个 174 行的 `scheduler.ts`"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Fact: src/loop/ contains one scheduler.ts (174 lines)"
+    },
+    {
+      "node_id": "concept_b82bfe7e81999e99",
+      "node_type": "concept",
+      "name": "architecture.md",
+      "description": "architecture.md",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: architecture.md. "
+    },
+    {
+      "node_id": "concept_dac7d7f932148764",
+      "node_type": "concept",
+      "name": "memory/, plan/, goal/, runtime/",
+      "description": "memory/, plan/, goal/, runtime/",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: memory/, plan/, goal/, runtime/. "
+    },
+    {
+      "node_id": "fact_47bed7b88127c333",
+      "node_type": "fact",
+      "subject": "ARCHITECTURE.md",
+      "predicate": "omits",
+      "object": "memory/, plan/, goal/, runtime/",
+      "description": "ARCHITECTURE.md omits memory/, plan/, goal/, runtime/",
+      "subject_id": "concept_b82bfe7e81999e99",
+      "object_id": "concept_dac7d7f932148764",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "e8406c87"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "对 `memory/`（图存储、向量、蒸馏、技能演化）、`plan/`、`goal/`、`runtime/` 完全没有描述"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Fact: ARCHITECTURE.md omits memory/, plan/, goal/, runtime/"
+    },
+    {
+      "node_id": "concept_61ebb9fd6e8cf908",
+      "node_type": "concept",
+      "name": "tsconfig.json",
+      "description": "tsconfig.json",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: tsconfig.json. "
+    },
+    {
+      "node_id": "concept_649a18989cda5e0a",
+      "node_type": "concept",
+      "name": "src/**/*.ts only",
+      "description": "src/**/*.ts only",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: src/**/*.ts only. "
+    },
+    {
+      "node_id": "fact_c8ebc80ef1a8e88c",
+      "node_type": "fact",
+      "subject": "tsconfig.json",
+      "predicate": "include",
+      "object": "src/**/*.ts only",
+      "description": "tsconfig.json include src/**/*.ts only",
+      "subject_id": "concept_61ebb9fd6e8cf908",
+      "object_id": "concept_649a18989cda5e0a",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "e8406c87"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "`tsconfig.json` 的 `include` 只有 `src/**/*.ts`"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Fact: tsconfig.json include src/**/*.ts only"
+    },
+    {
+      "node_id": "concept_bcf0dda7d79c9560",
+      "node_type": "concept",
+      "name": "npm run check",
+      "description": "npm run check",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: npm run check. "
+    },
+    {
+      "node_id": "concept_8dc2362f18c98aae",
+      "node_type": "concept",
+      "name": "test/",
+      "description": "test/",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: test/. "
+    },
+    {
+      "node_id": "fact_4513bb258a5971b9",
+      "node_type": "fact",
+      "subject": "npm run check",
+      "predicate": "does_not_validate",
+      "object": "test/",
+      "description": "npm run check does not validate test/",
+      "subject_id": "concept_bcf0dda7d79c9560",
+      "object_id": "concept_8dc2362f18c98aae",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "e8406c87"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "`npm run check` **不校验 test/**"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Fact: npm run check does not validate test/"
+    },
+    {
+      "node_id": "concept_9dc9cfdccfa0cbf9",
+      "node_type": "concept",
+      "name": "38 tests for 103 modules; 54 modules without direct tests",
+      "description": "38 tests for 103 modules; 54 modules without direct tests",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: 38 tests for 103 modules; 54 modules without direct tests. "
+    },
+    {
+      "node_id": "fact_736dfcbe8b3de9aa",
+      "node_type": "fact",
+      "subject": "project",
+      "predicate": "test_coverage",
+      "object": "38 tests for 103 modules; 54 modules without direct tests",
+      "description": "project test coverage 38 tests for 103 modules; 54 modules without direct tests",
+      "subject_id": "concept_98f54143ab4e86b2",
+      "object_id": "concept_9dc9cfdccfa0cbf9",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "e8406c87"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "38 个测试对应 103 个模块，按文件名匹配有 54 个模块无直接测试"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Fact: project test coverage 38 tests for 103 modules; 54 modules without direct tests"
+    },
+    {
+      "node_id": "concept_b8cdf3c49f38e865",
+      "node_type": "concept",
+      "name": "bin/minicode",
+      "description": "bin/minicode",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: bin/minicode. "
+    },
+    {
+      "node_id": "concept_436cd88e1d74afdc",
+      "node_type": "concept",
+      "name": "bash script that fails on windows npm i -g shim",
+      "description": "bash script that fails on windows npm i -g shim",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: bash script that fails on windows npm i -g shim. "
+    },
+    {
+      "node_id": "fact_d7b888c68ea22587",
+      "node_type": "fact",
+      "subject": "bin/minicode",
+      "predicate": "is",
+      "object": "bash script that fails on Windows npm i -g shim",
+      "description": "bin/minicode is bash script that fails on Windows npm i -g shim",
+      "subject_id": "concept_b8cdf3c49f38e865",
+      "object_id": "concept_436cd88e1d74afdc",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "e8406c87"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "`bin/minicode` 是 bash 脚本，Windows 下 `npm i -g` 生成的 shim 跑不起来"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Fact: bin/minicode is bash script that fails on Windows npm i -g shim"
+    },
+    {
+      "node_id": "concept_90d314f018f4249c",
+      "node_type": "concept",
+      "name": "repository root",
+      "description": "repository root",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: repository root. "
+    },
+    {
+      "node_id": "concept_adfe9f995fadc891",
+      "node_type": "concept",
+      "name": "12 markdown files",
+      "description": "12 markdown files",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: 12 markdown files. "
+    },
+    {
+      "node_id": "fact_f64db95bd1811b70",
+      "node_type": "fact",
+      "subject": "repository root",
+      "predicate": "contains",
+      "object": "12 Markdown files",
+      "description": "repository root contains 12 Markdown files",
+      "subject_id": "concept_90d314f018f4249c",
+      "object_id": "concept_adfe9f995fadc891",
+      "confidence": 0.6,
+      "lifecycle": "candidate",
+      "is_latest": true,
+      "valid_from": "2026-10-23",
+      "mention_count": 1,
+      "source_sessions": [
+        "e8406c87"
+      ],
+      "supported_by_event_ids": [],
+      "evidence": [
+        "仓库根目录 12 个 Markdown"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Fact: repository root contains 12 Markdown files"
+    },
+    {
+      "node_id": "concept_d362478b0030ac5c",
+      "node_type": "concept",
+      "name": "previous 10-month and 3-month project duration statements",
+      "description": "previous 10-month and 3-month project duration statements",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: previous 10-month and 3-month project duration statements. "
+    },
+    {
+      "node_id": "claim_2a957d7151715db2",
+      "node_type": "claim",
+      "source_person_id": "p_12dea96fec205935",
+      "target": "previous 10-month and 3-month project duration statements",
+      "target_id": "concept_d362478b0030ac5c",
+      "content": "were mistaken; the project actually took 6 months",
+      "confidence": 0.6,
+      "lifecycle": "stable",
+      "evidence": [],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Claim by User about previous 10-month and 3-month project duration statements: were mistaken; the project actually took 6 months"
+    },
+    {
+      "node_id": "concept_0aef6ea5c7f10c66",
+      "node_type": "concept",
+      "name": "project directory structure",
+      "description": "project directory structure",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: project directory structure. "
+    },
+    {
+      "node_id": "claim_265626a26c875a9c",
+      "node_type": "claim",
+      "source_person_id": "p_27a9612b3207eb0f",
+      "target": "project directory structure",
+      "target_id": "concept_0aef6ea5c7f10c66",
+      "content": "the main defect is not missing directories but unmaintained boundaries between existing layers",
+      "confidence": 0.6,
+      "lifecycle": "stable",
+      "evidence": [
+        "主要不在“缺目录”，而在**分层已经存在但边界没守住**"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Claim by Assistant about project directory structure: the main defect is not missing directories but unmaintained boundaries between existing layers"
+    },
+    {
+      "node_id": "claim_b2e7396bdb6ba9e4",
+      "node_type": "claim",
+      "source_person_id": "p_27a9612b3207eb0f",
+      "target": "src/",
+      "target_id": "concept_984e76fdaf636983",
+      "content": "is a structural monolith with entry, core, adapter, and UI mixed in one layer",
+      "confidence": 0.6,
+      "lifecycle": "stable",
+      "evidence": [
+        "全混在一层，没有“入口/核心/适配器/视图”的物理边界"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Claim by Assistant about src/: is a structural monolith with entry, core, adapter, and UI mixed in one layer"
+    },
+    {
+      "node_id": "claim_64bcb7db7b244273",
+      "node_type": "claim",
+      "source_person_id": "p_27a9612b3207eb0f",
+      "target": "src/tty-app.ts",
+      "target_id": "concept_3acfff76ded0ed77",
+      "content": "any change touches the same module and tests can only import the whole module",
+      "confidence": 0.6,
+      "lifecycle": "stable",
+      "evidence": [
+        "改动任何一处都在动同一个模块，测试也只能整模块引入"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Claim by Assistant about src/tty-app.ts: any change touches the same module and tests can only import the whole module"
+    },
+    {
+      "node_id": "claim_1dfffb7b60b6bd7e",
+      "node_type": "claim",
+      "source_person_id": "p_27a9612b3207eb0f",
+      "target": "src/mcp.ts",
+      "target_id": "concept_9e74e786739b8729",
+      "content": "crams stdio client, HTTP client, schema normalization, auth/token cache, and content formatting into one file",
+      "confidence": 0.6,
+      "lifecycle": "stable",
+      "evidence": [
+        "把 stdio client、HTTP client、schema 归一化、auth/token 缓存、内容格式化塞进一个文件"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Claim by Assistant about src/mcp.ts: crams stdio client, HTTP client, schema normalization, auth/token cache, and content formatting into one file"
+    },
+    {
+      "node_id": "claim_f8d5778df0e62374",
+      "node_type": "claim",
+      "source_person_id": "p_27a9612b3207eb0f",
+      "target": "src/loop/",
+      "target_id": "concept_b36ba06271690768",
+      "content": "exists only for the sake of having a directory",
+      "confidence": 0.6,
+      "lifecycle": "stable",
+      "evidence": [
+        "属于“为目录而目录”"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Claim by Assistant about src/loop/: exists only for the sake of having a directory"
+    },
+    {
+      "node_id": "claim_5ef4a78e731e8530",
+      "node_type": "claim",
+      "source_person_id": "p_27a9612b3207eb0f",
+      "target": "ARCHITECTURE.md",
+      "target_id": "concept_b82bfe7e81999e99",
+      "content": "has drifted from the real structure",
+      "confidence": 0.6,
+      "lifecycle": "stable",
+      "evidence": [
+        "文档与真实结构已漂移"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Claim by Assistant about ARCHITECTURE.md: has drifted from the real structure"
+    },
+    {
+      "node_id": "concept_e8323f7c785d763f",
+      "node_type": "concept",
+      "name": "bin/minicode on windows",
+      "description": "bin/minicode on windows",
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Concept: bin/minicode on windows. "
+    },
+    {
+      "node_id": "claim_a53b92bdac332f9a",
+      "node_type": "claim",
+      "source_person_id": "p_27a9612b3207eb0f",
+      "target": "bin/minicode on Windows",
+      "target_id": "concept_e8323f7c785d763f",
+      "content": "is a real usability defect",
+      "confidence": 0.6,
+      "lifecycle": "stable",
+      "evidence": [
+        "这是个真实的可用性缺陷"
+      ],
+      "created_at": "2026-10-23T07:08:33.342Z",
+      "updated_at": "2026-10-23T07:08:33.342Z",
+      "source_session_id": "e8406c87",
+      "embedding_text": "Claim by Assistant about bin/minicode on Windows: is a real usability defect"
+    }
+  ],
+  "edges": [
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "event_83123734d0d67ba8",
+      "edge_type": "PARTICIPATED_IN",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_12dea96fec205935",
+      "target_id": "event_83123734d0d67ba8",
+      "edge_type": "MENTIONED_IN",
+      "weight": 0.5,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "event_83123734d0d67ba8",
+      "target_id": "concept_9dd6ccb0a9c562ac",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "event_83123734d0d67ba8",
+      "target_id": "concept_26aca7941a99d90e",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_12dea96fec205935",
+      "target_id": "event_efb88d2ec44b7e50",
+      "edge_type": "PARTICIPATED_IN",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "event_efb88d2ec44b7e50",
+      "edge_type": "MENTIONED_IN",
+      "weight": 0.5,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "event_efb88d2ec44b7e50",
+      "target_id": "concept_1db089a9f84e14e9",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "event_efb88d2ec44b7e50",
+      "target_id": "concept_61e7a9a44ec34ad4",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_12dea96fec205935",
+      "target_id": "event_c49e1d11e8c7fb2c",
+      "edge_type": "PARTICIPATED_IN",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "event_c49e1d11e8c7fb2c",
+      "edge_type": "MENTIONED_IN",
+      "weight": 0.5,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "event_c49e1d11e8c7fb2c",
+      "target_id": "concept_25fc2ec16f543324",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "event_c49e1d11e8c7fb2c",
+      "target_id": "concept_77323db9a4451d6d",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_12dea96fec205935",
+      "target_id": "event_68adb9bc2d3118be",
+      "edge_type": "PARTICIPATED_IN",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "event_68adb9bc2d3118be",
+      "edge_type": "MENTIONED_IN",
+      "weight": 0.5,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "event_68adb9bc2d3118be",
+      "target_id": "concept_4e7560f1a014f1a1",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "event_68adb9bc2d3118be",
+      "target_id": "concept_f380cbcd9a79a4ea",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_12dea96fec205935",
+      "target_id": "event_7b0b0e69d8dd500f",
+      "edge_type": "PARTICIPATED_IN",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "event_7b0b0e69d8dd500f",
+      "edge_type": "MENTIONED_IN",
+      "weight": 0.5,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "event_7b0b0e69d8dd500f",
+      "target_id": "concept_d21ef039dc144aab",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "event_7b0b0e69d8dd500f",
+      "target_id": "concept_77323db9a4451d6d",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_12dea96fec205935",
+      "target_id": "event_b5e20c8c925fd43f",
+      "edge_type": "PARTICIPATED_IN",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "event_b5e20c8c925fd43f",
+      "edge_type": "MENTIONED_IN",
+      "weight": 0.5,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "event_b5e20c8c925fd43f",
+      "target_id": "concept_5e6a73aed591b502",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "event_b5e20c8c925fd43f",
+      "target_id": "concept_1c41cb55883b7d5d",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "event_b5e20c8c925fd43f",
+      "target_id": "concept_fb0dfd38de288a01",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_12dea96fec205935",
+      "target_id": "event_53afd4af21845cca",
+      "edge_type": "PARTICIPATED_IN",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "event_53afd4af21845cca",
+      "edge_type": "MENTIONED_IN",
+      "weight": 0.5,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "event_53afd4af21845cca",
+      "target_id": "concept_9dd6ccb0a9c562ac",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "event_53afd4af21845cca",
+      "target_id": "concept_fed758b7a842befd",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_12dea96fec205935",
+      "target_id": "event_b34a0a371f40a9c7",
+      "edge_type": "PARTICIPATED_IN",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "event_b34a0a371f40a9c7",
+      "edge_type": "MENTIONED_IN",
+      "weight": 0.5,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "event_b34a0a371f40a9c7",
+      "target_id": "concept_d91835cc0ae68ddc",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "event_b34a0a371f40a9c7",
+      "target_id": "concept_02ee3cf1a87ecec6",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_12dea96fec205935",
+      "target_id": "event_319eb32781b8635f",
+      "edge_type": "PARTICIPATED_IN",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "event_319eb32781b8635f",
+      "edge_type": "MENTIONED_IN",
+      "weight": 0.5,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "event_319eb32781b8635f",
+      "target_id": "concept_e39add1be3b92e12",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_12dea96fec205935",
+      "target_id": "event_79de950e05554d9b",
+      "edge_type": "PARTICIPATED_IN",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "event_79de950e05554d9b",
+      "edge_type": "MENTIONED_IN",
+      "weight": 0.5,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "event_79de950e05554d9b",
+      "target_id": "concept_e39add1be3b92e12",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "event_4aa68b431b28ac4a",
+      "edge_type": "PARTICIPATED_IN",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_12dea96fec205935",
+      "target_id": "event_4aa68b431b28ac4a",
+      "edge_type": "MENTIONED_IN",
+      "weight": 0.5,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "event_4aa68b431b28ac4a",
+      "target_id": "concept_ee11771ce87d177b",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "event_4aa68b431b28ac4a",
+      "target_id": "concept_e39add1be3b92e12",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "fact_f1b2b3a5cfc5e06c",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "fact_f1b2b3a5cfc5e06c",
+      "target_id": "concept_3cac7efec42e8cfb",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "concept_98f54143ab4e86b2",
+      "target_id": "fact_1893476685d8aad2",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "fact_1893476685d8aad2",
+      "target_id": "concept_4cd888a0ecdf4687",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "concept_98f54143ab4e86b2",
+      "target_id": "fact_cfce8f84700dc307",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "fact_cfce8f84700dc307",
+      "target_id": "concept_cd66d24f20829ecb",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "concept_98f54143ab4e86b2",
+      "target_id": "fact_de5ca5443d31ec26",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "fact_de5ca5443d31ec26",
+      "target_id": "concept_88c42379f3bbf017",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "concept_98f54143ab4e86b2",
+      "target_id": "fact_13ab53a241b1e9d1",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "fact_13ab53a241b1e9d1",
+      "target_id": "concept_83cd898e36656805",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "concept_98f54143ab4e86b2",
+      "target_id": "fact_9e0415b380967b82",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "fact_9e0415b380967b82",
+      "target_id": "concept_e21decbd3d98dbbf",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "concept_98f54143ab4e86b2",
+      "target_id": "fact_2897cfbeb52f8bc5",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "fact_2897cfbeb52f8bc5",
+      "target_id": "concept_17a0dcb349aaa0c3",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "concept_393cb2b9cf555c26",
+      "target_id": "fact_6974cabafd227479",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "fact_6974cabafd227479",
+      "target_id": "concept_71c7f8e2a3f2f8c4",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "concept_9e0df00d41c77123",
+      "target_id": "fact_4f99d5e457fedc3f",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "fact_4f99d5e457fedc3f",
+      "target_id": "concept_e4e8287d75179864",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "concept_2c74b4f8a330b52e",
+      "target_id": "fact_f630a10595c7cb42",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "fact_f630a10595c7cb42",
+      "target_id": "concept_3d9e35ff5e17ef9d",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_12dea96fec205935",
+      "target_id": "fact_9cbe26e7e15ad425",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "fact_9cbe26e7e15ad425",
+      "target_id": "concept_712d47b8f627f003",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_12dea96fec205935",
+      "target_id": "fact_f91821a920880d09",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "fact_f91821a920880d09",
+      "target_id": "concept_e7d0efd48fdee0a6",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_12dea96fec205935",
+      "target_id": "fact_2f6506c3120c45af",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "fact_2f6506c3120c45af",
+      "target_id": "concept_40d8b38678ef09f2",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "fact_ecb02bf3567377e9",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "fact_ecb02bf3567377e9",
+      "target_id": "concept_b7b5090300999d21",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "claim_e244ec7286bfbf10",
+      "edge_type": "CLAIMS",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "claim_e244ec7286bfbf10",
+      "target_id": "concept_89041b61b49852f2",
+      "edge_type": "ABOUT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "claim_9c7e6e9bc700bd7a",
+      "edge_type": "CLAIMS",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "claim_9c7e6e9bc700bd7a",
+      "target_id": "concept_56356caa52500a2e",
+      "edge_type": "ABOUT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "claim_9b2759792bd7dc39",
+      "edge_type": "CLAIMS",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "claim_9b2759792bd7dc39",
+      "target_id": "concept_419604aee97b733c",
+      "edge_type": "ABOUT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "claim_5a80502a1260e68d",
+      "edge_type": "CLAIMS",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "claim_5a80502a1260e68d",
+      "target_id": "concept_a3ff334be57e1cdd",
+      "edge_type": "ABOUT",
+      "weight": 1,
+      "created_at": "2026-10-23T06:05:43.087Z"
+    },
+    {
+      "source_id": "p_12dea96fec205935",
+      "target_id": "event_2f85ca8413c3c0a4",
+      "edge_type": "PARTICIPATED_IN",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "event_2f85ca8413c3c0a4",
+      "edge_type": "MENTIONED_IN",
+      "weight": 0.5,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "event_2f85ca8413c3c0a4",
+      "target_id": "concept_05c062636488ff27",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "event_2f85ca8413c3c0a4",
+      "target_id": "concept_2c74b4f8a330b52e",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "event_2f85ca8413c3c0a4",
+      "target_id": "concept_81c5d49be9505089",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "p_12dea96fec205935",
+      "target_id": "event_5130276bb94f53ad",
+      "edge_type": "PARTICIPATED_IN",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "event_5130276bb94f53ad",
+      "edge_type": "MENTIONED_IN",
+      "weight": 0.5,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "event_5130276bb94f53ad",
+      "target_id": "concept_05c062636488ff27",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "event_5130276bb94f53ad",
+      "target_id": "concept_3c6a4d4601d05e0c",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "event_961b5c3eba750788",
+      "edge_type": "PARTICIPATED_IN",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "event_961b5c3eba750788",
+      "target_id": "concept_566bc72834222f76",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "event_961b5c3eba750788",
+      "target_id": "concept_05c062636488ff27",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "p_12dea96fec205935",
+      "target_id": "event_33df5d1d1117988f",
+      "edge_type": "PARTICIPATED_IN",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "event_33df5d1d1117988f",
+      "edge_type": "MENTIONED_IN",
+      "weight": 0.5,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "event_33df5d1d1117988f",
+      "target_id": "concept_f696ea8b6f0558f1",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "event_33df5d1d1117988f",
+      "target_id": "concept_f380cbcd9a79a4ea",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "event_33df5d1d1117988f",
+      "target_id": "concept_722f4317399fc5d2",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "concept_98f54143ab4e86b2",
+      "target_id": "fact_417552203c6ba44f",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "fact_417552203c6ba44f",
+      "target_id": "concept_cd75b86f4ff467de",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "concept_98f54143ab4e86b2",
+      "target_id": "fact_785ddfac1f4ffad7",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "fact_785ddfac1f4ffad7",
+      "target_id": "concept_af9f85fe1576553e",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "concept_984e76fdaf636983",
+      "target_id": "fact_a65ebfda0603efb9",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "fact_a65ebfda0603efb9",
+      "target_id": "concept_687a0a8a51c07952",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "concept_3acfff76ded0ed77",
+      "target_id": "fact_a4d0adb10ef29758",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "fact_a4d0adb10ef29758",
+      "target_id": "concept_76884f9700f3d266",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "concept_9e74e786739b8729",
+      "target_id": "fact_ccaf45d4285f7cff",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "fact_ccaf45d4285f7cff",
+      "target_id": "concept_84a69e48c436d180",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "concept_1ff6ab38822c9f4b",
+      "target_id": "fact_8e99a0972eb41583",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "fact_8e99a0972eb41583",
+      "target_id": "concept_4eaa63613b4e1066",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "concept_196c8c2100cdc767",
+      "target_id": "fact_bce79a13e8115bbc",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "fact_bce79a13e8115bbc",
+      "target_id": "concept_f907c2de949c1668",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "concept_330b7921647bbcc7",
+      "target_id": "fact_e1b611202d0d4186",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "fact_e1b611202d0d4186",
+      "target_id": "concept_53bf0fd88bebe875",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "concept_001ba32a17ee181b",
+      "target_id": "fact_5bff11b121cd99a3",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "fact_5bff11b121cd99a3",
+      "target_id": "concept_b7003ca5713ed454",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "concept_98f54143ab4e86b2",
+      "target_id": "fact_9b6c1cd4ce8bd707",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "fact_9b6c1cd4ce8bd707",
+      "target_id": "concept_4d83947b1d335ce4",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "concept_b36ba06271690768",
+      "target_id": "fact_63b37c99852a03a9",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "fact_63b37c99852a03a9",
+      "target_id": "concept_b5907956d45182cd",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "concept_b82bfe7e81999e99",
+      "target_id": "fact_47bed7b88127c333",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "fact_47bed7b88127c333",
+      "target_id": "concept_dac7d7f932148764",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "concept_61ebb9fd6e8cf908",
+      "target_id": "fact_c8ebc80ef1a8e88c",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "fact_c8ebc80ef1a8e88c",
+      "target_id": "concept_649a18989cda5e0a",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "concept_bcf0dda7d79c9560",
+      "target_id": "fact_4513bb258a5971b9",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "fact_4513bb258a5971b9",
+      "target_id": "concept_8dc2362f18c98aae",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "concept_98f54143ab4e86b2",
+      "target_id": "fact_736dfcbe8b3de9aa",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "fact_736dfcbe8b3de9aa",
+      "target_id": "concept_9dc9cfdccfa0cbf9",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "concept_b8cdf3c49f38e865",
+      "target_id": "fact_d7b888c68ea22587",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "fact_d7b888c68ea22587",
+      "target_id": "concept_436cd88e1d74afdc",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "concept_90d314f018f4249c",
+      "target_id": "fact_f64db95bd1811b70",
+      "edge_type": "HAS_ATTRIBUTE",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "fact_f64db95bd1811b70",
+      "target_id": "concept_adfe9f995fadc891",
+      "edge_type": "ABOUT_CONCEPT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "p_12dea96fec205935",
+      "target_id": "claim_2a957d7151715db2",
+      "edge_type": "CLAIMS",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "claim_2a957d7151715db2",
+      "target_id": "concept_d362478b0030ac5c",
+      "edge_type": "ABOUT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "claim_265626a26c875a9c",
+      "edge_type": "CLAIMS",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "claim_265626a26c875a9c",
+      "target_id": "concept_0aef6ea5c7f10c66",
+      "edge_type": "ABOUT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "claim_b2e7396bdb6ba9e4",
+      "edge_type": "CLAIMS",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "claim_b2e7396bdb6ba9e4",
+      "target_id": "concept_984e76fdaf636983",
+      "edge_type": "ABOUT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "claim_64bcb7db7b244273",
+      "edge_type": "CLAIMS",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "claim_64bcb7db7b244273",
+      "target_id": "concept_3acfff76ded0ed77",
+      "edge_type": "ABOUT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "claim_1dfffb7b60b6bd7e",
+      "edge_type": "CLAIMS",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "claim_1dfffb7b60b6bd7e",
+      "target_id": "concept_9e74e786739b8729",
+      "edge_type": "ABOUT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "claim_f8d5778df0e62374",
+      "edge_type": "CLAIMS",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "claim_f8d5778df0e62374",
+      "target_id": "concept_b36ba06271690768",
+      "edge_type": "ABOUT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "claim_5ef4a78e731e8530",
+      "edge_type": "CLAIMS",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "claim_5ef4a78e731e8530",
+      "target_id": "concept_b82bfe7e81999e99",
+      "edge_type": "ABOUT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "p_27a9612b3207eb0f",
+      "target_id": "claim_a53b92bdac332f9a",
+      "edge_type": "CLAIMS",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    },
+    {
+      "source_id": "claim_a53b92bdac332f9a",
+      "target_id": "concept_e8323f7c785d763f",
+      "edge_type": "ABOUT",
+      "weight": 1,
+      "created_at": "2026-10-23T07:08:33.342Z"
+    }
+  ]
+}

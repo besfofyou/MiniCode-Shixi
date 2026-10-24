@@ -1,0 +1,27 @@
+{
+  "id": "e7b8bb49-e96",
+  "schemaVersion": 2,
+  "tier": "procedural",
+  "content": "在该仓库与用户协作时，回答保持精简（只给结论与关键点），结尾固定写“陛下，我已经完成，请您批阅”；若测试未过、信息缺失或任务只完成一半，须在落款前明确写出“未完成/待确认”。",
+  "createdAt": "2026-10-23T06:04:14.412Z",
+  "updatedAt": "2026-10-23T06:04:14.412Z",
+  "lastAccessedAt": "2026-10-23T06:04:14.412Z",
+  "accessCount": 0,
+  "source": {
+    "sessionId": "turn-9",
+    "trigger": "auto_distill"
+  },
+  "confidence": 0.6,
+  "supersedes": null,
+  "supersededAt": null,
+  "tags": [
+    "convention",
+    "response-format",
+    "user-preference"
+  ],
+  "obsolete": false,
+  "obsoleteReason": null,
+  "contentHash": "eaaa056f804e3e4ec7621b803fca34b7649da0d08e58e9a24daef8ca82898c53",
+  "origin": "agent",
+  "durability": "durable"
+}

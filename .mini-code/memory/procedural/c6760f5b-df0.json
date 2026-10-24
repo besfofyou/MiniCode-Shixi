@@ -1,0 +1,27 @@
+{
+  "id": "c6760f5b-df0",
+  "schemaVersion": 2,
+  "tier": "procedural",
+  "content": "结构整改按收益/风险比排序推进：①拆 src/tty-app.ts（降耦合收益最大）；②拆 src/mcp.ts 为 mcp/{client,stdio,http,auth,format}.ts 并解开 tool.ts ↔ mcp.ts 循环依赖；③tsconfig include 加上 test/**/*.ts；④bin/minicode 由 bash 脚本换成 .mjs node 入口以兼容 Windows；⑤补 .gitignore（.idea/、.workbuddy/、modifySuggestion/）。",
+  "createdAt": "2026-10-23T07:05:44.488Z",
+  "updatedAt": "2026-10-23T07:05:44.488Z",
+  "lastAccessedAt": "2026-10-23T07:05:44.488Z",
+  "accessCount": 0,
+  "source": {
+    "sessionId": "turn-3",
+    "trigger": "auto_distill"
+  },
+  "confidence": 0.6,
+  "supersedes": null,
+  "supersededAt": null,
+  "tags": [
+    "refactor",
+    "architecture",
+    "cross-platform"
+  ],
+  "obsolete": false,
+  "obsoleteReason": null,
+  "contentHash": "47ab64d23eef3d659e9df89a15f05e7f21d10b6e425e83f4d3ce69534cb1c959",
+  "origin": "agent",
+  "durability": "durable"
+}

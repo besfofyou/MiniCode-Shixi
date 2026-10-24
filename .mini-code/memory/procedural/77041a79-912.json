@@ -1,0 +1,27 @@
+{
+  "id": "77041a79-912",
+  "schemaVersion": 2,
+  "tier": "procedural",
+  "content": "改动或分析 MiniCode-main 后，验证测试通过 test/run-tests.mjs 聚合执行（测试文件本身是 node:test 风格的 .ts）；代码风格检查由 eslint.config.js 约束。",
+  "createdAt": "2026-10-23T06:01:10.194Z",
+  "updatedAt": "2026-10-23T06:01:10.194Z",
+  "lastAccessedAt": "2026-10-23T06:01:10.194Z",
+  "accessCount": 0,
+  "source": {
+    "sessionId": "turn-6",
+    "trigger": "auto_distill"
+  },
+  "confidence": 0.6,
+  "supersedes": null,
+  "supersededAt": null,
+  "tags": [
+    "测试",
+    "验证",
+    "工作流"
+  ],
+  "obsolete": false,
+  "obsoleteReason": null,
+  "contentHash": "d213b7f29d76fce52f3f205354e30af3b2cb35a56ccac88d2ed6cd881bf01daf",
+  "origin": "agent",
+  "durability": "durable"
+}

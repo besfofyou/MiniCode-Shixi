@@ -14,6 +14,7 @@ import { SkillBank } from './skill-bank.js'
 import { CLI_EVOLUTION_PRESET, ForgeEngine } from './skill-evolution.js'
 import { SkillMutator } from './skill-mutator.js'
 import { distillSessionEnd } from './distiller.js'
+import { migrateConceptLayer } from './concept-migration.js'
 import { sanitizeSkill } from './safety.js'
 import { cleanupStaleTmp } from './fs-util.js'
 import { feedbackFromNextUserMessage, immediateSignal, summarizeLastTurn, type CreditSignal } from './credit.js'
@@ -74,7 +75,17 @@ export class MemoryRuntime {
     // 加载图谱和向量索引
     await runtime.graph.load(runtime.graphPath)
     await runtime.vectorStore.load(runtime.vectorPath)
-    runtime.vectorStore.syncWithGraph(runtime.graph)        // 补齐上次失败遗留的缺口
+    // 概念层清洗迁移（幂等）：删低价值概念、合并分隔符重复节点、重接引用
+    const migration = migrateConceptLayer(runtime.graph)
+    if (migration.changed) {
+      for (const id of migration.staleVectorIds) runtime.vectorStore.remove(id)
+      await runtime.vectorStore.addBatch(migration.refreshedVectors)   // 失败自动进 pending，下次 flush 重建
+      await runtime.log(`concept-migration ${JSON.stringify({
+        ...migration, staleVectorIds: migration.staleVectorIds.length, refreshedVectors: migration.refreshedVectors.length,
+      })}`)
+    }
+    runtime.vectorStore.syncWithGraph(runtime.graph)        // 补齐上次失败遗留的缺口 + 迁移改名节点的向量
+    if (migration.changed) await runtime.save()
     await runtime.forgeEngine.load()
     return runtime
   }

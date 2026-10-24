@@ -1,0 +1,27 @@
+{
+  "id": "818c59fc-b4d",
+  "schemaVersion": 2,
+  "tier": "procedural",
+  "content": "评审 TypeScript 项目目录结构健康度可按三层审计：P0 结构性巨石（数单文件行数与顶层声明数、找循环依赖、看根目录文件平铺比例）；P1 分层倒挂与重复概念（视图是否反向依赖领域/工具，同名目录与文件是否语义冲突、空壳目录）；P2 工程配置与仓库卫生（tsconfig include 是否漏 test、测试与模块数量比、脚本的跨平台可执行性、.gitignore 覆盖、submodule 体积、文档与真实结构是否漂移）。",
+  "createdAt": "2026-10-23T07:08:03.204Z",
+  "updatedAt": "2026-10-23T07:08:03.204Z",
+  "lastAccessedAt": "2026-10-23T07:08:03.204Z",
+  "accessCount": 0,
+  "source": {
+    "sessionId": "e8406c87",
+    "trigger": "auto_distill"
+  },
+  "confidence": 0.6,
+  "supersedes": null,
+  "supersededAt": null,
+  "tags": [
+    "代码评审",
+    "架构审计",
+    "方法论"
+  ],
+  "obsolete": false,
+  "obsoleteReason": null,
+  "contentHash": "384b7e8bfdd96716a3461383d538b794c125821368c4d9ccb762b4bb3520d913",
+  "origin": "agent",
+  "durability": "durable"
+}

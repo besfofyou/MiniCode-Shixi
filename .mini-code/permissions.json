@@ -1,0 +1,26 @@
+{
+  "allowedDirectoryPrefixes": [],
+  "deniedDirectoryPrefixes": [],
+  "allowedCommandPatterns": [
+    "bash -lc find . -name \"*.ts\" -o -name \"*.js\" -o -name \"*.json\" -o -name \"*.md\" | head -30",
+    "bash -lc dir /s /b *.ts *.js *.json *.md | head -30",
+    "bash -lc bash -lc find . -name \"*.ts\" -o -name \"*.js\" -o -name \"*.json\" -o -name \"*.md\" | head -30",
+    "bash -lc wc -l src/*.ts src/*/*.ts | sort -n",
+    "cmd /c dir /b src",
+    "bash -lc bash -lc find . -maxdepth 2 -type d -not -path \"*/node_modules*\" -not -path \"*/.git/*\" | sort",
+    "bash -lc bash -lc find . -path ./node_modules -prune -o -name \"*.ts\" -print | head -60",
+    "bash -lc bash -lc \"find src -name '*.ts' | head -60\"",
+    "node --version",
+    "npm.cmd run check",
+    "npm.cmd test",
+    "cmd /c node test/run-tests.mjs > .test-out.txt 2>&1 & findstr /C:\"# pass\" /C:\"# fail\" /C:\"# todo\" /C:\"# duration\" .test-out.txt",
+    "node -e const fs=require('fs'),p=require('path');const w=d=>fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>e.isDirectory()?w(p.join(d,e.name)):[p.join(d,e.name)]);w('src').filter(f=>f.endsWith('.ts')).map(f=>[f,fs.readFileSync(f,'utf8').split('\\n').length]).sort((a,b)=>b[1]-a[1]).slice(0,18).forEach(x=>console.log(String(x[1]).padStart(6),x[0]))",
+    "cmd /c del .test-out.txt",
+    "bash -lc bash -lc find . -not -path \"*/node_modules/*\" -not -path \"*/.git/*\" -maxdepth 2 | head -60",
+    "bash -lc bash -lc find src test bin docs external -type d -not -path \"*/node_modules/*\" | head -80",
+    "bash -lc bash -lc wc -l src/*.ts src/*/*.ts 2>/dev/null | sort -n | tail -40"
+  ],
+  "deniedCommandPatterns": [],
+  "allowedEditPatterns": [],
+  "deniedEditPatterns": []
+}

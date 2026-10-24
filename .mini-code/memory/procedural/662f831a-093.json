@@ -1,0 +1,27 @@
+{
+  "id": "662f831a-093",
+  "schemaVersion": 2,
+  "tier": "procedural",
+  "content": "该项目类型检查用 npm run check（tsc），但 tsconfig include 仅覆盖 src/**/*.ts；要校验测试需把 include 扩为 [\"src/**/*.ts\", \"test/**/*.ts\"]。当前 test/ 下有 38 个测试对应 103 个模块。",
+  "createdAt": "2026-10-23T07:05:44.463Z",
+  "updatedAt": "2026-10-23T07:05:44.463Z",
+  "lastAccessedAt": "2026-10-23T07:05:44.463Z",
+  "accessCount": 0,
+  "source": {
+    "sessionId": "turn-3",
+    "trigger": "auto_distill"
+  },
+  "confidence": 0.6,
+  "supersedes": null,
+  "supersededAt": null,
+  "tags": [
+    "build",
+    "verification",
+    "typescript"
+  ],
+  "obsolete": false,
+  "obsoleteReason": null,
+  "contentHash": "bca38b43e7b05ca0dc036f90a5ae61a5a581c187029de64d8fb136124ef9f7a0",
+  "origin": "agent",
+  "durability": "durable"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "c795f0fa-c78",
+  "schemaVersion": 2,
+  "tier": "procedural",
+  "content": "分析该项目 agent loop 或修改主循环时，入口定位到 src/agent-loop.ts 的 runAgentTurnWithOutcome，按“上下文收敛 → model.next → 分支处理（final / progress / tool_calls）”三段结构阅读，避免在多处重复追踪。",
+  "createdAt": "2026-10-23T06:05:16.525Z",
+  "updatedAt": "2026-10-23T06:05:16.525Z",
+  "lastAccessedAt": "2026-10-23T06:05:16.525Z",
+  "accessCount": 0,
+  "source": {
+    "sessionId": "fc0f3d51",
+    "trigger": "auto_distill"
+  },
+  "confidence": 0.6,
+  "supersedes": null,
+  "supersededAt": null,
+  "tags": [
+    "agent-loop",
+    "navigation",
+    "src"
+  ],
+  "obsolete": false,
+  "obsoleteReason": null,
+  "contentHash": "6f38947b4a797e12cf712a62930ad77b0adaa6ee8f664c0a521bef7a5aa000fc",
+  "origin": "agent",
+  "durability": "durable"
+}

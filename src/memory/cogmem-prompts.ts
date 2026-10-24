@@ -1,15 +1,28 @@
-/** 结构化信息抽取 prompt（对应 CogMem ATOMIC_EXTRACTION） */
-export const EXTRACTION_SYSTEM_PROMPT = `You extract long-term memory for a coding assistant.
-1. events — things that happened in this session (requests, decisions, fixes, failures):
-   {"title":"User asked to migrate tests to Vitest","description":"...","participants":["User","Assistant"],"time":"yesterday","concepts":["vitest","testing"],"evidence":"<verbatim quote ≤200 chars>"}
+/** 结构化信息抽取 prompt（对应 CogMem ATOMIC_EXTRACTION，按编码助手场景适配） */
+export const EXTRACTION_SYSTEM_PROMPT = `You are an expert information extractor building long-term memory for a coding assistant. Extract structured information from the conversation.
+
+1. events — specific occurrences (requests, decisions, fixes, failures, preferences stated by the user):
+   {"title":"User asked to migrate tests to Vitest","description":"...","participants":["User","Assistant"],"time":"yesterday","concepts":["vitest migration","test framework"],"evidence":"<verbatim quote ≤200 chars>"}
+   - title: a short past-tense sentence with a concrete actor and action (e.g. "User asked to migrate tests to Vitest"), not a vague label like "Discussion" or "Introduction".
    - participants: "User" for the human, "Assistant" for the agent; first item = primary actor.
    - time: keep the original relative expression if one is mentioned; otherwise omit.
-   - concepts: REQUIRED, 1-4 short noun phrases (library, module, file area, practice).
-2. facts — durable project knowledge or user preferences:
+   - concepts: REQUIRED, 1-4 salient topic phrases. Use exact names and terms from the conversation (library, tool, file, module, concrete practice), e.g. ["vitest","test framework"]. Prefer specific multi-word phrases over lone generic words.
+2. concepts — one entry for EVERY concept string used in events/facts/claims, with the identical spelling:
+   {"name":"vitest","description":"Test framework the user wants to migrate the project's Jest suite to."}
+   - description: REQUIRED, one sentence (≤120 chars), grounded in this conversation; do not just repeat the name.
+3. facts — objective, durable project knowledge or user preferences:
    {"subject":"project","predicate":"uses_test_framework","object":"vitest","evidence":"..."}
-3. claims — subjective opinions/judgments:
+   - subject: a specific entity ("project", "User", a module or file name); predicate: snake_case verb phrase; object: a short noun — never a measurement, count or date.
+4. claims — subjective opinions/judgments expressed by a speaker:
    {"source":"User","target":"jest","content":"is too slow for this repo","evidence":"..."}
-Rules: explicit info only; no transient runtime state; no secrets, tokens or absolute paths; "evidence" must be copied verbatim.
+
+Concept quality rules — never emit as a concept:
+- Generic lone words: "introduction", "overview", "identity", "architecture", "code", "testing", "question", "answer", "discussion", "summary", "timeline", "structure", "project", "help".
+- Generic compound labels, in any spelling (space or hyphen): "response format", "response style", "user preference", "project timeline", "repository statistics".
+- Numbers, measurements, durations, date ranges: "12 commits", "17.3k lines", "3 months", "2026-10-13 to 2026-10-22".
+- Verbatim user phrases/quotes, file listings, comma-joined lists, arrow chains ("tool.ts → mcp.ts"), or sentence-like fragments ending with punctuation.
+
+Global rules: extract only explicit or directly inferable information; no transient runtime state; no secrets, tokens or absolute paths; "evidence" must be copied verbatim from the conversation; use exact names and terms from the conversation; output valid JSON only, no markdown.
 Return ONE JSON object: {"persons":[{"name":"..."}],"concepts":[{"name":"...","description":"..."}],"events":[],"facts":[],"claims":[]}`
 
 export const EXTRACTION_USER_PROMPT = `Extract structured information from the following coding session:
@@ -19,8 +32,8 @@ Conversation:
 
 Session Date: {session_date}
 
-Provide your extraction as JSON:
-{"events":[...],"facts":[...],"claims":[...],"persons":[{"name":"..."}],"concepts":[{"name":"..."}]}`
+Return ONE JSON object with "persons", "concepts" (each with a one-sentence "description"), "events", "facts" and "claims" arrays:
+{"persons":[{"name":"..."}],"concepts":[{"name":"...","description":"..."}],"events":[{"title":"...","participants":["..."],"concepts":["..."],"evidence":"..."}],"facts":[{"subject":"...","predicate":"...","object":"...","evidence":"..."}],"claims":[{"source":"...","target":"...","content":"...","evidence":"..."}]}`
 
 /** SearchAgent 系统 prompt（对应 CogMem SEARCH_AGENT） */
 export const SEARCH_AGENT_SYSTEM = `You are an intelligent memory search agent for a coding assistant.

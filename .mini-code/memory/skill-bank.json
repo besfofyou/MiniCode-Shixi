@@ -1,0 +1,269 @@
+{
+  "general_skills": [
+    {
+      "skill_id": "distill_3eb59ea5",
+      "title": "当约定固定落款/结束语时，若任务实际未完成（测试未过、缺少用户信息等），须在落款前明确写出「未完成/待确认」，不用落款掩盖真实状态",
+      "principle": "当约定固定落款/结束语时，若任务实际未完成（测试未过、缺少用户信息等），须在落款前明确写出「未完成/待确认」，不用落款掩盖真实状态。",
+      "when_to_apply": "用户要求每次回答附加固定句式或签名时",
+      "tags": [
+        "response-format",
+        "honesty"
+      ],
+      "usage_count": 5,
+      "success_count": 4,
+      "lifecycle": "trial",
+      "parent_id": null,
+      "generation": 0,
+      "children": [],
+      "recent_failures": [
+        {
+          "task": "我完成这个项目用了10个月",
+          "trajectory": ""
+        }
+      ],
+      "createdAt": "2026-10-23T05:58:49.284Z",
+      "updatedAt": "2026-10-23T06:04:36.710Z"
+    },
+    {
+      "skill_id": "distill_e486c88d",
+      "title": "改动或分析 MiniCode-main 后，验证测试通过 test/run-tests",
+      "principle": "改动或分析 MiniCode-main 后，验证测试通过 test/run-tests.mjs 聚合执行（测试文件本身是 node:test 风格的 .ts）；代码风格检查由 eslint.config.js 约束。",
+      "when_to_apply": "在本仓库完成代码改动、需要跑测试或校验时",
+      "tags": [
+        "测试",
+        "验证",
+        "工作流"
+      ],
+      "usage_count": 5,
+      "success_count": 3,
+      "lifecycle": "trial",
+      "parent_id": null,
+      "generation": 0,
+      "children": [],
+      "recent_failures": [
+        {
+          "task": "我完成这个项目用了10个月",
+          "trajectory": ""
+        },
+        {
+          "task": "你好，我之前说我完成这个项目用了多久？",
+          "trajectory": ""
+        }
+      ],
+      "createdAt": "2026-10-23T06:01:10.257Z",
+      "updatedAt": "2026-10-23T07:01:19.577Z"
+    },
+    {
+      "skill_id": "distill_b3965c60",
+      "title": "分析陌生仓库结构的推荐流程：先统计 src/ 与 test/ 的文件数与行数了解规模，再读 package",
+      "principle": "分析陌生仓库结构的推荐流程：先统计 src/ 与 test/ 的文件数与行数了解规模，再读 package.json/tsconfig 确认技术栈与入口（bin/），然后按分层（入口层、核心循环层、UI 层、支撑模块）归类 src/，最后核对 submodule 与文档目录；把非工程产物（如工具日志目录）单独标出。",
+      "when_to_apply": "需要快速给出一个仓库的目录概览或架构说明时",
+      "tags": [
+        "代码阅读",
+        "仓库概览",
+        "流程"
+      ],
+      "usage_count": 5,
+      "success_count": 4,
+      "lifecycle": "trial",
+      "parent_id": null,
+      "generation": 0,
+      "children": [],
+      "recent_failures": [
+        {
+          "task": "我完成这个项目用了10个月",
+          "trajectory": ""
+        }
+      ],
+      "createdAt": "2026-10-23T06:01:10.257Z",
+      "updatedAt": "2026-10-23T07:02:00.930Z"
+    },
+    {
+      "skill_id": "distill_954f0e13",
+      "title": "在该仓库与用户协作时，回答保持精简（只给结论与关键点），结尾固定写“陛下，我已经完成，请您批阅”；若测试未过、信息缺失或任务只完成一半，须在落款前明确写出“未完",
+      "principle": "在该仓库与用户协作时，回答保持精简（只给结论与关键点），结尾固定写“陛下，我已经完成，请您批阅”；若测试未过、信息缺失或任务只完成一半，须在落款前明确写出“未完成/待确认”。",
+      "when_to_apply": "每次向该用户作答时，尤其是汇报改动或验证结果时。",
+      "tags": [
+        "convention",
+        "response-format",
+        "user-preference"
+      ],
+      "usage_count": 3,
+      "success_count": 2,
+      "lifecycle": "trial",
+      "parent_id": null,
+      "generation": 0,
+      "children": [],
+      "recent_failures": [
+        {
+          "task": "你好，我之前说我完成这个项目用了多久？",
+          "trajectory": ""
+        }
+      ],
+      "createdAt": "2026-10-23T06:04:14.442Z",
+      "updatedAt": "2026-10-23T07:02:00.930Z"
+    },
+    {
+      "skill_id": "distill_f9ae0147",
+      "title": "分析或修改 MiniCode 的 agent 行为时，从 src/agent-loop",
+      "principle": "分析或修改 MiniCode 的 agent 行为时，从 src/agent-loop.ts 的 runAgentTurnWithOutcome 入手：核对每 step 的上下文收敛顺序（snip→micro→collapse→必要时 autoCompact）、model.next 调用与 assistant/progress/tool_calls 三路分支，以及 maxSteps/abort/重试等退出条件；优先改循环层而非 TUI 层。",
+      "when_to_apply": "需要调整对话循环、上下文压缩策略、工具调用流程或排查循环卡死/提前结束时。",
+      "tags": [
+        "agent-loop",
+        "workflow",
+        "debugging"
+      ],
+      "usage_count": 3,
+      "success_count": 2,
+      "lifecycle": "trial",
+      "parent_id": null,
+      "generation": 0,
+      "children": [],
+      "recent_failures": [
+        {
+          "task": "你好，我之前说我完成这个项目用了多久？",
+          "trajectory": ""
+        }
+      ],
+      "createdAt": "2026-10-23T06:04:14.442Z",
+      "updatedAt": "2026-10-23T07:02:00.930Z"
+    },
+    {
+      "skill_id": "distill_a5f04401",
+      "title": "分析该项目 agent loop 或修改主循环时，入口定位到 src/agent-loop",
+      "principle": "分析该项目 agent loop 或修改主循环时，入口定位到 src/agent-loop.ts 的 runAgentTurnWithOutcome，按“上下文收敛 → model.next → 分支处理（final / progress / tool_calls）”三段结构阅读，避免在多处重复追踪。",
+      "when_to_apply": "需要解释、调试或修改 MiniCode 的 agent 主循环时",
+      "tags": [
+        "agent-loop",
+        "navigation",
+        "src"
+      ],
+      "usage_count": 2,
+      "success_count": 1,
+      "lifecycle": "trial",
+      "parent_id": null,
+      "generation": 0,
+      "children": [],
+      "recent_failures": [
+        {
+          "task": "你好，我之前说我完成这个项目用了多久？",
+          "trajectory": ""
+        }
+      ],
+      "createdAt": "2026-10-23T06:05:16.583Z",
+      "updatedAt": "2026-10-23T07:02:00.930Z"
+    },
+    {
+      "skill_id": "distill_29108d7b",
+      "title": "测试位于 test/ 下的",
+      "principle": "测试位于 test/ 下的 .ts 文件（node:test 风格），由 run-tests.mjs 聚合执行；改动后应运行该聚合脚本做验证。",
+      "when_to_apply": "修改源码后需要跑测试验证时",
+      "tags": [
+        "testing",
+        "verification",
+        "commands"
+      ],
+      "usage_count": 2,
+      "success_count": 1,
+      "lifecycle": "trial",
+      "parent_id": null,
+      "generation": 0,
+      "children": [],
+      "recent_failures": [
+        {
+          "task": "你好，我之前说我完成这个项目用了多久？",
+          "trajectory": ""
+        }
+      ],
+      "createdAt": "2026-10-23T06:05:16.583Z",
+      "updatedAt": "2026-10-23T07:02:00.930Z"
+    },
+    {
+      "skill_id": "distill_afab459b",
+      "title": "阅读/回答仓库结构类问题时按“顶层布局 → 文件规模统计 → src 分层（入口启动、agent loop、模型适配、工具注册、上下文压缩、记忆、TUI）”顺序",
+      "principle": "阅读/回答仓库结构类问题时按“顶层布局 → 文件规模统计 → src 分层（入口启动、agent loop、模型适配、工具注册、上下文压缩、记忆、TUI）”顺序组织，先结论后细节，并附可深入的方向。",
+      "when_to_apply": "用户要求分析目录结构或做项目概览时",
+      "tags": [
+        "code-reading",
+        "reporting",
+        "structure"
+      ],
+      "usage_count": 2,
+      "success_count": 1,
+      "lifecycle": "trial",
+      "parent_id": null,
+      "generation": 0,
+      "children": [],
+      "recent_failures": [
+        {
+          "task": "你好，我之前说我完成这个项目用了多久？",
+          "trajectory": ""
+        }
+      ],
+      "createdAt": "2026-10-23T06:05:16.583Z",
+      "updatedAt": "2026-10-23T07:02:00.930Z"
+    },
+    {
+      "skill_id": "distill_96679661",
+      "title": "该项目类型检查用 npm run check（tsc），但 tsconfig include 仅覆盖 src/**/*",
+      "principle": "该项目类型检查用 npm run check（tsc），但 tsconfig include 仅覆盖 src/**/*.ts；要校验测试需把 include 扩为 [\"src/**/*.ts\", \"test/**/*.ts\"]。当前 test/ 下有 38 个测试对应 103 个模块。",
+      "when_to_apply": "在该项目修改代码后做类型校验，或需要为 test/ 增加编译期检查时",
+      "tags": [
+        "build",
+        "verification",
+        "typescript"
+      ],
+      "usage_count": 0,
+      "success_count": 0,
+      "lifecycle": "trial",
+      "parent_id": null,
+      "generation": 0,
+      "children": [],
+      "recent_failures": [],
+      "createdAt": "2026-10-23T07:05:44.505Z",
+      "updatedAt": "2026-10-23T07:05:44.505Z"
+    },
+    {
+      "skill_id": "distill_ebb82f42",
+      "title": "结构整改按收益/风险比排序推进：①拆 src/tty-app",
+      "principle": "结构整改按收益/风险比排序推进：①拆 src/tty-app.ts（降耦合收益最大）；②拆 src/mcp.ts 为 mcp/{client,stdio,http,auth,format}.ts 并解开 tool.ts ↔ mcp.ts 循环依赖；③tsconfig include 加上 test/**/*.ts；④bin/minicode 由 bash 脚本换成 .mjs node 入口以兼容 Windows；⑤补 .gitignore（.idea/、.workbuddy/、modifySuggestion/）。",
+      "when_to_apply": "对该项目做目录/模块重构或修复跨平台安装问题时",
+      "tags": [
+        "refactor",
+        "architecture",
+        "cross-platform"
+      ],
+      "usage_count": 0,
+      "success_count": 0,
+      "lifecycle": "trial",
+      "parent_id": null,
+      "generation": 0,
+      "children": [],
+      "recent_failures": [],
+      "createdAt": "2026-10-23T07:05:44.505Z",
+      "updatedAt": "2026-10-23T07:05:44.505Z"
+    },
+    {
+      "skill_id": "distill_acaeedf8",
+      "title": "评审 TypeScript 项目目录结构健康度可按三层审计：P0 结构性巨石（数单文件行数与顶层声明数、找循环依赖、看根目录文件平铺比例）；P1 分层倒挂与重复",
+      "principle": "评审 TypeScript 项目目录结构健康度可按三层审计：P0 结构性巨石（数单文件行数与顶层声明数、找循环依赖、看根目录文件平铺比例）；P1 分层倒挂与重复概念（视图是否反向依赖领域/工具，同名目录与文件是否语义冲突、空壳目录）；P2 工程配置与仓库卫生（tsconfig include 是否漏 test、测试与模块数量比、脚本的跨平台可执行性、.gitignore 覆盖、submodule 体积、文档与真实结构是否漂移）。",
+      "when_to_apply": "被要求评估某项目目录结构/架构是否有缺陷，或需要给出优先级排序的重构建议时",
+      "tags": [
+        "代码评审",
+        "架构审计",
+        "方法论"
+      ],
+      "usage_count": 0,
+      "success_count": 0,
+      "lifecycle": "trial",
+      "parent_id": null,
+      "generation": 0,
+      "children": [],
+      "recent_failures": [],
+      "createdAt": "2026-10-23T07:08:03.216Z",
+      "updatedAt": "2026-10-23T07:08:03.216Z"
+    }
+  ],
+  "task_specific_skills": {},
+  "common_mistakes": []
+}

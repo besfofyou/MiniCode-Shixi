@@ -1,0 +1,26 @@
+{
+  "id": "c11e537f-c85",
+  "schemaVersion": 2,
+  "tier": "procedural",
+  "content": "当约定固定落款/结束语时，若任务实际未完成（测试未过、缺少用户信息等），须在落款前明确写出「未完成/待确认」，不用落款掩盖真实状态。",
+  "createdAt": "2026-10-23T05:58:49.281Z",
+  "updatedAt": "2026-10-23T05:58:49.281Z",
+  "lastAccessedAt": "2026-10-23T05:58:49.281Z",
+  "accessCount": 0,
+  "source": {
+    "sessionId": "turn-3",
+    "trigger": "auto_distill"
+  },
+  "confidence": 0.6,
+  "supersedes": null,
+  "supersededAt": null,
+  "tags": [
+    "response-format",
+    "honesty"
+  ],
+  "obsolete": false,
+  "obsoleteReason": null,
+  "contentHash": "770c4cbbb33b2cdd97f5a74cd8152fc57cf872d1b71f1a7c5f6b0b7bf0c6de4e",
+  "origin": "agent",
+  "durability": "durable"
+}

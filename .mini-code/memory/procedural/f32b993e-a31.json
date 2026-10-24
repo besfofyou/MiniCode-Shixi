@@ -1,0 +1,27 @@
+{
+  "id": "f32b993e-a31",
+  "schemaVersion": 2,
+  "tier": "procedural",
+  "content": "分析或修改 MiniCode 的 agent 行为时，从 src/agent-loop.ts 的 runAgentTurnWithOutcome 入手：核对每 step 的上下文收敛顺序（snip→micro→collapse→必要时 autoCompact）、model.next 调用与 assistant/progress/tool_calls 三路分支，以及 maxSteps/abort/重试等退出条件；优先改循环层而非 TUI 层。",
+  "createdAt": "2026-10-23T06:04:14.432Z",
+  "updatedAt": "2026-10-23T06:04:14.432Z",
+  "lastAccessedAt": "2026-10-23T06:04:14.432Z",
+  "accessCount": 0,
+  "source": {
+    "sessionId": "turn-9",
+    "trigger": "auto_distill"
+  },
+  "confidence": 0.6,
+  "supersedes": null,
+  "supersededAt": null,
+  "tags": [
+    "agent-loop",
+    "workflow",
+    "debugging"
+  ],
+  "obsolete": false,
+  "obsoleteReason": null,
+  "contentHash": "55703c3a0abc667390a0669536d5fc81f2f1fb0b24fee3f8a7e40cdcd6e270ea",
+  "origin": "agent",
+  "durability": "durable"
+}

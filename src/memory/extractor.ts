@@ -7,7 +7,7 @@ import type {
 import { GraphStore } from './graph-store.js'
 import { VectorStore } from './vector-store.js'
 import { EXTRACTION_SYSTEM_PROMPT, EXTRACTION_USER_PROMPT } from './cogmem-prompts.js'
-import { stableId, normalizeConceptName, canonicalPersonName, resolveRelativeTime } from './graph-ids.js'
+import { stableId, normalizeConceptName, canonicalPersonName, resolveRelativeTime, isLowValueConceptName } from './graph-ids.js'
 import { extractJsonObject, fill } from './json-util.js'
 import { memoryModelText } from './model-call.js'
 import { sanitizeMemoryContent, validateMemoryWrite } from './safety.js'
@@ -65,6 +65,18 @@ export class CogMemExtractor {
     const ctx: Ctx = { sessionId, now: new Date().toISOString(), sourceText, batch: [], created: { n: 0 } }
     const newEventIds: string[] = [], touchedFactIds: string[] = []
 
+    // 顶层 concepts 的描述表（按归一化名索引），供事件/事实/声明中出现的同名概念补齐描述
+    const conceptMeta = new Map<string, string>()
+    for (const c of x.concepts) {
+      const name = clean(c?.name)
+      const desc = clean(c?.description, 160)
+      if (!name) continue
+      const key = normalizeConceptName(name)
+      if (isLowValueConceptName(key)) continue
+      if (desc && !conceptMeta.has(key)) conceptMeta.set(key, desc)
+    }
+    const descFor = (name: string): string | undefined => conceptMeta.get(normalizeConceptName(clean(name)))
+
     for (const p of x.persons) if (p?.name) this.ensurePerson(p.name, ctx, p.aliases ?? [])
     for (const c of x.concepts) if (c?.name) this.ensureConcept(c.name, ctx, c.description)
 
@@ -76,7 +88,8 @@ export class CogMemExtractor {
       if (this.graph.getNode(id)) continue                                       // 幂等
       const people = (e.participants?.length ? e.participants : ['User'])
         .map(n => this.ensurePerson(n, ctx)).filter((p): p is PersonNode => !!p)
-      const concepts = (e.concepts ?? []).map(n => this.ensureConcept(n, ctx)).filter((c): c is ConceptNode => !!c)
+      const concepts = (e.concepts ?? [])
+        .map(n => this.ensureConcept(n, ctx, descFor(n))).filter((c): c is ConceptNode => !!c)
       const timeRaw = typeof e.time === 'string' && e.time.trim() ? e.time.trim() : undefined
       const desc = clean(e.description) || title
       this.add({
@@ -97,9 +110,11 @@ export class CogMemExtractor {
       const subject = clean(f.subject), object = clean(f.object)
       const predicate = clean(f.predicate).toLowerCase().replace(/\s+/g, '_').slice(0, 60)
       if (!subject || !predicate || !object) continue                            // = CogMem skip_incomplete_facts
-      const subj = this.findPersonByName(canonicalPersonName(subject)) ?? this.ensureConcept(subject, ctx)
-      const obj = this.ensureConcept(object, ctx)
-      if (!subj || !obj) continue
+      // 先解析 object：低价值 object 直接跳过整条 fact，避免把 subject 建成孤儿概念
+      const obj = this.ensureConcept(object, ctx, descFor(object))
+      if (!obj) continue
+      const subj = this.findPersonByName(canonicalPersonName(subject)) ?? this.ensureConcept(subject, ctx, descFor(subject))
+      if (!subj) continue
       const id = stableId('fact', subj.node_id, predicate, obj.node_id)
       const existing = this.graph.getNode(id)
       if (existing?.node_type === 'fact') {                                      // 跨会话重复出现：记录次数，供第 2 点晋升
@@ -130,7 +145,7 @@ export class CogMemExtractor {
       if (content.length < 3) continue
       const src = this.ensurePerson(c.source || 'User', ctx)
       if (!src) continue
-      const tgt = c.target ? (this.findPersonByName(canonicalPersonName(c.target)) ?? this.ensureConcept(c.target, ctx)) : null
+      const tgt = c.target ? (this.findPersonByName(canonicalPersonName(c.target)) ?? this.ensureConcept(c.target, ctx, descFor(c.target))) : null
       const id = stableId('claim', src.node_id, tgt?.node_id ?? '', content)
       if (this.graph.getNode(id)) continue
       this.add({
@@ -164,15 +179,44 @@ export class CogMemExtractor {
     this.add(node, ctx); return node
   }
 
+  /**
+   * 概念层写入（对应 CogMem ConceptManager.resolve + indexer 的 Concept 节点创建）：
+   * - 低价值概念（泛称词/测量值/日期/引文）不实例化为节点；
+   * - 原始写法与归一化名不同时记录为别名；
+   * - 旧节点描述是占位符（等于名称/为空）时用新描述刷新并重建向量索引；
+   * - 每次命中累计 mention_count（供后续概念合并/排序使用）。
+   */
   private ensureConcept(name: string, ctx: Ctx, description?: string): ConceptNode | null {
-    const norm = normalizeConceptName(clean(name))
-    if (norm.length < 2) return null
+    const raw = clean(name, 80)
+    if (!raw) return null
+    const norm = normalizeConceptName(raw)
+    if (norm.length < 2 || isLowValueConceptName(norm)) return null
     const id = stableId('concept', norm)
+    const desc = clean(description, 160)
+
     const hit = this.graph.getNode(id)
-    if (hit?.node_type === 'concept') return hit
+    if (hit?.node_type === 'concept') {
+      if (desc && (!hit.description || hit.description === hit.name) && hit.description !== desc) {
+        hit.description = desc
+        hit.embedding_text = `Concept: ${hit.name}. ${desc}`
+        hit.updated_at = ctx.now
+        ctx.batch.push({ id: hit.node_id, text: hit.embedding_text })      // upsert 语义，重建向量
+      }
+      const lowerRaw = raw.toLowerCase()
+      if (raw !== hit.name && !(hit.aliases ?? []).some(a => a.toLowerCase() === lowerRaw)) {
+        hit.aliases = [...(hit.aliases ?? []), raw]
+        hit.updated_at = ctx.now
+      }
+      hit.mention_count = (hit.mention_count ?? 0) + 1
+      return hit
+    }
+
+    const fallback = raw !== norm ? `${norm} (${raw})` : norm
     const node: ConceptNode = {
-      node_id: id, node_type: 'concept', name: norm, description: clean(description) || norm,
-      created_at: ctx.now, updated_at: ctx.now, source_session_id: ctx.sessionId, embedding_text: `Concept: ${norm}. ${clean(description)}`,
+      node_id: id, node_type: 'concept', name: norm, aliases: raw !== norm ? [raw] : [],
+      description: desc || norm, mention_count: 1,
+      created_at: ctx.now, updated_at: ctx.now, source_session_id: ctx.sessionId,
+      embedding_text: `Concept: ${norm}. ${desc || fallback}`,
     }
     this.add(node, ctx); return node
   }

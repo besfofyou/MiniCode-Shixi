@@ -1,0 +1,27 @@
+{
+  "id": "77f41504-11d",
+  "schemaVersion": 2,
+  "tier": "procedural",
+  "content": "测试位于 test/ 下的 .ts 文件（node:test 风格），由 run-tests.mjs 聚合执行；改动后应运行该聚合脚本做验证。",
+  "createdAt": "2026-10-23T06:05:16.544Z",
+  "updatedAt": "2026-10-23T06:05:16.544Z",
+  "lastAccessedAt": "2026-10-23T06:05:16.544Z",
+  "accessCount": 0,
+  "source": {
+    "sessionId": "fc0f3d51",
+    "trigger": "auto_distill"
+  },
+  "confidence": 0.6,
+  "supersedes": null,
+  "supersededAt": null,
+  "tags": [
+    "testing",
+    "verification",
+    "commands"
+  ],
+  "obsolete": false,
+  "obsoleteReason": null,
+  "contentHash": "7c7b144d01096addc738d7026b3b0772205dbc2cae1175138a8d391e76dfc957",
+  "origin": "agent",
+  "durability": "durable"
+}

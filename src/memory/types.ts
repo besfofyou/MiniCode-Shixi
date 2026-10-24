@@ -126,8 +126,12 @@ export interface EventNode extends GraphNode {
 export interface ConceptNode extends GraphNode {
   node_type: 'concept'
   name: string
+  /** 原始写法（大小写/分隔符不同但归一化到同一概念时保留），对应 CogMem ConceptManager 的 aliases */
+  aliases?: string[]
   description: string
   parent_concept_id?: string
+  /** 被抽取命中的累计次数（对应 CogMem ConceptManager 的 mention_count，供概念排序/合并） */
+  mention_count?: number
 }
 
 /** Claim 节点（情景记忆：主观陈述） */

@@ -1,0 +1,27 @@
+{
+  "id": "aed15a16-72d",
+  "schemaVersion": 2,
+  "tier": "procedural",
+  "content": "分析陌生仓库结构的推荐流程：先统计 src/ 与 test/ 的文件数与行数了解规模，再读 package.json/tsconfig 确认技术栈与入口（bin/），然后按分层（入口层、核心循环层、UI 层、支撑模块）归类 src/，最后核对 submodule 与文档目录；把非工程产物（如工具日志目录）单独标出。",
+  "createdAt": "2026-10-23T06:01:10.250Z",
+  "updatedAt": "2026-10-23T06:01:10.250Z",
+  "lastAccessedAt": "2026-10-23T06:01:10.250Z",
+  "accessCount": 0,
+  "source": {
+    "sessionId": "turn-6",
+    "trigger": "auto_distill"
+  },
+  "confidence": 0.6,
+  "supersedes": null,
+  "supersededAt": null,
+  "tags": [
+    "代码阅读",
+    "仓库概览",
+    "流程"
+  ],
+  "obsolete": false,
+  "obsoleteReason": null,
+  "contentHash": "8b5a96d28b59b1b8415cb94c6a4f497950ab2edf151825880e8cac5f03b09e50",
+  "origin": "agent",
+  "durability": "durable"
+}

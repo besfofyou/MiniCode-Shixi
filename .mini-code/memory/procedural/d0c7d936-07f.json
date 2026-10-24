@@ -1,0 +1,28 @@
+{
+  "id": "d0c7d936-07f",
+  "schemaVersion": 2,
+  "tier": "procedural",
+  "content": "对该项目做结构重构时的建议顺序：① 先拆 src/tty-app.ts（降低后续所有改动与测试耦合成本）；② 再拆 src/mcp.ts 为 src/mcp/{client,stdio,http,auth,format}.ts 以消除与 tool.ts 的循环依赖；③ tsconfig include 增加 \"test/**/*.ts\" 让 npm run check 覆盖测试；④ bin/minicode 的 bash 脚本换成 .mjs node 入口以支持 Windows；⑤ 补 .gitignore 的 .idea/、.workbuddy/、modifySuggestion/ 三条。",
+  "createdAt": "2026-10-23T07:08:03.188Z",
+  "updatedAt": "2026-10-23T07:08:03.188Z",
+  "lastAccessedAt": "2026-10-23T07:08:03.188Z",
+  "accessCount": 0,
+  "source": {
+    "sessionId": "e8406c87",
+    "trigger": "auto_distill"
+  },
+  "confidence": 0.6,
+  "supersedes": null,
+  "supersededAt": null,
+  "tags": [
+    "重构",
+    "TypeScript",
+    "CLI",
+    "跨平台"
+  ],
+  "obsolete": false,
+  "obsoleteReason": null,
+  "contentHash": "b9314622485f8ecc22dc8417b81a05b509b8114e142cc3b876d93929586be130",
+  "origin": "agent",
+  "durability": "durable"
+}

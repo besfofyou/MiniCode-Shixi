@@ -1,0 +1,27 @@
+{
+  "id": "502ad318-e4c",
+  "schemaVersion": 2,
+  "tier": "procedural",
+  "content": "阅读/回答仓库结构类问题时按“顶层布局 → 文件规模统计 → src 分层（入口启动、agent loop、模型适配、工具注册、上下文压缩、记忆、TUI）”顺序组织，先结论后细节，并附可深入的方向。",
+  "createdAt": "2026-10-23T06:05:16.568Z",
+  "updatedAt": "2026-10-23T06:05:16.568Z",
+  "lastAccessedAt": "2026-10-23T06:05:16.568Z",
+  "accessCount": 0,
+  "source": {
+    "sessionId": "fc0f3d51",
+    "trigger": "auto_distill"
+  },
+  "confidence": 0.6,
+  "supersedes": null,
+  "supersededAt": null,
+  "tags": [
+    "code-reading",
+    "reporting",
+    "structure"
+  ],
+  "obsolete": false,
+  "obsoleteReason": null,
+  "contentHash": "7262b588fd5a499620551c2e87c9a42cb41496b57e065f88b0bca1cee53765c1",
+  "origin": "agent",
+  "durability": "durable"
+}
